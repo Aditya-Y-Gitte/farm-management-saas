@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# You need to set the REACT_APP_API_URL environment variable in Netlify
+# to the URL of your Heroku backend.
+# [[redirects]]
+#   from = "/api/*"
+#   to = "YOUR_BACKEND_URL/:splat"
+#   status = 200
+#   force = true
