@@ -1,10 +1,8 @@
-using backend.Data;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
@@ -13,42 +11,40 @@ namespace backend.Controllers
     [ApiController]
     public class LivestockController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ILivestockService _livestockService;
 
-        public LivestockController(ApplicationDbContext context)
+        public LivestockController(ILivestockService livestockService)
         {
-            _context = context;
+            _livestockService = livestockService;
         }
 
         // GET: api/Livestock
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Livestock>>> GetLivestocks()
         {
-            return await _context.Livestocks.ToListAsync();
+            return Ok(await _livestockService.GetAllAsync());
         }
 
         // GET: api/Livestock/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Livestock>> GetLivestock(Guid id)
         {
-            var livestock = await _context.Livestocks.FindAsync(id);
+            var livestock = await _livestockService.GetByIdAsync(id);
 
             if (livestock == null)
             {
                 return NotFound();
             }
 
-            return livestock;
+            return Ok(livestock);
         }
 
         // POST: api/Livestock
         [HttpPost]
         public async Task<ActionResult<Livestock>> PostLivestock(Livestock livestock)
         {
-            _context.Livestocks.Add(livestock);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetLivestock", new { id = livestock.Id }, livestock);
+            var createdLivestock = await _livestockService.CreateAsync(livestock);
+            return CreatedAtAction("GetLivestock", new { id = createdLivestock.Id }, createdLivestock);
         }
 
         // PUT: api/Livestock/5
@@ -60,24 +56,12 @@ namespace backend.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(livestock).State = EntityState.Modified;
-
-            try
+            var updatedLivestock = await _livestockService.UpdateAsync(livestock);
+            if (updatedLivestock == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LivestockExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            
             return NoContent();
         }
 
@@ -85,21 +69,13 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLivestock(Guid id)
         {
-            var livestock = await _context.Livestocks.FindAsync(id);
-            if (livestock == null)
+            var deleted = await _livestockService.DeleteAsync(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.Livestocks.Remove(livestock);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool LivestockExists(Guid id)
-        {
-            return _context.Livestocks.Any(e => e.Id == id);
         }
     }
 }

@@ -1,4 +1,6 @@
 using backend.Data;
+using backend.Repositories;
+using backend.Services;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System;
@@ -13,25 +15,32 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 if (builder.Environment.IsProduction())
 {
     var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-    var databaseUri = new Uri(databaseUrl);
-    var userInfo = databaseUri.UserInfo.Split(':');
-
-    var builderDb = new NpgsqlConnectionStringBuilder
+    if (databaseUrl != null)
     {
-        Host = databaseUri.Host,
-        Port = databaseUri.Port,
-        Username = userInfo[0],
-        Password = userInfo[1],
-        Database = databaseUri.LocalPath.TrimStart('/'),
-        SslMode = SslMode.Prefer,
-        TrustServerCertificate = true
-    };
-    connectionString = builderDb.ToString();
+        var databaseUri = new Uri(databaseUrl);
+        var userInfo = databaseUri.UserInfo.Split(':');
+
+        var builderDb = new NpgsqlConnectionStringBuilder
+        {
+            Host = databaseUri.Host,
+            Port = databaseUri.Port,
+            Username = userInfo[0],
+            Password = userInfo[1],
+            Database = databaseUri.LocalPath.TrimStart('/'),
+            SslMode = SslMode.Prefer,
+        };
+        connectionString = builderDb.ToString();
+    }
 }
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<ILivestockRepository, LivestockRepository>();
+builder.Services.AddScoped<IDairyRepository, DairyRepository>();
+builder.Services.AddScoped<ILivestockService, LivestockService>();
+builder.Services.AddScoped<IDairyService, DairyService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -1,10 +1,8 @@
-using backend.Data;
 using backend.Models;
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
@@ -13,42 +11,40 @@ namespace backend.Controllers
     [ApiController]
     public class DairyController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDairyService _dairyService;
 
-        public DairyController(ApplicationDbContext context)
+        public DairyController(IDairyService dairyService)
         {
-            _context = context;
+            _dairyService = dairyService;
         }
 
         // GET: api/Dairy
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Dairy>>> GetDairies()
         {
-            return await _context.Dairies.ToListAsync();
+            return Ok(await _dairyService.GetAllAsync());
         }
 
         // GET: api/Dairy/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Dairy>> GetDairy(Guid id)
         {
-            var dairy = await _context.Dairies.FindAsync(id);
+            var dairy = await _dairyService.GetByIdAsync(id);
 
             if (dairy == null)
             {
                 return NotFound();
             }
 
-            return dairy;
+            return Ok(dairy);
         }
 
         // POST: api/Dairy
         [HttpPost]
         public async Task<ActionResult<Dairy>> PostDairy(Dairy dairy)
         {
-            _context.Dairies.Add(dairy);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDairy", new { id = dairy.Id }, dairy);
+            var createdDairy = await _dairyService.CreateAsync(dairy);
+            return CreatedAtAction("GetDairy", new { id = createdDairy.Id }, createdDairy);
         }
 
         // PUT: api/Dairy/5
@@ -60,22 +56,10 @@ namespace backend.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(dairy).State = EntityState.Modified;
-
-            try
+            var updatedDairy = await _dairyService.UpdateAsync(dairy);
+            if (updatedDairy == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DairyExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
@@ -85,21 +69,13 @@ namespace backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDairy(Guid id)
         {
-            var dairy = await _context.Dairies.FindAsync(id);
-            if (dairy == null)
+            var deleted = await _dairyService.DeleteAsync(id);
+            if (!deleted)
             {
                 return NotFound();
             }
 
-            _context.Dairies.Remove(dairy);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool DairyExists(Guid id)
-        {
-            return _context.Dairies.Any(e => e.Id == id);
         }
     }
 }
