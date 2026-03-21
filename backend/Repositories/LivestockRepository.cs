@@ -46,6 +46,11 @@ namespace backend.Repositories
             return await _context.Livestocks.FindAsync(id);
         }
 
+        public async Task<Livestock?> GetByNameAsync(string name)
+        {
+            return await _context.Livestocks.FirstOrDefaultAsync(l => l.Name == name);
+        }
+
         public async Task<Livestock> UpdateAsync(Livestock livestock)
         {
             _context.Entry(livestock).State = EntityState.Modified;

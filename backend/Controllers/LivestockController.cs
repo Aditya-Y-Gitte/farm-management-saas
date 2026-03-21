@@ -2,13 +2,13 @@ using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class LivestockController : ControllerBase
     {
         private readonly ILivestockService _livestockService;
@@ -18,63 +18,42 @@ namespace backend.Controllers
             _livestockService = livestockService;
         }
 
-        // GET: api/Livestock
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Livestock>>> GetLivestocks()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(await _livestockService.GetAllAsync());
+            var records = await _livestockService.GetAllAsync();
+            return Ok(records);
         }
 
-        // GET: api/Livestock/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Livestock>> GetLivestock(Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var livestock = await _livestockService.GetByIdAsync(id);
-
-            if (livestock == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(livestock);
+            var record = await _livestockService.GetByIdAsync(id);
+            if (record == null) return NotFound();
+            return Ok(record);
         }
 
-        // POST: api/Livestock
         [HttpPost]
-        public async Task<ActionResult<Livestock>> PostLivestock(Livestock livestock)
+        public async Task<IActionResult> Create([FromBody] Livestock livestock)
         {
-            var createdLivestock = await _livestockService.CreateAsync(livestock);
-            return CreatedAtAction("GetLivestock", new { id = createdLivestock.Id }, createdLivestock);
+            var createdRecord = await _livestockService.CreateAsync(livestock);
+            return CreatedAtAction(nameof(GetById), new { id = createdRecord.Id }, createdRecord);
         }
 
-        // PUT: api/Livestock/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLivestock(Guid id, Livestock livestock)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] Livestock livestock)
         {
-            if (id != livestock.Id)
-            {
-                return BadRequest();
-            }
-
-            var updatedLivestock = await _livestockService.UpdateAsync(livestock);
-            if (updatedLivestock == null)
-            {
-                return NotFound();
-            }
+            if (id != livestock.Id) return BadRequest(new { message = "ID mismatch" });
             
-            return NoContent();
+            var updatedRecord = await _livestockService.UpdateAsync(livestock);
+            return Ok(updatedRecord);
         }
 
-        // DELETE: api/Livestock/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLivestock(Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             var deleted = await _livestockService.DeleteAsync(id);
-            if (!deleted)
-            {
-                return NotFound();
-            }
-
+            if (!deleted) return NotFound();
             return NoContent();
         }
     }

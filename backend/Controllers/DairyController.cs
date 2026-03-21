@@ -2,13 +2,13 @@ using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class DairyController : ControllerBase
     {
         private readonly IDairyService _dairyService;
@@ -18,63 +18,58 @@ namespace backend.Controllers
             _dairyService = dairyService;
         }
 
-        // GET: api/Dairy
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Dairy>>> GetDairies()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(await _dairyService.GetAllAsync());
+            var records = await _dairyService.GetAllAsync();
+            return Ok(records);
         }
 
-        // GET: api/Dairy/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Dairy>> GetDairy(Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var dairy = await _dairyService.GetByIdAsync(id);
-
-            if (dairy == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(dairy);
+            var record = await _dairyService.GetByIdAsync(id);
+            if (record == null) return NotFound();
+            return Ok(record);
         }
 
-        // POST: api/Dairy
+        [HttpGet("livestock/{livestockId:guid}/date/{date:datetime}")]
+        public async Task<IActionResult> GetByLivestockIdAndDate(Guid livestockId, DateTime date)
+        {
+            var record = await _dairyService.GetByLivestockIdAndDateAsync(livestockId, date);
+            if (record == null) return NotFound();
+            return Ok(record);
+        }
+
         [HttpPost]
-        public async Task<ActionResult<Dairy>> PostDairy(Dairy dairy)
+        public async Task<IActionResult> Create([FromBody] Dairy dairy)
         {
-            var createdDairy = await _dairyService.CreateAsync(dairy);
-            return CreatedAtAction("GetDairy", new { id = createdDairy.Id }, createdDairy);
+            try
+            {
+                var createdRecord = await _dairyService.CreateAsync(dairy);
+                return CreatedAtAction(nameof(GetById), new { id = createdRecord.Id }, createdRecord);
+            }
+            catch (Exception ex)
+            {
+                // Catches the duplication logic exception implemented in DairyService
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
-        // PUT: api/Dairy/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDairy(Guid id, Dairy dairy)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] Dairy dairy)
         {
-            if (id != dairy.Id)
-            {
-                return BadRequest();
-            }
-
-            var updatedDairy = await _dairyService.UpdateAsync(dairy);
-            if (updatedDairy == null)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
+            if (id != dairy.Id) return BadRequest(new { message = "ID mismatch" });
+            
+            var updatedRecord = await _dairyService.UpdateAsync(dairy);
+            return Ok(updatedRecord);
         }
 
-        // DELETE: api/Dairy/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDairy(Guid id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
         {
             var deleted = await _dairyService.DeleteAsync(id);
-            if (!deleted)
-            {
-                return NotFound();
-            }
-
+            if (!deleted) return NotFound();
             return NoContent();
         }
     }

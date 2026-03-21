@@ -1,0 +1,23 @@
+/* Tabs.css */
+.tab-list {
+  border-bottom: 1px solid #ccc;
+  display: flex;
+}
+
+.tab-list button {
+  padding: 10px 20px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  outline: none;
+}
+
+.tab-list button.active {
+  border-bottom: 2px solid #007bff;
+  font-weight: bold;
+}
+
+.tab-content {
+  padding: 20px;
+}

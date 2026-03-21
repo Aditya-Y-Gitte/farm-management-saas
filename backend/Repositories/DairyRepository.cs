@@ -46,6 +46,11 @@ namespace backend.Repositories
             return await _context.Dairies.FindAsync(id);
         }
 
+        public async Task<Dairy?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
+        {
+            return await _context.Dairies.FirstOrDefaultAsync(d => d.LivestockId == livestockId && d.Date.Date == date.Date);
+        }
+
         public async Task<Dairy> UpdateAsync(Dairy dairy)
         {
             _context.Entry(dairy).State = EntityState.Modified;

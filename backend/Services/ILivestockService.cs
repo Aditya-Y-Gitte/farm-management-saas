@@ -9,6 +9,7 @@ namespace backend.Services
     {
         Task<IEnumerable<Livestock>> GetAllAsync();
         Task<Livestock?> GetByIdAsync(Guid id);
+        Task<Livestock?> GetByNameAsync(string name);
         Task<Livestock> CreateAsync(Livestock livestock);
         Task<Livestock> UpdateAsync(Livestock livestock);
         Task<bool> DeleteAsync(Guid id);
