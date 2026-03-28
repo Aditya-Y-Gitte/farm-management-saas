@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 
 const HealthCheck: React.FC = () => {
+  const { t } = useTranslation();
   const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -23,13 +25,13 @@ const HealthCheck: React.FC = () => {
 
   return (
     <div>
-      <h2>Backend Health</h2>
+      <h2>{t('Backend Health')}</h2>
       {isHealthy === null ? (
-        <p>Checking...</p>
+        <p>{t('Checking...')}</p>
       ) : isHealthy ? (
-        <p>Backend is healthy</p>
+        <p>{t('Backend is healthy')}</p>
       ) : (
-        <p>Backend is not healthy</p>
+        <p>{t('Backend is not healthy')}</p>
       )}
     </div>
   );

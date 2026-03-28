@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <data name="Greeting" xml:space="preserve">
+        <value>Hello!</value>
+    </data>
+    <data name="ID mismatch" xml:space="preserve">
+        <value>ID mismatch</value>
+    </data>
+</root>

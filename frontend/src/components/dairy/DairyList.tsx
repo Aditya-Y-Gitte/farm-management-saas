@@ -1,5 +1,6 @@
 // DairyList.tsx
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getDairies } from '../../services/dairyService';
 import { Dairy } from '../../types/dairy';
 import './Dairy.css';
@@ -9,6 +10,7 @@ interface DairyListProps {
 }
 
 const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
+    const { t } = useTranslation();
     const [dairies, setDairies] = useState<Dairy[]>([]);
 
     useEffect(() => {
@@ -21,15 +23,15 @@ const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
 
     return (
         <div className="dairy-container">
-            <h2>Dairy Records</h2>
+            <h2>{t('Dairy Records')}</h2>
             <table className="dairy-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Milk Yield</th>
-                        <th>Fat Content</th>
-                        <th>Protein Content</th>
-                        <th>Quality</th>
+                        <th>{t('Date')}</th>
+                        <th>{t('Milk Yield')}</th>
+                        <th>{t('Fat Content')}</th>
+                        <th>{t('Protein Content')}</th>
+                        <th>{t('Quality')}</th>
                     </tr>
                 </thead>
                 <tbody>

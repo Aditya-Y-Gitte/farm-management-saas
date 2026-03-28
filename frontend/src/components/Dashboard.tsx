@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getLivestocks } from '../services/livestockService';
 import { getDairies } from '../services/dairyService';
 import { Livestock } from '../types/livestock';
@@ -7,6 +8,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart,
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
+    const { t } = useTranslation();
     const [livestockCount, setLivestockCount] = useState(0);
     const [totalMilkToday, setTotalMilkToday] = useState(0);
     const [activeAlerts, setActiveAlerts] = useState(0);
@@ -52,27 +54,27 @@ const Dashboard: React.FC = () => {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>Farm Dashboard</h1>
+                <h1>{t('Farm Dashboard')}</h1>
             </div>
 
             <div className="summary-cards">
                 <div className="card">
-                    <h3>Total Livestock</h3>
+                    <h3>{t('Total Livestock')}</h3>
                     <p>{livestockCount}</p>
                 </div>
                 <div className="card">
-                    <h3>Total Milk (Today)</h3>
+                    <h3>{t('Total Milk (Today)')}</h3>
                     <p>{totalMilkToday.toFixed(2)} L</p>
                 </div>
                 <div className="card">
-                    <h3>Active Alerts</h3>
+                    <h3>{t('Active Alerts')}</h3>
                     <p>{activeAlerts}</p>
                 </div>
             </div>
 
             <div className="dashboard-main">
                 <div className="chart-container">
-                    <h3>Livestock Analytics</h3>
+                    <h3>{t('Livestock Analytics')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={livestockByType}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -86,7 +88,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 <div className="chart-container">
-                    <h3>Dairy Analytics</h3>
+                    <h3>{t('Dairy Analytics')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={milkProductionTrend}>
                             <CartesianGrid strokeDasharray="3 3" />

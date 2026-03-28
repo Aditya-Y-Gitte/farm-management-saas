@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 import LivestockList from './components/livestock/LivestockList';
 import LivestockForm from './components/livestock/LivestockForm';
@@ -10,6 +11,7 @@ import Dashboard from './components/Dashboard';
 import './components/Tabs.css';
 
 function App() {
+  const { t, i18n } = useTranslation();
   const [showLivestockForm, setShowLivestockForm] = useState(false);
   const [showDairyForm, setShowDairyForm] = useState(false);
   const [refreshLivestock, setRefreshLivestock] = useState(false);
@@ -25,17 +27,21 @@ function App() {
     setShowDairyForm(false);
   }, []);
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
   const tabs = [
     {
-      label: 'Dashboard',
+      label: t('Dashboard'),
       content: <Dashboard />,
     },
     {
-      label: 'Livestock',
+      label: t('Livestock'),
       content: (
         <div>
           <button className="tab-content-button" onClick={() => setShowLivestockForm(!showLivestockForm)}>
-            {showLivestockForm ? 'Hide Form' : 'Add Livestock'}
+            {showLivestockForm ? t('Hide Form') : t('Add Livestock')}
           </button>
           {showLivestockForm && <LivestockForm onLivestockCreated={handleLivestockCreate} />}
           <LivestockList refresh={refreshLivestock} />
@@ -43,11 +49,11 @@ function App() {
       ),
     },
     {
-      label: 'Dairy',
+      label: t('Dairy'),
       content: (
         <div>
           <button className="tab-content-button" onClick={() => setShowDairyForm(!showDairyForm)}>
-            {showDairyForm ? 'Hide Form' : 'Add Dairy Log'}
+            {showDairyForm ? t('Hide Form') : t('Add Dairy Log')}
           </button>
           {showDairyForm && <DairyForm onDairyCreated={handleDairyCreate} />}
           <DairyList refresh={refreshDairy} />
@@ -59,7 +65,11 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Farm Management SaaS</h1>
+        <h1>{t('Farm Management SaaS')}</h1>
+        <div className="language-switcher">
+          <button onClick={() => changeLanguage('en')}>English</button>
+          <button onClick={() => changeLanguage('mr')}>मराठी</button>
+        </div>
       </header>
       <main>
         <HealthCheck />
