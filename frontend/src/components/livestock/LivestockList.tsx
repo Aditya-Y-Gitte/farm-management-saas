@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getLivestocks } from '../../services/livestockService';
 import { Livestock } from '../../types/livestock';
+import './Livestock.css';
 
 interface LivestockListProps {
     refresh: boolean;
@@ -19,9 +20,9 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
     }, [refresh]);
 
     return (
-        <div>
+        <div className="livestock-container">
             <h2>Livestock</h2>
-            <table>
+            <table className="livestock-table">
                 <thead>
                     <tr>
                         <th>Name</th>

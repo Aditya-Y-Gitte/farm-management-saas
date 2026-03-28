@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { getDairies } from '../../services/dairyService';
 import { Dairy } from '../../types/dairy';
+import './Dairy.css';
 
 interface DairyListProps {
     refresh: boolean;
@@ -19,9 +20,9 @@ const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
     }, [refresh]);
 
     return (
-        <div>
+        <div className="dairy-container">
             <h2>Dairy Records</h2>
-            <table>
+            <table className="dairy-table">
                 <thead>
                     <tr>
                         <th>Date</th>

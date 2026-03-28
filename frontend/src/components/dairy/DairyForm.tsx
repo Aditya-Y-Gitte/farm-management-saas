@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { createDairy } from '../../services/dairyService';
 import { Dairy } from '../../types/dairy';
+import './Dairy.css';
 
 interface DairyFormProps {
     onDairyCreated: () => void;
@@ -37,33 +38,33 @@ const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
     };
 
     return (
-        <div>
+        <div className="dairy-form-container">
             <h2>Add Dairy Record</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Livestock ID:
-                    <input type="text" value={livestockId} onChange={(e) => setLivestockId(e.target.value)} required />
-                </label>
-                <label>
-                    Date:
-                    <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-                </label>
-                <label>
-                    Milk Yield:
-                    <input type="number" value={milkYield} onChange={(e) => setMilkYield(parseFloat(e.target.value))} required />
-                </label>
-                <label>
-                    Fat Content:
-                    <input type="number" value={fatContent} onChange={(e) => setFatContent(parseFloat(e.target.value))} />
-                </label>
-                <label>
-                    Protein Content:
-                    <input type="number" value={proteinContent} onChange={(e) => setProteinContent(parseFloat(e.target.value))} />
-                </label>
-                <label>
-                    Quality:
-                    <input type="text" value={quality} onChange={(e) => setQuality(e.target.value)} />
-                </label>
+            <form onSubmit={handleSubmit} className="dairy-form">
+                <div>
+                    <label htmlFor="livestockId">Livestock ID:</label>
+                    <input id="livestockId" type="text" value={livestockId} onChange={(e) => setLivestockId(e.target.value)} required />
+                </div>
+                <div>
+                    <label htmlFor="date">Date:</label>
+                    <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                </div>
+                <div>
+                    <label htmlFor="milkYield">Milk Yield:</label>
+                    <input id="milkYield" type="number" value={milkYield} onChange={(e) => setMilkYield(parseFloat(e.target.value))} required />
+                </div>
+                <div>
+                    <label htmlFor="fatContent">Fat Content:</label>
+                    <input id="fatContent" type="number" value={fatContent} onChange={(e) => setFatContent(parseFloat(e.target.value))} />
+                </div>
+                <div>
+                    <label htmlFor="proteinContent">Protein Content:</label>
+                    <input id="proteinContent" type="number" value={proteinContent} onChange={(e) => setProteinContent(parseFloat(e.target.value))} />
+                </div>
+                <div>
+                    <label htmlFor="quality">Quality:</label>
+                    <input id="quality" type="text" value={quality} onChange={(e) => setQuality(e.target.value)} />
+                </div>
                 <button type="submit">Add</button>
             </form>
         </div>

@@ -5,6 +5,7 @@ import { getDairies } from '../services/dairyService';
 import { Livestock } from '../types/livestock';
 import { Dairy } from '../types/dairy';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
+import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
     const [livestockCount, setLivestockCount] = useState(0);
@@ -45,20 +46,20 @@ const Dashboard: React.FC = () => {
     }, []);
 
     return (
-        <div>
+        <div className="dashboard">
             <h2>Dashboard</h2>
-            <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-                <div style={{ border: '1px solid #ccc', padding: '20px' }}>
+            <div className="dashboard-summary">
+                <div className="summary-card">
                     <h3>Total Livestock</h3>
                     <p>{livestockCount}</p>
                 </div>
-                <div style={{ border: '1px solid #ccc', padding: '20px' }}>
+                <div className="summary-card">
                     <h3>Average Milk Yield</h3>
                     <p>{averageMilkYield.toFixed(2)} L</p>
                 </div>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                <div>
+            <div className="charts-container">
+                <div className="chart">
                     <h3>Livestock by Species</h3>
                     <BarChart width={400} height={300} data={livestockBySpecies}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -66,10 +67,10 @@ const Dashboard: React.FC = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="count" fill="#8884d8" />
+                        <Bar dataKey="count" fill="#2c6e49" />
                     </BarChart>
                 </div>
-                <div>
+                <div className="chart">
                     <h3>Milk Yield Over Time</h3>
                     <LineChart width={400} height={300} data={milkYieldOverTime}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -77,7 +78,7 @@ const Dashboard: React.FC = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-                        <Line type="monotone" dataKey="milkYield" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="milkYield" stroke="#f5b700" />
                     </LineChart>
                 </div>
             </div>
