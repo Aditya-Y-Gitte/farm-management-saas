@@ -34,7 +34,7 @@ function App() {
       label: 'Livestock',
       content: (
         <div>
-          <button onClick={() => setShowLivestockForm(!showLivestockForm)}>
+          <button className="tab-content-button" onClick={() => setShowLivestockForm(!showLivestockForm)}>
             {showLivestockForm ? 'Hide Form' : 'Add Livestock'}
           </button>
           {showLivestockForm && <LivestockForm onLivestockCreated={handleLivestockCreate} />}
@@ -46,7 +46,7 @@ function App() {
       label: 'Dairy',
       content: (
         <div>
-          <button onClick={() => setShowDairyForm(!showDairyForm)}>
+          <button className="tab-content-button" onClick={() => setShowDairyForm(!showDairyForm)}>
             {showDairyForm ? 'Hide Form' : 'Add Dairy Log'}
           </button>
           {showDairyForm && <DairyForm onDairyCreated={handleDairyCreate} />}
@@ -59,7 +59,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Farm Management</h1>
+        <h1>Farm Management SaaS</h1>
       </header>
       <main>
         <HealthCheck />

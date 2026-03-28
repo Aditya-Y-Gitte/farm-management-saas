@@ -1,24 +1,29 @@
 .tab-list {
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #dddddd;
   display: flex;
 }
 
 .tab-list button {
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   outline: none;
   color: #333333;
   background-color: transparent;
+  transition: all 0.3s;
+}
+
+.tab-list button:hover {
+  background-color: #f0f0f0;
 }
 
 .tab-list button.active {
-  border-bottom: 3px solid #2c6e49;
+  border-bottom: 3px solid #3a5a40;
   font-weight: bold;
-  color: #2c6e49;
+  color: #3a5a40;
 }
 
 .tab-content {
-  padding: 24px;
+  padding-top: 1.5rem;
 }

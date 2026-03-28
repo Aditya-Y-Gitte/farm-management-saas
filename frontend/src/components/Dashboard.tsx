@@ -1,45 +1,49 @@
-// Dashboard.tsx
 import React, { useState, useEffect } from 'react';
 import { getLivestocks } from '../services/livestockService';
 import { getDairies } from '../services/dairyService';
 import { Livestock } from '../types/livestock';
 import { Dairy } from '../types/dairy';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
     const [livestockCount, setLivestockCount] = useState(0);
-    const [averageMilkYield, setAverageMilkYield] = useState(0);
-    const [livestockBySpecies, setLivestockBySpecies] = useState<{ name: string; count: number }[]>([]);
-    const [milkYieldOverTime, setMilkYieldOverTime] = useState<{ date: string; milkYield: number }[]>([]);
+    const [totalMilkToday, setTotalMilkToday] = useState(0);
+    const [activeAlerts, setActiveAlerts] = useState(0);
+    const [livestockByType, setLivestockByType] = useState<{ name: string; count: number }[]>([]);
+    const [milkProductionTrend, setMilkProductionTrend] = useState<{ date: string; totalMilk: number }[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const livestockData = await getLivestocks();
             const dairyData = await getDairies();
 
-            // Calculate total livestock
+            // At-a-Glance Summary
             setLivestockCount(livestockData.length);
 
-            // Calculate average milk yield
-            if (dairyData.length > 0) {
-                const totalMilkYield = dairyData.reduce((acc, curr) => acc + curr.milkYield, 0);
-                setAverageMilkYield(totalMilkYield / dairyData.length);
-            }
+            const today = new Date().toISOString().split('T')[0];
+            const todayMilk = dairyData
+                .filter(d => d.date.split('T')[0] === today)
+                .reduce((acc, curr) => acc + curr.milkYield, 0);
+            setTotalMilkToday(todayMilk);
 
-            // Group livestock by species
-            const speciesCount = livestockData.reduce((acc, curr) => {
+            // Mock active alerts
+            setActiveAlerts(3);
+
+            // Livestock Analytics
+            const livestockCountByType = livestockData.reduce((acc, curr) => {
                 acc[curr.species] = (acc[curr.species] || 0) + 1;
                 return acc;
             }, {} as { [key: string]: number });
-            setLivestockBySpecies(Object.entries(speciesCount).map(([name, count]) => ({ name, count })));
+            setLivestockByType(Object.entries(livestockCountByType).map(([name, count]) => ({ name, count })));
 
-            // Group milk yield by date
-            const milkYieldByDate = dairyData.map(d => ({
-                date: new Date(d.date).toLocaleDateString(),
-                milkYield: d.milkYield
-            }));
-            setMilkYieldOverTime(milkYieldByDate);
+            // Dairy Analytics
+            const milkByDate = dairyData.reduce((acc, curr) => {
+                const date = new Date(curr.date).toLocaleDateString();
+                acc[date] = (acc[date] || 0) + curr.milkYield;
+                return acc;
+            }, {} as { [key: string]: number });
+            setMilkProductionTrend(Object.entries(milkByDate).map(([date, totalMilk]) => ({ date, totalMilk })));
         };
 
         fetchData();
@@ -47,39 +51,52 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard">
-            <h2>Dashboard</h2>
-            <div className="dashboard-summary">
-                <div className="summary-card">
+            <div className="dashboard-header">
+                <h1>Farm Dashboard</h1>
+            </div>
+
+            <div className="summary-cards">
+                <div className="card">
                     <h3>Total Livestock</h3>
                     <p>{livestockCount}</p>
                 </div>
-                <div className="summary-card">
-                    <h3>Average Milk Yield</h3>
-                    <p>{averageMilkYield.toFixed(2)} L</p>
+                <div className="card">
+                    <h3>Total Milk (Today)</h3>
+                    <p>{totalMilkToday.toFixed(2)} L</p>
+                </div>
+                <div className="card">
+                    <h3>Active Alerts</h3>
+                    <p>{activeAlerts}</p>
                 </div>
             </div>
-            <div className="charts-container">
-                <div className="chart">
-                    <h3>Livestock by Species</h3>
-                    <BarChart width={400} height={300} data={livestockBySpecies}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="count" fill="#2c6e49" />
-                    </BarChart>
+
+            <div className="dashboard-main">
+                <div className="chart-container">
+                    <h3>Livestock Analytics</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart data={livestockByType}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="count" fill="#8884d8" />
+                        </BarChart>
+                    </ResponsiveContainer>
                 </div>
-                <div className="chart">
-                    <h3>Milk Yield Over Time</h3>
-                    <LineChart width={400} height={300} data={milkYieldOverTime}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="date" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="milkYield" stroke="#f5b700" />
-                    </LineChart>
+
+                <div className="chart-container">
+                    <h3>Dairy Analytics</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={milkProductionTrend}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="totalMilk" stroke="#82ca9d" />
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
         </div>

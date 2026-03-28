@@ -1,56 +1,66 @@
-/* Dashboard.css */
 .dashboard {
-    padding: 24px;
+  padding: 2rem;
+  background-color: #f9f9f9;
 }
 
-.dashboard h2 {
-    font-size: 24px;
-    color: #2c6e49;
-    margin-bottom: 24px;
+.dashboard-header {
+  margin-bottom: 2rem;
 }
 
-.dashboard-summary {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 32px;
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  color: #333;
 }
 
-.summary-card {
-    background-color: #fefee3;
-    padding: 24px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex-basis: 45%;
+.summary-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.summary-card h3 {
-    font-size: 18px;
-    color: #2c6e49;
-    margin-bottom: 8px;
+.card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  text-align: center;
 }
 
-.summary-card p {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333333;
+.card h3 {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 0.5rem;
 }
 
-.charts-container {
-    display: flex;
-    justify-content: space-around;
+.card p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
 }
 
-.chart {
-    background-color: #fefee3;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.dashboard-main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
 
-.chart h3 {
-    font-size: 18px;
-    color: #2c6e49;
-    margin-bottom: 16px;
-    text-align: center;
+@media (min-width: 768px) {
+  .dashboard-main {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.chart-container {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
