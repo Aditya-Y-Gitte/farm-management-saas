@@ -44,27 +44,27 @@ const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
             <h2>{t('Add Dairy Record')}</h2>
             <form onSubmit={handleSubmit} className="dairy-form">
                 <div>
-                    <label htmlFor="livestockId">{t('Livestock ID')}:</label>
+                    <label htmlFor="livestockId">{t('Livestock ID:')}</label>
                     <input id="livestockId" type="text" value={livestockId} onChange={(e) => setLivestockId(e.target.value)} required />
                 </div>
                 <div>
-                    <label htmlFor="date">{t('Date')}:</label>
+                    <label htmlFor="date">{t('Date:')}</label>
                     <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
                 </div>
                 <div>
-                    <label htmlFor="milkYield">{t('Milk Yield')}:</label>
+                    <label htmlFor="milkYield">{t('Milk Yield:')}</label>
                     <input id="milkYield" type="number" value={milkYield} onChange={(e) => setMilkYield(parseFloat(e.target.value))} required />
                 </div>
                 <div>
-                    <label htmlFor="fatContent">{t('Fat Content')}:</label>
+                    <label htmlFor="fatContent">{t('Fat Content:')}</label>
                     <input id="fatContent" type="number" value={fatContent} onChange={(e) => setFatContent(parseFloat(e.target.value))} />
                 </div>
                 <div>
-                    <label htmlFor="proteinContent">{t('Protein Content')}:</label>
+                    <label htmlFor="proteinContent">{t('Protein Content:')}</label>
                     <input id="proteinContent" type="number" value={proteinContent} onChange={(e) => setProteinContent(parseFloat(e.target.value))} />
                 </div>
                 <div>
-                    <label htmlFor="quality">{t('Quality')}:</label>
+                    <label htmlFor="quality">{t('Quality:')}</label>
                     <input id="quality" type="text" value={quality} onChange={(e) => setQuality(e.target.value)} />
                 </div>
                 <button type="submit">{t('Add')}</button>

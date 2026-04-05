@@ -3,6 +3,8 @@ using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Localization;
+using backend.Resources;
 
 namespace backend.Controllers
 {
@@ -12,10 +14,12 @@ namespace backend.Controllers
     public class LivestockController : ControllerBase
     {
         private readonly ILivestockService _livestockService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public LivestockController(ILivestockService livestockService)
+        public LivestockController(ILivestockService livestockService, IStringLocalizer<SharedResource> localizer)
         {
             _livestockService = livestockService;
+            _localizer = localizer;
         }
 
         [HttpGet]
@@ -43,7 +47,7 @@ namespace backend.Controllers
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] Livestock livestock)
         {
-            if (id != livestock.Id) return BadRequest(new { message = "ID mismatch" });
+            if (id != livestock.Id) return BadRequest(new { message = _localizer["ID mismatch"] });
             
             var updatedRecord = await _livestockService.UpdateAsync(livestock);
             return Ok(updatedRecord);

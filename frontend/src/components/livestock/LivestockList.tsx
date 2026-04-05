@@ -1,5 +1,6 @@
 // LivestockList.tsx
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getLivestocks } from '../../services/livestockService';
 import { Livestock } from '../../types/livestock';
 import './Livestock.css';
@@ -9,6 +10,7 @@ interface LivestockListProps {
 }
 
 const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
+    const { t } = useTranslation();
     const [livestocks, setLivestocks] = useState<Livestock[]>([]);
 
     useEffect(() => {
@@ -21,15 +23,15 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
 
     return (
         <div className="livestock-container">
-            <h2>Livestock</h2>
+            <h2>{t('Livestock')}</h2>
             <table className="livestock-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Species</th>
-                        <th>Breed</th>
-                        <th>Date of Birth</th>
-                        <th>Gender</th>
+                        <th>{t('Name')}</th>
+                        <th>{t('Species')}</th>
+                        <th>{t('Breed')}</th>
+                        <th>{t('Date of Birth')}</th>
+                        <th>{t('Gender')}</th>
                     </tr>
                 </thead>
                 <tbody>
