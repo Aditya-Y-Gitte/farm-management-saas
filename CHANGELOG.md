@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Netlify Configuration**: Updated `netlify.toml` with strict rewrite rules to accurately proxy `/api/*` requests to the remote API Gateway.
 - **Database Migrations**: Switched from `EnsureCreated()` to explicit EF Core Migrations (`Database.Migrate()`) across all microservices.
 
+### Fixed
+- **TypeScript Compilation**: Fixed generic mapping errors in `DairyList`, `LivestockList`, and `Dashboard` when processing `PaginatedResponse` types from the API.
+- **Docker Healthchecks**: Installed `curl` in `.NET 10` ASPNET runtime images (`auth-service`, `catalog-api`, `production-api`, `api-gateway`) to ensure Docker-compose health checks succeed.
+- **EF Core Migrations**: Generated the missing `InitialCreate` migration for `auth-service` to prevent startup crashes when evaluating migration history.
+
 ### Security
 - **Proxy Headers Verification**: Added `ForwardedHeadersMiddleware` to the API Gateway and Auth Service to accurately resolve client IPs behind load balancers for rate limiting and logging.
 - **Connection Resiliency**: Configured `MaxPoolSize=50` and increased healthcheck timeouts across databases to avoid resource starvation on free-tier infrastructure.
