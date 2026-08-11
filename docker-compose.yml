@@ -1,0 +1,227 @@
+version: '3.8'
+
+services:
+  # =============================================
+  # Database Layer - 3 Isolated PostgreSQL Instances
+  # =============================================
+  catalog-db:
+    image: postgres:16-alpine
+    container_name: farm-catalog-db
+    environment:
+      POSTGRES_DB: catalog_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${CATALOG_DB_PASSWORD:-postgres}
+    ports:
+      - "5433:5432"
+    volumes:
+      - catalog-db-data:/var/lib/postgresql/data
+    networks:
+      - farm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d catalog_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  production-db:
+    image: postgres:16-alpine
+    container_name: farm-production-db
+    environment:
+      POSTGRES_DB: production_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PRODUCTION_DB_PASSWORD:-postgres}
+    ports:
+      - "5434:5432"
+    volumes:
+      - production-db-data:/var/lib/postgresql/data
+    networks:
+      - farm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d production_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-db:
+    image: postgres:16-alpine
+    container_name: farm-auth-db
+    environment:
+      POSTGRES_DB: auth_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD:-postgres}
+    ports:
+      - "5435:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks:
+      - farm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =============================================
+  # Auth Service
+  # =============================================
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile
+    container_name: farm-auth-service
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=auth-db;Port=5432;Database=auth_db;Username=postgres;Password=${AUTH_DB_PASSWORD:-postgres};MaxPoolSize=50"
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
+      Jwt__Issuer: farm-management-auth
+      Jwt__Audience: farm-management-api
+      Google__ClientId: ${GOOGLE_CLIENT_ID}
+      Google__ClientSecret: ${GOOGLE_CLIENT_SECRET}
+      AllowedOrigins__0: http://localhost:3000
+      AllowedOrigins__1: http://localhost:5173
+      # Production frontend origin (e.g. https://your-farm-app.netlify.app)
+      FrontendUrl: ${FRONTEND_URL:-}
+    ports:
+      - "5003:5003"
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    networks:
+      - farm-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5003/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  # =============================================
+  # Catalog API (Livestock Domain)
+  # =============================================
+  catalog-api:
+    build:
+      context: .
+      dockerfile: services/catalog-api/Dockerfile
+    container_name: farm-catalog-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=catalog-db;Port=5432;Database=catalog_db;Username=postgres;Password=${CATALOG_DB_PASSWORD:-postgres};MaxPoolSize=50"
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
+      Jwt__Issuer: farm-management-auth
+      Jwt__Audience: farm-management-api
+      AllowedOrigins__0: http://api-gateway:5000
+    ports:
+      - "5001:5001"
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+    networks:
+      - farm-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5001/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  # =============================================
+  # Production API (Dairy Domain)
+  # =============================================
+  production-api:
+    build:
+      context: .
+      dockerfile: services/production-api/Dockerfile
+    container_name: farm-production-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=production-db;Port=5432;Database=production_db;Username=postgres;Password=${PRODUCTION_DB_PASSWORD:-postgres};MaxPoolSize=50"
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
+      Jwt__Issuer: farm-management-auth
+      Jwt__Audience: farm-management-api
+      AllowedOrigins__0: http://api-gateway:5000
+    ports:
+      - "5002:5002"
+    depends_on:
+      production-db:
+        condition: service_healthy
+    networks:
+      - farm-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5002/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  # =============================================
+  # API Gateway (YARP Reverse Proxy)
+  # =============================================
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: farm-api-gateway
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
+      Jwt__Issuer: farm-management-auth
+      Jwt__Audience: farm-management-api
+      ServiceUrls__CatalogApi: http://catalog-api:5001
+      ServiceUrls__ProductionApi: http://production-api:5002
+      AllowedOrigins__0: http://localhost:3000
+      AllowedOrigins__1: http://localhost:5173
+      # Production frontend origin (e.g. https://your-farm-app.netlify.app)
+      FrontendUrl: ${FRONTEND_URL:-}
+      # Override YARP cluster addresses for Docker networking
+      ReverseProxy__Clusters__auth-cluster__Destinations__auth-service__Address: http://auth-service:5003
+      ReverseProxy__Clusters__catalog-cluster__Destinations__catalog-api__Address: http://catalog-api:5001
+      ReverseProxy__Clusters__production-cluster__Destinations__production-api__Address: http://production-api:5002
+    ports:
+      - "5000:5000"
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      catalog-api:
+        condition: service_healthy
+      production-api:
+        condition: service_healthy
+    networks:
+      - farm-network
+    restart: unless-stopped
+
+  # =============================================
+  # Frontend (React + Nginx)
+  # =============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: farm-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - farm-network
+    restart: unless-stopped
+
+# =============================================
+# Persistent Volumes
+# =============================================
+volumes:
+  catalog-db-data:
+    driver: local
+  production-db-data:
+    driver: local
+  auth-db-data:
+    driver: local
+
+# =============================================
+# Network
+# =============================================
+networks:
+  farm-network:
+    driver: bridge
