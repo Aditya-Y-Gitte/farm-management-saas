@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Local Authentication**: Added Email/Password authentication support with BCrypt password hashing alongside existing Google OAuth.
+- **N-Tier Architecture**: Refactored `auth-service` to strictly adhere to N-Tier Architecture, separating Presentation (Controllers/DTOs), Business Logic (Services), and Data Access (Repositories).
 - **Microservices Architecture**: Migrated the legacy monolithic backend into a distributed microservices architecture consisting of:
   - **API Gateway**: YARP-based proxy with rate limiting and metric aggregation.
   - **Auth Service**: Standalone authentication service with Google OAuth 2.0 integration and JWT generation.
@@ -22,10 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Security Documentation**: Added `SECURITY.md` defining gitignore policies and pre-push checks.
 
 ### Changed
+- **Database Migrations**: Replaced Entity Framework Migrations (`EnsureCreated`/`Database.Migrate`) with Evolve for explicit, raw SQL-based database migrations across all microservices.
+- **Frontend UI**: Refined and polished the dashboard layout and overall styling for a better user experience. Restyled the authentication page to include tabs for "Sign In" and "Create Account".
 - **Frontend Layout**: Refactored the main UI shell to securely host protected views and provide an intuitive Sidebar navigation.
 - **Service Integration**: Updated `dairyService` and `livestockService` to consume the new `apiClient` rather than relying on direct endpoints.
 - **Netlify Configuration**: Updated `netlify.toml` with strict rewrite rules to accurately proxy `/api/*` requests to the remote API Gateway.
-- **Database Migrations**: Switched from `EnsureCreated()` to explicit EF Core Migrations (`Database.Migrate()`) across all microservices.
+- **Database Migrations (Legacy)**: Switched from `EnsureCreated()` to explicit EF Core Migrations (`Database.Migrate()`) across all microservices.
 
 ### Fixed
 - **TypeScript Compilation**: Fixed generic mapping errors in `DairyList`, `LivestockList`, and `Dashboard` when processing `PaginatedResponse` types from the API.
