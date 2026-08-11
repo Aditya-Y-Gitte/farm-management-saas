@@ -4,12 +4,43 @@
   box-sizing: border-box;
 }
 
+:root {
+  /* Color Palette - Practical Light Mode */
+  --bg-main: #f8fafc;        /* Soft off-white to reduce glare outdoors */
+  --bg-card: #ffffff;
+  --bg-alt: #f1f5f9;
+  
+  --text-main: #0f172a;      /* High contrast dark slate */
+  --text-muted: #475569;
+  
+  --primary: #166534;        /* High-visibility Forest Green */
+  --primary-hover: #14532d;
+  --secondary: #854d0e;      /* Earthy Brown */
+  
+  --border: #cbd5e1;
+  --border-focus: #166534;
+  
+  --danger: #b91c1c;
+  --warning: #b45309;
+  --success: #15803d;
+
+  /* Typography */
+  --font-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --border-radius-sm: 4px;
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #fefee3;
-  color: #333333;
+  background-color: var(--bg-main);
+  color: var(--text-main);
   line-height: 1.6;
+  font-size: 16px; /* Larger base font size for readability */
 }

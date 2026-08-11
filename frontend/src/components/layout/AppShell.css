@@ -1,19 +1,19 @@
 .app-shell {
   display: flex;
   min-height: 100vh;
-  background: #0f172a;
+  background: var(--bg-alt);
 }
 
 .app-shell__main {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 280px; /* Wider sidebar for larger touch targets */
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
 }
 
 .app-shell--sidebar-collapsed .app-shell__main {
-  margin-left: 72px;
+  margin-left: 80px;
 }
 
 /* Top Bar */
@@ -22,19 +22,21 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px 32px;
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--primary); /* Solid high-contrast header */
+  border-bottom: 2px solid var(--primary-hover);
   position: sticky;
   top: 0;
   z-index: 50;
+  color: white;
+  box-shadow: var(--shadow-md);
 }
 
 .topbar__title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #e2e8f0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
   margin: 0;
+  letter-spacing: 0.5px;
 }
 
 .topbar__right {
@@ -45,40 +47,42 @@
 
 .topbar__lang {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
 .topbar__lang-btn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  min-height: 44px;
 }
 
 .topbar__lang-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
 }
 
 .topbar__user {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 12px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .topbar__avatar {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid rgba(102, 187, 106, 0.4);
+  border: 2px solid white;
 }
 
 .topbar__user-info {
@@ -87,38 +91,45 @@
 }
 
 .topbar__user-name {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #e2e8f0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
 }
 
 .topbar__user-role {
-  font-size: 0.7rem;
-  color: #64748b;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
   text-transform: capitalize;
 }
 
 .topbar__logout {
   background: none;
   border: none;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
+  padding: 8px;
+  border-radius: var(--border-radius);
   transition: all 0.2s;
-  opacity: 0.6;
+  color: white;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .topbar__logout:hover {
-  opacity: 1;
-  background: rgba(239, 83, 80, 0.1);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 /* Content Area */
 .app-shell__content {
   flex: 1;
   padding: 32px;
-  color: #e2e8f0;
+  color: var(--text-main);
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* Loading Screen */
@@ -128,18 +139,18 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #66BB6A;
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 @keyframes spin {
@@ -151,15 +162,12 @@
   .app-shell__main {
     margin-left: 0;
   }
-
   .app-shell__topbar {
-    padding: 12px 16px;
+    padding: 16px;
   }
-
   .app-shell__content {
     padding: 16px;
   }
-
   .topbar__user-info {
     display: none;
   }

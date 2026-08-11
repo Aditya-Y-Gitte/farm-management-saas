@@ -43,31 +43,31 @@ const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
         <div className="dairy-form-container">
             <h2>{t('Add Dairy Record')}</h2>
             <form onSubmit={handleSubmit} className="dairy-form">
-                <div>
+                <div className="form-group">
                     <label htmlFor="livestockId">{t('Livestock ID:')}</label>
                     <input id="livestockId" type="text" value={livestockId} onChange={(e) => setLivestockId(e.target.value)} required />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="date">{t('Date:')}</label>
                     <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="milkYield">{t('Milk Yield:')}</label>
                     <input id="milkYield" type="number" value={milkYield} onChange={(e) => setMilkYield(parseFloat(e.target.value))} required />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="fatContent">{t('Fat Content:')}</label>
                     <input id="fatContent" type="number" value={fatContent} onChange={(e) => setFatContent(parseFloat(e.target.value))} />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="proteinContent">{t('Protein Content:')}</label>
                     <input id="proteinContent" type="number" value={proteinContent} onChange={(e) => setProteinContent(parseFloat(e.target.value))} />
                 </div>
-                <div>
+                <div className="form-group">
                     <label htmlFor="quality">{t('Quality:')}</label>
                     <input id="quality" type="text" value={quality} onChange={(e) => setQuality(e.target.value)} />
                 </div>
-                <button type="submit">{t('Add')}</button>
+                <button type="submit" className="btn-primary">{t('Add')}</button>
             </form>
         </div>
     );

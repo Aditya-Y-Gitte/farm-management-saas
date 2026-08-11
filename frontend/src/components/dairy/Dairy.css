@@ -1,65 +1,38 @@
 /* Dairy.css */
 
-/* General Styles */
 .dairy-container,
 .dairy-form-container {
-    padding: 24px;
+    padding: 0;
 }
 
 .dairy-container h2,
 .dairy-form-container h2 {
-    font-size: 24px;
-    color: #2c6e49;
+    font-size: 1.5rem;
+    color: var(--primary);
     margin-bottom: 24px;
+    font-weight: 700;
 }
 
-/* Table Styles */
+/* Rely on global table styles from App.css for .dairy-table */
 .dairy-table {
     width: 100%;
-    border-collapse: collapse;
-}
-
-.dairy-table th,
-.dairy-table td {
-    padding: 16px;
-    border-bottom: 1px solid #cccccc;
-    text-align: left;
-}
-
-.dairy-table th {
-    background-color: #fefee3;
-    font-weight: 600;
 }
 
 /* Form Styles */
 .dairy-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
-.dairy-form label {
-    font-weight: 600;
-    margin-bottom: 8px;
-    display: block;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-.dairy-form input {
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 16px;
-    width: 100%;
-}
+/* Input and label styles are inherited from App.css */
 
 .dairy-form button {
-    background-color: #2c6e49;
-    color: #ffffff;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    align-self: flex-start;
+    margin-top: 12px;
 }

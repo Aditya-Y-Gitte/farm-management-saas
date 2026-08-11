@@ -6,55 +6,70 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 16px;
 }
 
 .page__header h1 {
-  font-size: 1.6rem;
+  font-size: 2rem;
   font-weight: 800;
   margin: 0;
-  letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #e2e8f0, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-main);
 }
 
 .page__action-btn {
-  background: linear-gradient(135deg, #66BB6A, #43A047);
+  background: var(--primary);
   color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border: 2px solid var(--primary-hover);
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 4px 12px rgba(102, 187, 106, 0.3);
+  min-height: 48px; /* Large touch target */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
 }
 
 .page__action-btn:hover {
+  background: var(--primary-hover);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 187, 106, 0.4);
 }
 
 .page__form-panel {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 24px;
-  animation: slideDown 0.3s ease-out;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--border-radius-lg);
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: var(--shadow-md);
+  animation: slideDown 0.2s ease-out;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-12px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .page__header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  
+  .page__action-btn {
+    width: 100%;
   }
 }

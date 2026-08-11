@@ -62,25 +62,25 @@ const DashboardPage: React.FC = () => {
       icon: '🐄',
       label: t('Total Livestock'),
       value: metrics?.livestock?.totalLivestock ?? 0,
-      color: '#66BB6A'
+      color: '#15803d' // Success green
     },
     {
       icon: '🥛',
       label: t('Milk Today'),
       value: `${(metrics?.dairy?.totalMilkToday ?? 0).toFixed(1)} L`,
-      color: '#4FC3F7'
+      color: '#0369a1' // Deep blue
     },
     {
       icon: '📅',
       label: t('Milk This Week'),
       value: `${(metrics?.dairy?.totalMilkThisWeek ?? 0).toFixed(1)} L`,
-      color: '#AB47BC'
+      color: '#a21caf' // Deep purple
     },
     {
       icon: '📊',
       label: t('Dairy Records'),
       value: metrics?.dairy?.totalRecords ?? 0,
-      color: '#FFB74D'
+      color: '#b45309' // Warning orange/brown
     }
   ];
 
@@ -115,13 +115,13 @@ const DashboardPage: React.FC = () => {
           <h3>{t('Average Milk Quality')}</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={qualityData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-              <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 12 }} />
-              <YAxis tick={{ fill: '#94a3b8', fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="name" tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} />
+              <YAxis tick={{ fill: '#475569', fontSize: 14, fontWeight: 600 }} />
               <Tooltip
-                contentStyle={{ background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#e2e8f0' }}
+                contentStyle={{ background: '#ffffff', border: '2px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', fontWeight: 600 }}
               />
-              <Bar dataKey="value" fill="#4FC3F7" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="value" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
