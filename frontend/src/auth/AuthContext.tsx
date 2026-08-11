@@ -17,6 +17,8 @@ interface AuthContextType {
   isLoading: boolean;
   accessToken: string | null;
   login: (googleIdToken: string) => Promise<void>;
+  localLogin: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, displayName?: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<string | null>;
 }
@@ -90,6 +92,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  const localLogin = useCallback(async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.apiGatewayUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Invalid email or password');
+      }
+
+      const data = await response.json();
+      setAccessToken(data.accessToken);
+      setUser(data.user);
+    } catch (error) {
+      console.error('Local login error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const register = useCallback(async (email: string, password: string, displayName?: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${config.apiGatewayUrl}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password, displayName }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      const data = await response.json();
+      setAccessToken(data.accessToken);
+      setUser(data.user);
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       await fetch(`${config.apiGatewayUrl}/api/auth/logout`, {
@@ -128,7 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, accessToken, login, logout, refreshAccessToken }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, accessToken, login, localLogin, register, logout, refreshAccessToken }}>
       {children}
     </AuthContext.Provider>
   );

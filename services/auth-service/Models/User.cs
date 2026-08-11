@@ -12,11 +12,16 @@ public class User
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
-    /// Google's unique user identifier (from the sub claim in Google ID token).
+    /// Google's unique user identifier. Optional for users who sign up via Email/Password.
     /// </summary>
-    [Required]
     [MaxLength(256)]
-    public string GoogleId { get; set; } = string.Empty;
+    public string? GoogleId { get; set; }
+
+    /// <summary>
+    /// Password hash for local authentication. Optional for users who sign up via Google.
+    /// </summary>
+    [MaxLength(512)]
+    public string? PasswordHash { get; set; }
 
     [Required]
     [MaxLength(256)]

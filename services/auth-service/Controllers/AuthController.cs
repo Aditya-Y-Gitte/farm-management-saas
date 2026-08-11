@@ -1,10 +1,8 @@
-using AuthService.Data;
-using AuthService.Models;
 using AuthService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using FarmManagement.SharedKernel.Auth;
+using AuthService.DTOs;
 
 namespace AuthService.Controllers;
 
@@ -12,22 +10,19 @@ namespace AuthService.Controllers;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IGoogleOAuthService _googleOAuthService;
+    private readonly IAuthenticationService _authenticationService;
     private readonly IJwtService _jwtService;
-    private readonly AuthDbContext _context;
     private readonly ILogger<AuthController> _logger;
     private readonly IWebHostEnvironment _environment;
 
     public AuthController(
-        IGoogleOAuthService googleOAuthService,
+        IAuthenticationService authenticationService,
         IJwtService jwtService,
-        AuthDbContext context,
         ILogger<AuthController> logger,
         IWebHostEnvironment environment)
     {
-        _googleOAuthService = googleOAuthService;
+        _authenticationService = authenticationService;
         _jwtService = jwtService;
-        _context = context;
         _logger = logger;
         _environment = environment;
     }
@@ -39,67 +34,49 @@ public class AuthController : ControllerBase
     [HttpPost("google")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.IdToken))
+        var (response, errorMessage) = await _authenticationService.GoogleLoginAsync(request);
+        
+        if (errorMessage != null || response == null)
         {
-            return BadRequest(new { message = "Google ID token is required." });
+            return Unauthorized(new { message = errorMessage });
         }
 
-        var googleUser = await _googleOAuthService.ValidateGoogleTokenAsync(request.IdToken);
-        if (googleUser == null)
+        SetRefreshTokenCookie(response.RefreshToken);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Registers a new user via Email and Password.
+    /// </summary>
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+    {
+        var (response, errorMessage) = await _authenticationService.RegisterAsync(request);
+        
+        if (errorMessage != null || response == null)
         {
-            return Unauthorized(new { message = "Invalid Google token." });
+            return BadRequest(new { message = errorMessage });
         }
 
-        // Find or create user
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.GoogleId == googleUser.GoogleId);
-        if (user == null)
+        SetRefreshTokenCookie(response.RefreshToken);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Authenticates a user with Email and Password.
+    /// </summary>
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    {
+        var (response, errorMessage) = await _authenticationService.LoginAsync(request);
+        
+        if (errorMessage != null || response == null)
         {
-            user = new User
-            {
-                GoogleId = googleUser.GoogleId,
-                Email = googleUser.Email,
-                DisplayName = googleUser.DisplayName,
-                AvatarUrl = googleUser.AvatarUrl,
-                Role = "owner"
-            };
-            // For new users, TenantId = their own UserId (they own their farm)
-            user.TenantId = user.Id.ToString();
-            _context.Users.Add(user);
-            _logger.LogInformation("Created new user: {Email}, TenantId: {TenantId}", user.Email, user.TenantId);
-        }
-        else
-        {
-            // Update profile info on each login
-            user.DisplayName = googleUser.DisplayName;
-            user.AvatarUrl = googleUser.AvatarUrl;
-            user.LastLoginAt = DateTime.UtcNow;
-            _logger.LogInformation("Existing user logged in: {Email}", user.Email);
+            return Unauthorized(new { message = errorMessage });
         }
 
-        await _context.SaveChangesAsync();
-
-        // Housekeeping: purge expired tokens to keep the DB lean (important on free-tier)
-        await _jwtService.CleanupExpiredTokensAsync(user.Id);
-
-        var accessToken = _jwtService.GenerateAccessToken(user);
-        var refreshToken = await _jwtService.GenerateRefreshTokenAsync(user);
-
-        // Set refresh token in httpOnly cookie
-        SetRefreshTokenCookie(refreshToken);
-
-        return Ok(new AuthResponse
-        {
-            AccessToken = accessToken,
-            User = new UserDto
-            {
-                Id = user.Id.ToString(),
-                Email = user.Email,
-                DisplayName = user.DisplayName,
-                AvatarUrl = user.AvatarUrl,
-                TenantId = user.TenantId,
-                Role = user.Role
-            }
-        });
+        SetRefreshTokenCookie(response.RefreshToken);
+        return Ok(response);
     }
 
     /// <summary>
@@ -187,27 +164,4 @@ public class AuthController : ControllerBase
         };
         Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
     }
-}
-
-// --- Request / Response DTOs ---
-
-public class GoogleLoginRequest
-{
-    public string IdToken { get; set; } = string.Empty;
-}
-
-public class AuthResponse
-{
-    public string AccessToken { get; set; } = string.Empty;
-    public UserDto User { get; set; } = null!;
-}
-
-public class UserDto
-{
-    public string Id { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string DisplayName { get; set; } = string.Empty;
-    public string AvatarUrl { get; set; } = string.Empty;
-    public string TenantId { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
 }
