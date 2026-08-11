@@ -16,7 +16,7 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
     useEffect(() => {
         const fetchLivestocks = async () => {
             const data = await getLivestocks();
-            setLivestocks(data);
+            setLivestocks(data.items);
         };
         fetchLivestocks();
     }, [refresh]);

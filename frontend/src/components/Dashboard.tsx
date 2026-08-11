@@ -21,10 +21,10 @@ const Dashboard: React.FC = () => {
             const dairyData = await getDairies();
 
             // At-a-Glance Summary
-            setLivestockCount(livestockData.length);
+            setLivestockCount(livestockData.items.length);
 
             const today = new Date().toISOString().split('T')[0];
-            const todayMilk = dairyData
+            const todayMilk = dairyData.items
                 .filter(d => d.date.split('T')[0] === today)
                 .reduce((acc, curr) => acc + curr.milkYield, 0);
             setTotalMilkToday(todayMilk);
@@ -33,14 +33,14 @@ const Dashboard: React.FC = () => {
             setActiveAlerts(3);
 
             // Livestock Analytics
-            const livestockCountByType = livestockData.reduce((acc, curr) => {
+            const livestockCountByType = livestockData.items.reduce((acc, curr) => {
                 acc[curr.species] = (acc[curr.species] || 0) + 1;
                 return acc;
             }, {} as { [key: string]: number });
             setLivestockByType(Object.entries(livestockCountByType).map(([name, count]) => ({ name, count })));
 
             // Dairy Analytics
-            const milkByDate = dairyData.reduce((acc, curr) => {
+            const milkByDate = dairyData.items.reduce((acc, curr) => {
                 const date = new Date(curr.date).toLocaleDateString();
                 acc[date] = (acc[date] || 0) + curr.milkYield;
                 return acc;

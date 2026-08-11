@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthContext';
-import config from '../../config/app.config';
+import { useAuth } from '../auth/AuthContext';
+import config from '../config/app.config';
 import './LoginPage.css';
 
 declare global {

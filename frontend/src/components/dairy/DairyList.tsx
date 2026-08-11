@@ -16,7 +16,7 @@ const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
     useEffect(() => {
         const fetchDairies = async () => {
             const data = await getDairies();
-            setDairies(data);
+            setDairies(data.items);
         };
         fetchDairies();
     }, [refresh]);
