@@ -1,5 +1,6 @@
 using AuthService.Data;
 using AuthService.Services;
+using AuthService.Repositories;
 using FarmManagement.SharedKernel.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -25,9 +26,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AuthDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// --- Services ---
+// --- Repositories & Services ---
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IGoogleOAuthService, GoogleOAuthService>();
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 // --- JWT Authentication ---
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
@@ -95,14 +98,21 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// --- Auto-migrate on startup ---
-using (var scope = app.Services.CreateScope())
+// --- Auto-migrate on startup using Evolve ---
+try
 {
-    var context = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
-    if (context.Database.GetPendingMigrations().Any())
+    var evolveConnection = new Npgsql.NpgsqlConnection(connectionString);
+    var evolve = new EvolveDb.Evolve(evolveConnection, msg => Console.WriteLine(msg))
     {
-        context.Database.Migrate();
-    }
+        Locations = new[] { "db/migrations" },
+        IsEraseDisabled = true,
+    };
+    evolve.Migrate();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Database migration failed: " + ex.Message);
+    throw;
 }
 
 app.Run();

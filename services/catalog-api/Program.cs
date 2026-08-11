@@ -78,13 +78,21 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
 
-// --- Auto-migrate ---
-// Uses Migrate() so that future schema changes apply automatically on Neon/Render.
-// EnsureCreated() only creates the schema once and never runs later migrations.
-using (var scope = app.Services.CreateScope())
+// --- Auto-migrate on startup using Evolve ---
+try
 {
-    var context = scope.ServiceProvider.GetRequiredService<CatalogDbContext>();
-    context.Database.Migrate();
+    var evolveConnection = new Npgsql.NpgsqlConnection(connectionString);
+    var evolve = new EvolveDb.Evolve(evolveConnection, msg => Console.WriteLine(msg))
+    {
+        Locations = new[] { "db/migrations" },
+        IsEraseDisabled = true,
+    };
+    evolve.Migrate();
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Database migration failed: " + ex.Message);
+    throw;
 }
 
 app.Run();
