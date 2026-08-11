@@ -2,10 +2,26 @@
   command = "npm run build"
   publish = "build"
 
-# You need to set the REACT_APP_API_URL environment variable in Netlify
-# to the URL of your Heroku backend.
-# [[redirects]]
-#   from = "/api/*"
-#   to = "YOUR_BACKEND_URL/:splat"
-#   status = 200
-#   force = true
+# -----------------------------------------------------------------
+# API proxy: forward /api/* to the Render API Gateway
+# This keeps cookies on the same effective origin (farm.netlify.app)
+# so SameSite=Lax works in production without needing SameSite=None.
+#
+# Required Netlify env vars:
+#   REACT_APP_API_URL  = ""  (empty string — frontend uses relative paths)
+#   API_GATEWAY_URL    = "https://farm-api-gateway.onrender.com"
+# -----------------------------------------------------------------
+[[redirects]]
+  from = "/api/*"
+  to = ":API_GATEWAY_URL/api/:splat"
+  status = 200
+  force = true
+
+# -----------------------------------------------------------------
+# SPA routing: all other routes fallback to index.html
+# Must come AFTER the /api/* rule so it does not catch API calls.
+# -----------------------------------------------------------------
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
