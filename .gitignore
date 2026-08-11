@@ -1,41 +1,95 @@
-# =========================
-# Environments & Secrets
-# =========================
+# =============================================================================
+# SECRETS & ENVIRONMENT VARIABLES
+# =============================================================================
+# Real .env files — NEVER commit these
 .env
 .env.*
-!.env.example
-*/.env
-appsettings.Development.json
+!.env.example        # only the example template is safe to commit
 
-# =========================
-# OS & Editor
-# =========================
+# Per-directory .env files (frontend, services, etc.)
+*/.env
+*/.env.*
+!*/.env.example
+
+# .NET User Secrets (dotnet user-secrets store)
+# These live in %APPDATA%/Microsoft/UserSecrets but sometimes get added locally
+secrets.json
+.user-secrets.json
+**/secrets.json
+
+# Machine-local appsettings overrides (.NET convention)
+# appsettings.Development.json often contains real local DB passwords
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+appsettings.*.Local.json
+# NOTE: backend/appsettings.Development.json was previously committed — see
+# "git rm --cached backend/appsettings.Development.json" in SECURITY.md
+
+# =============================================================================
+# SSL / TLS PRIVATE KEYS & CERTIFICATES
+# =============================================================================
+*.pfx
+*.p12
+*.pem
+*.key
+*.crt
+*.cer
+*.der
+*.csr
+*.publishsettings
+
+# =============================================================================
+# OS & EDITOR
+# =============================================================================
 .DS_Store
 Thumbs.db
+Desktop.ini
 .vscode/
 .idea/
 .vs/
 *.user
 *.suo
+*.swp
+*~
 
-# =========================
-# Backend (.NET Core)
-# =========================
+# =============================================================================
+# BACKEND (.NET)
+# =============================================================================
 [Bb]in/
 [Oo]bj/
 TestResults/
-*.pfx
-*.publishsettings
+*.nupkg
+*.snupkg
+project.lock.json
 
-# =========================
-# Frontend (React / Node)
-# =========================
+# =============================================================================
+# FRONTEND (React / Node)
+# =============================================================================
 node_modules/
 build/
 dist/
+.cache/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 coverage/
 .pnp.*
+*.tsbuildinfo
+
+# =============================================================================
+# DOCKER
+# =============================================================================
+# Override files often contain local port mappings or secret env vars
+docker-compose.override.yml
+docker-compose.local.yml
+
+# =============================================================================
+# LOGS & DIAGNOSTICS
+# =============================================================================
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
