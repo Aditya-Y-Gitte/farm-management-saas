@@ -43,18 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// --- CORS ---
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowGateway", policy =>
-    {
-        var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
-            ?? new[] { "http://localhost:5000", "http://api-gateway:5000" };
-        policy.WithOrigins(origins)
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
+// CORS is handled at the API Gateway level to prevent duplicate header errors.
 
 // --- Controllers & Swagger ---
 builder.Services.AddControllers();
@@ -72,7 +61,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseCors("AllowGateway");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

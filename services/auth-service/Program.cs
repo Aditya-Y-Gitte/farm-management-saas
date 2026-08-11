@@ -53,26 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// --- CORS ---
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        // In production: set FRONTEND_URL env var to your deployed frontend origin
-        var configured = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>()
-            ?? new[] { "http://localhost:3000", "http://localhost:5173" };
-
-        var frontendUrl = builder.Configuration["FrontendUrl"];
-        var origins = string.IsNullOrEmpty(frontendUrl)
-            ? configured
-            : configured.Append(frontendUrl).Distinct().ToArray();
-
-        policy.WithOrigins(origins)
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
-});
+// CORS is handled at the API Gateway level to prevent duplicate header errors.
 
 // --- Controllers & Swagger ---
 builder.Services.AddControllers();
@@ -92,7 +73,6 @@ if (app.Environment.IsDevelopment())
 // ForwardedHeaders MUST come first in the pipeline
 app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

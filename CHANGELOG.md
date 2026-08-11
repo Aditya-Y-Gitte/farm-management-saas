@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Database Migrations (Legacy)**: Switched from `EnsureCreated()` to explicit EF Core Migrations (`Database.Migrate()`) across all microservices.
 
 ### Fixed
+- **Docker Publishing**: Updated `.csproj` files across backend services to correctly include the Evolve database migration scripts (`db/migrations/*.sql`) in the published container output.
+- **CORS Configuration**: Removed duplicate `UseCors` middleware from downstream microservices to prevent multiple `Access-Control-Allow-Origin` headers. CORS is now strictly handled at the API Gateway level.
+- **Frontend Environment**: Updated local frontend `.env` configuration to correctly route API calls through the API Gateway rather than attempting a direct connection on an incorrect port.
 - **TypeScript Compilation**: Fixed generic mapping errors in `DairyList`, `LivestockList`, and `Dashboard` when processing `PaginatedResponse` types from the API.
 - **Docker Healthchecks**: Installed `curl` in `.NET 10` ASPNET runtime images (`auth-service`, `catalog-api`, `production-api`, `api-gateway`) to ensure Docker-compose health checks succeed.
 - **EF Core Migrations**: Generated the missing `InitialCreate` migration for `auth-service` to prevent startup crashes when evaluating migration history.
