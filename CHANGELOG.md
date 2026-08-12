@@ -14,6 +14,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Data Access Layer**: Repositories operate solely on domain entities and return DTO aggregates (e.g. `DairySummaryDto`) without layering violations.
 - **Shared Kernel**: Introduced a universal `PagedResponse<T>` generic data contract to standardize paginated list shapes across all microservices.
 
+### Added
+- **Indian Farmer DB Schemas**: Expanded backend schemas to accommodate Indian dairy farming use cases:
+  - Added `TagNumber`, `Status`, `AcquisitionType`, `PurchasePrice` and `PurchaseDate` to `Livestock`.
+  - Created `HealthRecord` to track veterinary checkups, medications, and costs.
+  - Created `BreedingCycle` to track heat dates, insemination, pregnancy checks, and calving.
+  - Updated `Dairy` to include `Session` (Morning/Evening) and replaced protein metrics with `SnfContent` (Solid-Not-Fat) standard.
+  - Created `FeedConsumption` to track individual and herd-level feed usage and costs.
+- **Finance API**: Scaffolded a brand new `finance-api` microservice to track generalized `Income` and `Expense` ledgers. Fully integrated with JWT tenant isolation, isolated `finance_db`, and API Gateway routing.
+- **Architecture Guidelines**: Codified microservices and N-Tier standards into a root `BACKEND_GUIDELINES.md` to enforce consistency.
+
+### Changed
+- **DTO Mapping**: Stripped out manual DTO-to-Entity mappings (`FromEntity()`) across `catalog-api` and `production-api` and adopted **Mapster** (`.Adapt<T>()`) for clean, high-performance object mapping.
+
 ## [0.1.0] - 2026-08-11
 
 ### Added
