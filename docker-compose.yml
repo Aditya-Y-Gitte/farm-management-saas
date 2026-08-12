@@ -61,6 +61,25 @@ services:
       timeout: 5s
       retries: 5
 
+  finance-db:
+    image: postgres:16-alpine
+    container_name: farm-finance-db
+    environment:
+      POSTGRES_DB: finance_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${FINANCE_DB_PASSWORD:-postgres}
+    ports:
+      - "5436:5432"
+    volumes:
+      - finance-db-data:/var/lib/postgresql/data
+    networks:
+      - farm-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d finance_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # =============================================
   # Auth Service
   # =============================================
@@ -157,6 +176,30 @@ services:
       retries: 3
 
   # =============================================
+  # Finance API (Income/Expense Ledger)
+  # =============================================
+  finance-api:
+    build:
+      context: .
+      dockerfile: services/finance-api/Dockerfile
+    container_name: farm-finance-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Host=finance-db;Port=5432;Database=finance_db;Username=postgres;Password=${FINANCE_DB_PASSWORD:-postgres};MaxPoolSize=50"
+      Jwt__Key: ${JWT_SECRET_KEY}
+      Jwt__Issuer: farm-management-auth
+      Jwt__Audience: farm-management-users
+      AllowedOrigins__0: http://api-gateway:5000
+    ports:
+      - "5004:8080"
+    depends_on:
+      finance-db:
+        condition: service_healthy
+    networks:
+      - farm-network
+    restart: unless-stopped
+
+  # =============================================
   # API Gateway (YARP Reverse Proxy)
   # =============================================
   api-gateway:
@@ -179,6 +222,7 @@ services:
       ReverseProxy__Clusters__auth-cluster__Destinations__auth-service__Address: http://auth-service:5003
       ReverseProxy__Clusters__catalog-cluster__Destinations__catalog-api__Address: http://catalog-api:5001
       ReverseProxy__Clusters__production-cluster__Destinations__production-api__Address: http://production-api:5002
+      ReverseProxy__Clusters__finance-cluster__Destinations__finance-api__Address: http://finance-api:8080
     ports:
       - "5000:5000"
     depends_on:
@@ -188,6 +232,8 @@ services:
         condition: service_healthy
       production-api:
         condition: service_healthy
+      finance-api:
+        condition: service_started
     networks:
       - farm-network
     restart: unless-stopped
@@ -217,6 +263,8 @@ volumes:
   production-db-data:
     driver: local
   auth-db-data:
+    driver: local
+  finance-db-data:
     driver: local
 
 # =============================================
