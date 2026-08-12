@@ -1,15 +1,20 @@
-using ProductionApi.Models;
-using ProductionApi.Repositories;
+using FarmManagement.SharedKernel.Models;
+using ProductionApi.DTOs;
 
 namespace ProductionApi.Services;
 
+/// <summary>
+/// Business logic contract for Dairy production management.
+/// All methods accept and return DTOs — the domain model (Dairy) does not cross this boundary.
+/// Note: no import of ProductionApi.Repositories here — that was a layer inversion bug.
+/// </summary>
 public interface IDairyService
 {
-    Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
-    Task<Dairy?> GetByIdAsync(Guid id);
-    Task<Dairy?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date);
-    Task<Dairy> CreateAsync(Dairy dairy);
-    Task<Dairy> UpdateAsync(Dairy dairy);
+    Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize);
+    Task<DairyDto?> GetByIdAsync(Guid id);
+    Task<DairyDto?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date);
+    Task<DairyDto> CreateAsync(CreateDairyRequest request);
+    Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request);
     Task<bool> DeleteAsync(Guid id);
-    Task<DairySummary> GetSummaryAsync();
+    Task<DairySummaryDto> GetSummaryAsync();
 }

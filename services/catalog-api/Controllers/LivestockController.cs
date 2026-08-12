@@ -1,10 +1,15 @@
-using CatalogApi.Models;
+using CatalogApi.DTOs;
 using CatalogApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogApi.Controllers;
 
+/// <summary>
+/// Presentation layer for the Livestock domain.
+/// Responsibilities: routing, HTTP status mapping, and delegating to ILivestockService.
+/// Contains zero business logic and zero database access.
+/// </summary>
 [ApiController]
 [Route("api/catalog/[controller]")]
 [Authorize]
@@ -20,7 +25,7 @@ public class LivestockController : ControllerBase
     }
 
     /// <summary>
-    /// Get all livestock with pagination. Automatically scoped by tenant.
+    /// Returns a paginated list of livestock for the authenticated tenant.
     /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
@@ -28,43 +33,44 @@ public class LivestockController : ControllerBase
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
 
-        var (items, totalCount) = await _livestockService.GetAllAsync(page, pageSize);
-
-        return Ok(new
-        {
-            items,
-            totalCount,
-            page,
-            pageSize,
-            totalPages = (int)Math.Ceiling((double)totalCount / pageSize)
-        });
+        var result = await _livestockService.GetAllAsync(page, pageSize);
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Returns a single livestock record by ID.
+    /// </summary>
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var record = await _livestockService.GetByIdAsync(id);
-        if (record == null) return NotFound();
+        if (record is null) return NotFound();
         return Ok(record);
     }
 
+    /// <summary>
+    /// Creates a new livestock record for the authenticated tenant.
+    /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Livestock livestock)
+    public async Task<IActionResult> Create([FromBody] CreateLivestockRequest request)
     {
-        var created = await _livestockService.CreateAsync(livestock);
+        var created = await _livestockService.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+    /// <summary>
+    /// Updates an existing livestock record. ID in URL must match body.
+    /// </summary>
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Livestock livestock)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateLivestockRequest request)
     {
-        if (id != livestock.Id)
-            return BadRequest(new { message = "ID in URL does not match ID in body." });
-
-        var updated = await _livestockService.UpdateAsync(livestock);
+        var updated = await _livestockService.UpdateAsync(id, request);
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Deletes a livestock record by ID.
+    /// </summary>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
@@ -74,7 +80,8 @@ public class LivestockController : ControllerBase
     }
 
     /// <summary>
-    /// Count endpoint for the API Gateway metrics aggregation.
+    /// Returns the total livestock count for this tenant.
+    /// Consumed by the API Gateway metrics aggregation endpoint.
     /// </summary>
     [HttpGet("count")]
     public async Task<IActionResult> GetCount()

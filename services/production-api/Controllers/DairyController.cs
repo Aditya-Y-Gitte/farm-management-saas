@@ -1,11 +1,15 @@
-using ProductionApi.Models;
+using ProductionApi.DTOs;
 using ProductionApi.Services;
-using ProductionApi.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ProductionApi.Controllers;
 
+/// <summary>
+/// Presentation layer for the Dairy production domain.
+/// Responsibilities: routing, HTTP status mapping, delegating to IDairyService.
+/// Contains zero business logic and zero database access.
+/// </summary>
 [ApiController]
 [Route("api/production/[controller]")]
 [Authorize]
@@ -20,57 +24,64 @@ public class DairyController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Returns a paginated list of dairy records for the authenticated tenant.
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
 
-        var (items, totalCount) = await _dairyService.GetAllAsync(page, pageSize);
-
-        return Ok(new
-        {
-            items,
-            totalCount,
-            page,
-            pageSize,
-            totalPages = (int)Math.Ceiling((double)totalCount / pageSize)
-        });
+        var result = await _dairyService.GetAllAsync(page, pageSize);
+        return Ok(result);
     }
 
+    /// <summary>
+    /// Returns a single dairy record by ID.
+    /// </summary>
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var record = await _dairyService.GetByIdAsync(id);
-        if (record == null) return NotFound();
+        if (record is null) return NotFound();
         return Ok(record);
     }
 
+    /// <summary>
+    /// Returns a dairy record for a specific livestock on a specific date.
+    /// </summary>
     [HttpGet("livestock/{livestockId:guid}/date")]
     public async Task<IActionResult> GetByLivestockIdAndDate(Guid livestockId, [FromQuery] DateTime date)
     {
         var record = await _dairyService.GetByLivestockIdAndDateAsync(livestockId, date);
-        if (record == null) return NotFound();
+        if (record is null) return NotFound();
         return Ok(record);
     }
 
+    /// <summary>
+    /// Creates a new dairy production record.
+    /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Dairy dairy)
+    public async Task<IActionResult> Create([FromBody] CreateDairyRequest request)
     {
-        var created = await _dairyService.CreateAsync(dairy);
+        var created = await _dairyService.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
+    /// <summary>
+    /// Updates an existing dairy record.
+    /// </summary>
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Dairy dairy)
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateDairyRequest request)
     {
-        if (id != dairy.Id)
-            return BadRequest(new { message = "ID in URL does not match ID in body." });
-
-        var updated = await _dairyService.UpdateAsync(dairy);
+        var updated = await _dairyService.UpdateAsync(id, request);
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Deletes a dairy record by ID.
+    /// </summary>
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
@@ -80,7 +91,8 @@ public class DairyController : ControllerBase
     }
 
     /// <summary>
-    /// Summary endpoint for the API Gateway metrics aggregation.
+    /// Returns aggregated production statistics.
+    /// Consumed by the API Gateway metrics aggregation endpoint.
     /// </summary>
     [HttpGet("summary")]
     public async Task<IActionResult> GetSummary()

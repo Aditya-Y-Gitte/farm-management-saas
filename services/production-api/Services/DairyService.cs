@@ -1,68 +1,105 @@
+using FarmManagement.SharedKernel.Models;
+using ProductionApi.DTOs;
 using ProductionApi.Models;
 using ProductionApi.Repositories;
 
 namespace ProductionApi.Services;
 
+/// <summary>
+/// Dairy production business logic service.
+/// Owns mapping between DTOs and domain entities.
+/// Owns business rules (e.g. duplicate record prevention per livestock per day).
+/// Does not know about HTTP or EF Core.
+/// </summary>
 public class DairyService : IDairyService
 {
-    private readonly IDairyRepository _dairyRepository;
+    private readonly IDairyRepository _repository;
     private readonly ILogger<DairyService> _logger;
 
-    public DairyService(IDairyRepository dairyRepository, ILogger<DairyService> logger)
+    public DairyService(IDairyRepository repository, ILogger<DairyService> logger)
     {
-        _dairyRepository = dairyRepository;
+        _repository = repository;
         _logger = logger;
     }
 
-    public async Task<Dairy> CreateAsync(Dairy dairy)
+    public async Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize)
     {
-        _logger.LogInformation("Checking for existing dairy record: LivestockId={LivestockId}, Date={Date}",
-            dairy.LivestockId, dairy.Date);
+        _logger.LogInformation("Fetching dairy records. Page: {Page}, PageSize: {PageSize}", page, pageSize);
+        var (items, totalCount) = await _repository.GetAllAsync(page, pageSize);
+        var dtos = items.Select(DairyDto.FromEntity);
+        return PagedResponse<DairyDto>.Create(dtos, totalCount, page, pageSize);
+    }
 
-        var existing = await _dairyRepository.GetByLivestockIdAndDateAsync(dairy.LivestockId, dairy.Date);
+    public async Task<DairyDto?> GetByIdAsync(Guid id)
+    {
+        _logger.LogInformation("Fetching dairy record: {Id}", id);
+        var entity = await _repository.GetByIdAsync(id);
+        return entity is null ? null : DairyDto.FromEntity(entity);
+    }
+
+    public async Task<DairyDto?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
+    {
+        var entity = await _repository.GetByLivestockIdAndDateAsync(livestockId, date);
+        return entity is null ? null : DairyDto.FromEntity(entity);
+    }
+
+    public async Task<DairyDto> CreateAsync(CreateDairyRequest request)
+    {
+        // Business rule: one dairy record per livestock per day.
+        var existing = await _repository.GetByLivestockIdAndDateAsync(request.LivestockId, request.Date);
         if (existing != null)
         {
-            _logger.LogWarning("Duplicate dairy record for livestock {LivestockId} on {Date}",
-                dairy.LivestockId, dairy.Date);
-            throw new ArgumentException("Dairy record for this livestock on this date already exists.");
+            _logger.LogWarning("Duplicate dairy record. LivestockId: {LivestockId}, Date: {Date}",
+                request.LivestockId, request.Date.Date);
+            throw new ArgumentException(
+                $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' already exists.");
         }
 
-        _logger.LogInformation("Creating dairy record for livestock {LivestockId}", dairy.LivestockId);
-        return await _dairyRepository.CreateAsync(dairy);
+        var entity = new Dairy
+        {
+            LivestockId = request.LivestockId,
+            Date = request.Date,
+            MilkYield = request.MilkYield,
+            FatContent = request.FatContent,
+            ProteinContent = request.ProteinContent,
+            Quality = request.Quality
+        };
+
+        _logger.LogInformation("Creating dairy record for livestock {LivestockId}", entity.LivestockId);
+        var created = await _repository.CreateAsync(entity);
+        return DairyDto.FromEntity(created);
+    }
+
+    public async Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request)
+    {
+        var entity = await _repository.GetByIdAsync(id);
+        if (entity is null)
+        {
+            throw new KeyNotFoundException($"Dairy record with id '{id}' was not found.");
+        }
+
+        // Apply only mutable fields. TenantId and Id remain immutable.
+        entity.LivestockId = request.LivestockId;
+        entity.Date = request.Date;
+        entity.MilkYield = request.MilkYield;
+        entity.FatContent = request.FatContent;
+        entity.ProteinContent = request.ProteinContent;
+        entity.Quality = request.Quality;
+
+        _logger.LogInformation("Updating dairy record: {Id}", id);
+        var updated = await _repository.UpdateAsync(entity);
+        return DairyDto.FromEntity(updated);
     }
 
     public async Task<bool> DeleteAsync(Guid id)
     {
         _logger.LogInformation("Deleting dairy record: {Id}", id);
-        return await _dairyRepository.DeleteAsync(id);
+        return await _repository.DeleteAsync(id);
     }
 
-    public async Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize)
+    public async Task<DairySummaryDto> GetSummaryAsync()
     {
-        _logger.LogInformation("Getting dairy records. Page: {Page}, PageSize: {PageSize}", page, pageSize);
-        return await _dairyRepository.GetAllAsync(page, pageSize);
-    }
-
-    public async Task<Dairy?> GetByIdAsync(Guid id)
-    {
-        _logger.LogInformation("Getting dairy record: {Id}", id);
-        return await _dairyRepository.GetByIdAsync(id);
-    }
-
-    public async Task<Dairy?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
-    {
-        return await _dairyRepository.GetByLivestockIdAndDateAsync(livestockId, date);
-    }
-
-    public async Task<Dairy> UpdateAsync(Dairy dairy)
-    {
-        _logger.LogInformation("Updating dairy record: {Id}", dairy.Id);
-        return await _dairyRepository.UpdateAsync(dairy);
-    }
-
-    public async Task<DairySummary> GetSummaryAsync()
-    {
-        _logger.LogInformation("Getting dairy summary");
-        return await _dairyRepository.GetSummaryAsync();
+        _logger.LogInformation("Fetching dairy summary");
+        return await _repository.GetSummaryAsync();
     }
 }

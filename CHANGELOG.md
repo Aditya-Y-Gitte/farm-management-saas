@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Refactored
+- **N-Tier Architecture (catalog-api, production-api)**: Promoted both microservices to strict enterprise N-tier architectures.
+  - **Presentation Layer**: Extracted domain entities out of the controller boundary. Introduced per-service DTOs (`CreateLivestockRequest`, `UpdateDairyRequest`, etc.) with strict input validation attributes.
+  - **Business Logic Layer**: Controllers are now purely routers. Services orchestrate DTO-to-Domain mapping and encapsulate all complex business rules (e.g. enforcing duplicate naming or per-day production limits).
+  - **Data Access Layer**: Repositories operate solely on domain entities and return DTO aggregates (e.g. `DairySummaryDto`) without layering violations.
+- **Shared Kernel**: Introduced a universal `PagedResponse<T>` generic data contract to standardize paginated list shapes across all microservices.
+
+## [0.1.0] - 2026-08-11
+
 ### Added
 - **Local Authentication**: Added Email/Password authentication support with BCrypt password hashing alongside existing Google OAuth.
 - **N-Tier Architecture**: Refactored `auth-service` to strictly adhere to N-Tier Architecture, separating Presentation (Controllers/DTOs), Business Logic (Services), and Data Access (Repositories).

@@ -1,7 +1,14 @@
+using ProductionApi.DTOs;
 using ProductionApi.Models;
 
 namespace ProductionApi.Repositories;
 
+/// <summary>
+/// Data access contract for the Dairy domain.
+/// Works exclusively on domain models (Dairy) — DTOs are the service layer's concern.
+/// Exception: DairySummaryDto is used here because it's a pure aggregation result
+/// with no domain identity, making it appropriate for repository output.
+/// </summary>
 public interface IDairyRepository
 {
     Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
@@ -10,14 +17,5 @@ public interface IDairyRepository
     Task<Dairy> CreateAsync(Dairy dairy);
     Task<Dairy> UpdateAsync(Dairy dairy);
     Task<bool> DeleteAsync(Guid id);
-    Task<DairySummary> GetSummaryAsync();
-}
-
-public class DairySummary
-{
-    public decimal TotalMilkToday { get; set; }
-    public decimal TotalMilkThisWeek { get; set; }
-    public int TotalRecords { get; set; }
-    public decimal AverageFatContent { get; set; }
-    public decimal AverageProteinContent { get; set; }
+    Task<DairySummaryDto> GetSummaryAsync();
 }

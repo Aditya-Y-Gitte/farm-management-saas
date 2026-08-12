@@ -1,9 +1,15 @@
 using ProductionApi.Data;
+using ProductionApi.DTOs;
 using ProductionApi.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ProductionApi.Repositories;
 
+/// <summary>
+/// EF Core implementation of the Dairy repository.
+/// Works on domain models (Dairy). Returns DairySummaryDto for aggregate queries
+/// because these are projections with no entity identity.
+/// </summary>
 public class DairyRepository : IDairyRepository
 {
     private readonly ProductionDbContext _context;
@@ -54,14 +60,14 @@ public class DairyRepository : IDairyRepository
     public async Task<bool> DeleteAsync(Guid id)
     {
         var dairy = await _context.Dairies.FindAsync(id);
-        if (dairy == null) return false;
+        if (dairy is null) return false;
 
         _context.Dairies.Remove(dairy);
         await _context.SaveChangesAsync();
         return true;
     }
 
-    public async Task<DairySummary> GetSummaryAsync()
+    public async Task<DairySummaryDto> GetSummaryAsync()
     {
         var today = DateTime.UtcNow.Date;
         var weekStart = today.AddDays(-(int)today.DayOfWeek);
@@ -81,7 +87,7 @@ public class DairyRepository : IDairyRepository
             ? await query.AverageAsync(d => d.ProteinContent)
             : 0;
 
-        return new DairySummary
+        return new DairySummaryDto
         {
             TotalMilkToday = todayMilk,
             TotalMilkThisWeek = weekMilk,

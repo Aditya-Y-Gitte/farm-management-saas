@@ -1,14 +1,18 @@
-using CatalogApi.Models;
+using CatalogApi.DTOs;
+using FarmManagement.SharedKernel.Models;
 
 namespace CatalogApi.Services;
 
+/// <summary>
+/// Business logic contract for Livestock management.
+/// All methods accept and return DTOs — the domain model (Livestock) does not cross this boundary.
+/// </summary>
 public interface ILivestockService
 {
-    Task<(IEnumerable<Livestock> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
-    Task<Livestock?> GetByIdAsync(Guid id);
-    Task<Livestock?> GetByNameAsync(string name);
-    Task<Livestock> CreateAsync(Livestock livestock);
-    Task<Livestock> UpdateAsync(Livestock livestock);
+    Task<PagedResponse<LivestockDto>> GetAllAsync(int page, int pageSize);
+    Task<LivestockDto?> GetByIdAsync(Guid id);
+    Task<LivestockDto> CreateAsync(CreateLivestockRequest request);
+    Task<LivestockDto> UpdateAsync(Guid id, UpdateLivestockRequest request);
     Task<bool> DeleteAsync(Guid id);
     Task<int> GetCountAsync();
 }
