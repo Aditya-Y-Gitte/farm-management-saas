@@ -15,6 +15,9 @@ builder.Services.AddDbContext<FinanceDbContext>((sp, options) =>
 });
 builder.Services.AddHttpContextAccessor();
 
+// Register Services
+builder.Services.AddScoped<FinanceApi.Services.IFinanceService, FinanceApi.Services.FinanceService>();
+
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
