@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createDairy } from '../../services/dairyService';
-import { Dairy } from '../../types/dairy';
+import { CreateDairyRequest } from '../../types/dairy';
+import { DAIRY_SESSIONS, DAIRY_QUALITIES } from '../../constants/appConstants';
 import './Dairy.css';
 
 interface DairyFormProps {
@@ -11,63 +12,96 @@ interface DairyFormProps {
 
 const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
     const { t } = useTranslation();
-    const [livestockId, setLivestockId] = useState('');
-    const [date, setDate] = useState('');
-    const [milkYield, setMilkYield] = useState(0);
-    const [fatContent, setFatContent] = useState(0);
-    const [proteinContent, setProteinContent] = useState(0);
-    const [quality, setQuality] = useState('');
+    const [formData, setFormData] = useState<CreateDairyRequest>({
+        livestockId: '',
+        date: '',
+        session: DAIRY_SESSIONS[0],
+        milkYield: 0,
+        fatContent: 0,
+        snfContent: 0,
+        quality: DAIRY_QUALITIES[1] // 'Good'
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState('');
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'number' ? parseFloat(value) || 0 : value
+        }));
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const newDairy: Omit<Dairy, 'id'> = {
-            livestockId,
-            date,
-            milkYield,
-            fatContent,
-            proteinContent,
-            quality
-        };
-        await createDairy(newDairy);
-        onDairyCreated();
-        // clear form
-        setLivestockId('');
-        setDate('');
-        setMilkYield(0);
-        setFatContent(0);
-        setProteinContent(0);
-        setQuality('');
+        setError('');
+        setIsSubmitting(true);
+        try {
+            await createDairy(formData);
+            onDairyCreated();
+        } catch (err: any) {
+            setError(err.response?.data?.message || err.message || 'An error occurred');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
         <div className="dairy-form-container">
-            <h2>{t('Add Dairy Record')}</h2>
-            <form onSubmit={handleSubmit} className="dairy-form">
+            <h2 style={{ marginTop: 0, marginBottom: '24px' }}>{t('Add Dairy Record')}</h2>
+            
+            {error && <div className="login-error">{error}</div>}
+            
+            <form onSubmit={handleSubmit} className="grid grid-cols-2">
                 <div className="form-group">
-                    <label htmlFor="livestockId">{t('Livestock ID:')}</label>
-                    <input id="livestockId" type="text" value={livestockId} onChange={(e) => setLivestockId(e.target.value)} required />
+                    <label htmlFor="livestockId">{t('Livestock ID (Tag or GUID)')}</label>
+                    <input className="form-control" id="livestockId" name="livestockId" type="text" value={formData.livestockId} onChange={handleChange} required />
                 </div>
+                
                 <div className="form-group">
-                    <label htmlFor="date">{t('Date:')}</label>
-                    <input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                    <label htmlFor="date">{t('Date')}</label>
+                    <input className="form-control" id="date" name="date" type="date" value={formData.date} onChange={handleChange} required />
                 </div>
+                
                 <div className="form-group">
-                    <label htmlFor="milkYield">{t('Milk Yield:')}</label>
-                    <input id="milkYield" type="number" value={milkYield} onChange={(e) => setMilkYield(parseFloat(e.target.value))} required />
+                    <label htmlFor="session">{t('Session')}</label>
+                    <select className="form-control" id="session" name="session" value={formData.session} onChange={handleChange} required>
+                        {DAIRY_SESSIONS.map(session => (
+                            <option key={session} value={session}>{t(session)}</option>
+                        ))}
+                    </select>
                 </div>
+                
                 <div className="form-group">
-                    <label htmlFor="fatContent">{t('Fat Content:')}</label>
-                    <input id="fatContent" type="number" value={fatContent} onChange={(e) => setFatContent(parseFloat(e.target.value))} />
+                    <label htmlFor="milkYield">{t('Milk Yield (Liters)')}</label>
+                    <input className="form-control" id="milkYield" name="milkYield" type="number" step="0.1" value={formData.milkYield || ''} onChange={handleChange} required />
                 </div>
+                
                 <div className="form-group">
-                    <label htmlFor="proteinContent">{t('Protein Content:')}</label>
-                    <input id="proteinContent" type="number" value={proteinContent} onChange={(e) => setProteinContent(parseFloat(e.target.value))} />
+                    <label htmlFor="fatContent">{t('Fat Content (%)')}</label>
+                    <input className="form-control" id="fatContent" name="fatContent" type="number" step="0.1" value={formData.fatContent || ''} onChange={handleChange} />
                 </div>
+                
                 <div className="form-group">
-                    <label htmlFor="quality">{t('Quality:')}</label>
-                    <input id="quality" type="text" value={quality} onChange={(e) => setQuality(e.target.value)} />
+                    <label htmlFor="snfContent">{t('SNF Content (%)')}</label>
+                    <input className="form-control" id="snfContent" name="snfContent" type="number" step="0.1" value={formData.snfContent || ''} onChange={handleChange} />
                 </div>
-                <button type="submit" className="btn-primary">{t('Add')}</button>
+                
+                <div className="form-group">
+                    <label htmlFor="quality">{t('Quality')}</label>
+                    <select className="form-control" id="quality" name="quality" value={formData.quality} onChange={handleChange}>
+                        {DAIRY_QUALITIES.map(quality => (
+                            <option key={quality} value={quality}>{t(quality)}</option>
+                        ))}
+                    </select>
+                </div>
+                
+                <div style={{ gridColumn: '1 / -1', marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+                    <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ minWidth: '150px' }}>
+                        {isSubmitting ? t('Saving...') : t('Save Record')}
+                    </button>
+                </div>
             </form>
         </div>
     );
