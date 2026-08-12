@@ -34,7 +34,8 @@ const Dashboard: React.FC = () => {
 
             // Livestock Analytics
             const livestockCountByType = livestockData.items.reduce((acc, curr) => {
-                acc[curr.species] = (acc[curr.species] || 0) + 1;
+                const speciesName = t(curr.species);
+                acc[speciesName] = (acc[speciesName] || 0) + 1;
                 return acc;
             }, {} as { [key: string]: number });
             setLivestockByType(Object.entries(livestockCountByType).map(([name, count]) => ({ name, count })));

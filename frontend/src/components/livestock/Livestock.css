@@ -2,37 +2,84 @@
 
 .livestock-container,
 .livestock-form-container {
-    padding: 0; /* Let PageCommon handle padding */
+    padding: 0;
 }
 
 .livestock-container h2,
 .livestock-form-container h2 {
-    font-size: 1.5rem;
-    color: var(--primary);
-    margin-bottom: 24px;
+    font-size: var(--font-size-xl);
+    color: var(--text-main);
+    margin-bottom: var(--space-lg);
     font-weight: 700;
 }
 
-/* Rely on global table styles from App.css for .livestock-table */
+/* Table Responsive wrapper */
+.table-responsive {
+    overflow-x: auto;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-backdrop);
+    -webkit-backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
 .livestock-table {
     width: 100%;
+    border-collapse: collapse;
+    text-align: left;
 }
 
-/* Form Styles */
-.livestock-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.livestock-table th {
+    background-color: var(--bg-alt);
+    padding: var(--space-md);
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.livestock-table td {
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
 }
 
-/* Input and label styles are inherited from App.css */
+.livestock-table tr:last-child td {
+    border-bottom: none;
+}
 
-.livestock-form button {
-    margin-top: 12px;
+.livestock-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-active {
+    background-color: var(--primary-light);
+    color: var(--primary-hover);
+}
+
+.status-sold {
+    background-color: #fef3c7;
+    color: var(--warning);
+}
+
+.status-deceased {
+    background-color: #fee2e2;
+    color: var(--danger);
+}
+
+.text-center {
+    text-align: center;
 }

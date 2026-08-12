@@ -1,34 +1,36 @@
 .page {
   max-width: 1200px;
+  width: 100%;
 }
 
 .page__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 32px;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 16px;
+  margin-bottom: var(--space-xl);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-md);
 }
 
 .page__header h1 {
-  font-size: 2rem;
+  font-size: var(--font-size-2xl);
   font-weight: 800;
   margin: 0;
   color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
 .page__action-btn {
   background: var(--primary);
   color: white;
-  border: 2px solid var(--primary-hover);
-  padding: 12px 24px;
+  border: none;
+  padding: var(--space-sm) var(--space-lg);
   border-radius: var(--border-radius);
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: var(--font-size-base);
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  min-height: 48px; /* Large touch target */
+  transition: all var(--transition-normal);
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,24 +39,26 @@
 
 .page__action-btn:hover {
   background: var(--primary-hover);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
   transform: translateY(-2px);
 }
 
 .page__form-panel {
   background: var(--bg-card);
-  border: 2px solid var(--border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
   border-radius: var(--border-radius-lg);
-  padding: 32px;
-  margin-bottom: 32px;
-  box-shadow: var(--shadow-md);
-  animation: slideDown 0.2s ease-out;
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  box-shadow: var(--shadow-lg);
+  animation: slideDown var(--transition-normal) ease-out;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-16px);
   }
   to {
     opacity: 1;
@@ -65,7 +69,7 @@
 @media (max-width: 768px) {
   .page__header {
     flex-direction: column;
-    gap: 16px;
+    gap: var(--space-md);
     align-items: flex-start;
   }
   

@@ -74,8 +74,8 @@ const config: AppConfig = {
       label: 'Finances',
       icon: '💰',
       path: '/finances',
-      apiBasePath: '/api/production/finances',
-      enabled: false,
+      apiBasePath: '/api/finance',
+      enabled: true,
       description: 'Income, expenses, and profitability tracking'
     },
     {

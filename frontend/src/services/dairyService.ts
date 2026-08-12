@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { Dairy } from '../types/dairy';
+import { Dairy, CreateDairyRequest } from '../types/dairy';
 import { PaginatedResponse } from './livestockService';
 
 const BASE_PATH = '/api/production/dairy';
@@ -14,7 +14,7 @@ export const getDairy = async (id: string): Promise<Dairy> => {
   return response.data;
 };
 
-export const createDairy = async (dairy: Omit<Dairy, 'id'>): Promise<Dairy> => {
+export const createDairy = async (dairy: CreateDairyRequest): Promise<Dairy> => {
   const response = await apiClient.post(BASE_PATH, dairy);
   return response.data;
 };

@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import { Livestock } from '../types/livestock';
+import { Livestock, CreateLivestockRequest } from '../types/livestock';
 
 const BASE_PATH = '/api/catalog/livestock';
 
@@ -21,7 +21,7 @@ export const getLivestock = async (id: string): Promise<Livestock> => {
   return response.data;
 };
 
-export const createLivestock = async (livestock: Omit<Livestock, 'id'>): Promise<Livestock> => {
+export const createLivestock = async (livestock: CreateLivestockRequest): Promise<Livestock> => {
   const response = await apiClient.post(BASE_PATH, livestock);
   return response.data;
 };

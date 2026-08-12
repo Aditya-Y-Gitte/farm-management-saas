@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import LivestockPage from './pages/LivestockPage';
 import DairyPage from './pages/DairyPage';
+import LivestockProfilePage from './pages/LivestockProfilePage';
+import FinancePage from './pages/FinancePage';
 import './App.css';
 
 function App() {
@@ -27,7 +29,9 @@ function App() {
           >
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/livestock" element={<LivestockPage />} />
+            <Route path="/livestock/:id" element={<LivestockProfilePage />} />
             <Route path="/dairy" element={<DairyPage />} />
+            <Route path="/finances" element={<FinancePage />} />
           </Route>
 
           {/* Default redirect */}
