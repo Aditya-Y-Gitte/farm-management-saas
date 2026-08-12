@@ -8,7 +8,9 @@ namespace CatalogApi.DTOs;
 /// </summary>
 public class UpdateLivestockRequest
 {
-    [Required(ErrorMessage = "Name is required.")]
+    [MaxLength(50, ErrorMessage = "TagNumber must not exceed 50 characters.")]
+    public string TagNumber { get; set; } = string.Empty;
+
     [MaxLength(200, ErrorMessage = "Name must not exceed 200 characters.")]
     public string Name { get; set; } = string.Empty;
 
@@ -19,17 +21,18 @@ public class UpdateLivestockRequest
     [MaxLength(100, ErrorMessage = "Breed must not exceed 100 characters.")]
     public string Breed { get; set; } = string.Empty;
 
-    public DateTime DateOfBirth { get; set; }
+    public DateTime? DateOfBirth { get; set; }
 
     [MaxLength(20, ErrorMessage = "Gender must not exceed 20 characters.")]
     public string Gender { get; set; } = string.Empty;
 
-    [MaxLength(50, ErrorMessage = "Health status must not exceed 50 characters.")]
-    public string HealthStatus { get; set; } = string.Empty;
+    [MaxLength(50, ErrorMessage = "Status must not exceed 50 characters.")]
+    public string Status { get; set; } = string.Empty;
 
-    [MaxLength(500, ErrorMessage = "Medication must not exceed 500 characters.")]
-    public string Medication { get; set; } = string.Empty;
+    [MaxLength(50, ErrorMessage = "AcquisitionType must not exceed 50 characters.")]
+    public string AcquisitionType { get; set; } = string.Empty;
 
-    [MaxLength(500, ErrorMessage = "Vaccination must not exceed 500 characters.")]
-    public string Vaccination { get; set; } = string.Empty;
+    public decimal? PurchasePrice { get; set; }
+
+    public DateTime? PurchaseDate { get; set; }
 }

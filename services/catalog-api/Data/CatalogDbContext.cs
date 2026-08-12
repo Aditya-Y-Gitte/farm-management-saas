@@ -20,6 +20,8 @@ public class CatalogDbContext : DbContext
     }
 
     public DbSet<Livestock> Livestocks { get; set; }
+    public DbSet<HealthRecord> HealthRecords { get; set; }
+    public DbSet<BreedingCycle> BreedingCycles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,7 +32,19 @@ public class CatalogDbContext : DbContext
         {
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
-            entity.HasIndex(e => new { e.TenantId, e.Name }).IsUnique();
+            entity.HasIndex(e => new { e.TenantId, e.TagNumber }).IsUnique(); // Unique Tag Number per farmer
+        });
+
+        modelBuilder.Entity<HealthRecord>(entity =>
+        {
+            entity.HasQueryFilter(e => e.TenantId == _tenantId);
+            entity.HasIndex(e => e.TenantId);
+        });
+
+        modelBuilder.Entity<BreedingCycle>(entity =>
+        {
+            entity.HasQueryFilter(e => e.TenantId == _tenantId);
+            entity.HasIndex(e => e.TenantId);
         });
     }
 
