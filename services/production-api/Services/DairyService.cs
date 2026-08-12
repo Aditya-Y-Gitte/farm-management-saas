@@ -2,6 +2,7 @@ using FarmManagement.SharedKernel.Models;
 using ProductionApi.DTOs;
 using ProductionApi.Models;
 using ProductionApi.Repositories;
+using Mapster;
 
 namespace ProductionApi.Services;
 
@@ -26,7 +27,7 @@ public class DairyService : IDairyService
     {
         _logger.LogInformation("Fetching dairy records. Page: {Page}, PageSize: {PageSize}", page, pageSize);
         var (items, totalCount) = await _repository.GetAllAsync(page, pageSize);
-        var dtos = items.Select(DairyDto.FromEntity);
+        var dtos = items.Select(i => i.Adapt<DairyDto>());
         return PagedResponse<DairyDto>.Create(dtos, totalCount, page, pageSize);
     }
 
@@ -34,13 +35,13 @@ public class DairyService : IDairyService
     {
         _logger.LogInformation("Fetching dairy record: {Id}", id);
         var entity = await _repository.GetByIdAsync(id);
-        return entity is null ? null : DairyDto.FromEntity(entity);
+        return entity?.Adapt<DairyDto>();
     }
 
     public async Task<DairyDto?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
     {
         var entity = await _repository.GetByLivestockIdAndDateAsync(livestockId, date);
-        return entity is null ? null : DairyDto.FromEntity(entity);
+        return entity?.Adapt<DairyDto>();
     }
 
     public async Task<DairyDto> CreateAsync(CreateDairyRequest request)
@@ -59,15 +60,16 @@ public class DairyService : IDairyService
         {
             LivestockId = request.LivestockId,
             Date = request.Date,
+            Session = request.Session,
             MilkYield = request.MilkYield,
             FatContent = request.FatContent,
-            ProteinContent = request.ProteinContent,
+            SnfContent = request.SnfContent,
             Quality = request.Quality
         };
 
         _logger.LogInformation("Creating dairy record for livestock {LivestockId}", entity.LivestockId);
         var created = await _repository.CreateAsync(entity);
-        return DairyDto.FromEntity(created);
+        return created.Adapt<DairyDto>();
     }
 
     public async Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request)
@@ -81,14 +83,15 @@ public class DairyService : IDairyService
         // Apply only mutable fields. TenantId and Id remain immutable.
         entity.LivestockId = request.LivestockId;
         entity.Date = request.Date;
+        entity.Session = request.Session;
         entity.MilkYield = request.MilkYield;
         entity.FatContent = request.FatContent;
-        entity.ProteinContent = request.ProteinContent;
+        entity.SnfContent = request.SnfContent;
         entity.Quality = request.Quality;
 
         _logger.LogInformation("Updating dairy record: {Id}", id);
         var updated = await _repository.UpdateAsync(entity);
-        return DairyDto.FromEntity(updated);
+        return updated.Adapt<DairyDto>();
     }
 
     public async Task<bool> DeleteAsync(Guid id)

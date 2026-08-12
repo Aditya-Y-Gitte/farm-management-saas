@@ -19,6 +19,7 @@ public class ProductionDbContext : DbContext
     }
 
     public DbSet<Dairy> Dairies { get; set; }
+    public DbSet<FeedConsumption> FeedConsumptions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,7 +29,14 @@ public class ProductionDbContext : DbContext
         {
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
-            entity.HasIndex(e => new { e.TenantId, e.LivestockId, e.Date }).IsUnique();
+            entity.HasIndex(e => new { e.TenantId, e.LivestockId, e.Date, e.Session }).IsUnique();
+        });
+
+        modelBuilder.Entity<FeedConsumption>(entity =>
+        {
+            entity.HasQueryFilter(e => e.TenantId == _tenantId);
+            entity.HasIndex(e => e.TenantId);
+            entity.HasIndex(e => e.Date);
         });
     }
 

@@ -8,21 +8,25 @@ namespace ProductionApi.DTOs;
 /// </summary>
 public class CreateDairyRequest
 {
-    [Required(ErrorMessage = "LivestockId is required.")]
+    [Required(ErrorMessage = "Livestock ID is required.")]
     public Guid LivestockId { get; set; }
 
     [Required(ErrorMessage = "Date is required.")]
     public DateTime Date { get; set; }
 
-    [Required(ErrorMessage = "MilkYield is required.")]
-    [Range(0, 1000, ErrorMessage = "MilkYield must be between 0 and 1000 litres.")]
+    [Required(ErrorMessage = "Session is required.")]
+    [MaxLength(20, ErrorMessage = "Session must not exceed 20 characters.")]
+    public string Session { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Milk yield is required.")]
+    [Range(0, 1000, ErrorMessage = "Milk yield must be between 0 and 1000.")]
     public decimal MilkYield { get; set; }
 
-    [Range(0, 100, ErrorMessage = "FatContent must be between 0 and 100 percent.")]
+    [Range(0, 100, ErrorMessage = "Fat content must be between 0 and 100.")]
     public decimal FatContent { get; set; }
 
-    [Range(0, 100, ErrorMessage = "ProteinContent must be between 0 and 100 percent.")]
-    public decimal ProteinContent { get; set; }
+    [Range(0, 100, ErrorMessage = "SNF content must be between 0 and 100.")]
+    public decimal SnfContent { get; set; }
 
     [MaxLength(50, ErrorMessage = "Quality must not exceed 50 characters.")]
     public string Quality { get; set; } = string.Empty;

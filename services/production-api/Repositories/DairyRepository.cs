@@ -83,8 +83,8 @@ public class DairyRepository : IDairyRepository
         var avgFat = totalRecords > 0
             ? await query.AverageAsync(d => d.FatContent)
             : 0;
-        var avgProtein = totalRecords > 0
-            ? await query.AverageAsync(d => d.ProteinContent)
+        var avgSnf = totalRecords > 0
+            ? await query.AverageAsync(d => d.SnfContent)
             : 0;
 
         return new DairySummaryDto
@@ -93,7 +93,7 @@ public class DairyRepository : IDairyRepository
             TotalMilkThisWeek = weekMilk,
             TotalRecords = totalRecords,
             AverageFatContent = avgFat,
-            AverageProteinContent = avgProtein
+            AverageSnfContent = avgSnf
         };
     }
 }

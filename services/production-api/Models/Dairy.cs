@@ -16,6 +16,10 @@ public class Dairy : BaseEntity
     public DateTime Date { get; set; }
 
     [Required]
+    [MaxLength(20)]
+    public string Session { get; set; } = string.Empty; // e.g., Morning, Evening
+
+    [Required]
     [Range(0, 1000)]
     public decimal MilkYield { get; set; }
 
@@ -23,7 +27,7 @@ public class Dairy : BaseEntity
     public decimal FatContent { get; set; }
 
     [Range(0, 100)]
-    public decimal ProteinContent { get; set; }
+    public decimal SnfContent { get; set; }
 
     [MaxLength(50)]
     public string Quality { get; set; } = string.Empty;

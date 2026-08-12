@@ -11,5 +11,5 @@ public class DairySummaryDto
     public decimal TotalMilkThisWeek { get; set; }
     public int TotalRecords { get; set; }
     public decimal AverageFatContent { get; set; }
-    public decimal AverageProteinContent { get; set; }
+    public decimal AverageSnfContent { get; set; }
 }
