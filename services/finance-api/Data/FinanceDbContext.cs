@@ -30,6 +30,9 @@ public class FinanceDbContext : DbContext
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
             entity.HasIndex(e => e.Date);
+            entity.Property(e => e.Amount).HasPrecision(18, 2);
+            entity.Property(e => e.Quantity).HasPrecision(18, 2);
+            entity.Property(e => e.Rate).HasPrecision(18, 2);
         });
 
         modelBuilder.Entity<Expense>(entity =>
@@ -37,6 +40,7 @@ public class FinanceDbContext : DbContext
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
             entity.HasIndex(e => e.Date);
+            entity.Property(e => e.Amount).HasPrecision(18, 2);
         });
     }
 
