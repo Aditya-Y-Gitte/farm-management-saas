@@ -39,6 +39,10 @@ public class CatalogDbContext : DbContext
         {
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
+            entity.HasOne(e => e.Livestock)
+                  .WithMany(l => l.HealthRecords)
+                  .HasForeignKey(e => e.LivestockId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<BreedingCycle>(entity =>

@@ -21,6 +21,8 @@ builder.Services.AddHttpContextAccessor();
 // --- Services & Repositories ---
 builder.Services.AddScoped<ILivestockRepository, LivestockRepository>();
 builder.Services.AddScoped<ILivestockService, LivestockService>();
+builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
+builder.Services.AddScoped<IHealthRecordService, HealthRecordService>();
 
 // --- JWT Authentication ---
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
