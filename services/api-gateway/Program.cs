@@ -87,7 +87,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// --- HttpClient for metrics aggregation ---
+// --- HttpClient for metrics and health aggregation ---
+builder.Services.AddHttpClient("AuthService", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:AuthService"] ?? "http://localhost:5003");
+});
 builder.Services.AddHttpClient("CatalogApi", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CatalogApi"] ?? "http://localhost:5001");
@@ -95,6 +99,10 @@ builder.Services.AddHttpClient("CatalogApi", client =>
 builder.Services.AddHttpClient("ProductionApi", client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductionApi"] ?? "http://localhost:5002");
+});
+builder.Services.AddHttpClient("FinanceApi", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:FinanceApi"] ?? "http://localhost:5004");
 });
 
 builder.Services.AddHealthChecks();
@@ -175,33 +183,44 @@ app.MapGet("/api/gateway/metrics", async (HttpContext httpContext, IHttpClientFa
 app.MapGet("/health", async (IHttpClientFactory httpClientFactory) =>
 {
     var services = new Dictionary<string, string>();
+    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
-    try
+    var endpoints = new Dictionary<string, string>
     {
-        var catalogClient = httpClientFactory.CreateClient("CatalogApi");
-        var catalogResponse = await catalogClient.GetAsync("/health");
-        services["catalog-api"] = catalogResponse.IsSuccessStatusCode ? "healthy" : "unhealthy";
-    }
-    catch { services["catalog-api"] = "unreachable"; }
+        { "auth-service", "AuthService" },
+        { "catalog-api", "CatalogApi" },
+        { "production-api", "ProductionApi" },
+        { "finance-api", "FinanceApi" }
+    };
 
-    try
+    foreach (var endpoint in endpoints)
     {
-        var productionClient = httpClientFactory.CreateClient("ProductionApi");
-        var productionResponse = await productionClient.GetAsync("/health");
-        services["production-api"] = productionResponse.IsSuccessStatusCode ? "healthy" : "unhealthy";
+        try
+        {
+            var client = httpClientFactory.CreateClient(endpoint.Value);
+            var response = await client.GetAsync("/health", cts.Token);
+            services[endpoint.Key] = response.IsSuccessStatusCode ? "healthy" : "unhealthy";
+        }
+        catch
+        {
+            services[endpoint.Key] = "unreachable";
+        }
     }
-    catch { services["production-api"] = "unreachable"; }
 
     var overallHealthy = services.Values.All(s => s == "healthy");
-    return Results.Ok(new
+    var statusCode = overallHealthy ? 200 : 503;
+
+    return Results.Json(new
     {
         status = overallHealthy ? "healthy" : "degraded",
         services,
         checkedAt = DateTime.UtcNow
-    });
+    }, statusCode: statusCode);
 });
 
 // --- YARP reverse proxy ---
 app.MapReverseProxy();
 
 app.Run();
+
+public partial class Program { }
