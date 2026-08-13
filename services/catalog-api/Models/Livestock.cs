@@ -40,4 +40,5 @@ public class Livestock : BaseEntity
 
     // EF Navigation
     public ICollection<HealthRecord> HealthRecords { get; set; } = new List<HealthRecord>();
+    public ICollection<BreedingCycle> BreedingCycles { get; set; } = new List<BreedingCycle>();
 }
