@@ -104,7 +104,7 @@ var app = builder.Build();
 // --- Middleware Pipeline ---
 // ForwardedHeaders MUST come first — before rate limiter reads RemoteIpAddress
 app.UseForwardedHeaders();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseSharedExceptionHandling();
 app.UseRateLimiter();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();

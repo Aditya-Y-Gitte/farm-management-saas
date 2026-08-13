@@ -60,7 +60,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseSharedExceptionHandling();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
