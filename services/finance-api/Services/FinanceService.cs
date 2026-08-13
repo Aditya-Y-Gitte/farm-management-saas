@@ -1,7 +1,8 @@
+using FarmManagement.SharedKernel.Exceptions;
+using FarmManagement.SharedKernel.Models;
 using FinanceApi.Data;
 using FinanceApi.DTOs;
 using FinanceApi.Models;
-using FarmManagement.SharedKernel.Exceptions;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +17,7 @@ public class FinanceService : IFinanceService
         _context = context;
     }
 
-    public async Task<(IEnumerable<IncomeDto> Items, int TotalCount, int TotalPages)> GetIncomesAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null)
+    public async Task<PagedResponse<IncomeDto>> GetIncomesAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null)
     {
         var query = _context.Incomes.AsNoTracking();
 
@@ -30,8 +31,8 @@ public class FinanceService : IFinanceService
         var totalCount = await query.CountAsync();
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-        return (items.Adapt<IEnumerable<IncomeDto>>(), totalCount, totalPages);
+        var dtos = items.Select(i => i.Adapt<IncomeDto>());
+        return PagedResponse<IncomeDto>.Create(dtos, totalCount, page, pageSize);
     }
 
     public async Task<IncomeDto?> GetIncomeByIdAsync(Guid id)
@@ -42,25 +43,19 @@ public class FinanceService : IFinanceService
 
     public async Task<IncomeDto> CreateIncomeAsync(CreateIncomeRequest request)
     {
-        var income = request.Adapt<Income>();
-        _context.Incomes.Add(income);
+        var entity = request.Adapt<Income>();
+        _context.Incomes.Add(entity);
         await _context.SaveChangesAsync();
-        return income.Adapt<IncomeDto>();
+        return entity.Adapt<IncomeDto>();
     }
 
     public async Task<IncomeDto> UpdateIncomeAsync(Guid id, UpdateIncomeRequest request)
     {
         var entity = await _context.Incomes.FirstOrDefaultAsync(i => i.Id == id);
-        if (entity == null) throw new NotFoundException($"Income with ID {id} not found.");
+        if (entity == null)
+            throw new NotFoundException($"Income with id {id} not found");
 
-        entity.Date = request.Date;
-        entity.Category = request.Category;
-        entity.Amount = request.Amount;
-        entity.Quantity = request.Quantity;
-        entity.Rate = request.Rate;
-        entity.BuyerName = request.BuyerName;
-        entity.Notes = request.Notes;
-
+        request.Adapt(entity);
         await _context.SaveChangesAsync();
         return entity.Adapt<IncomeDto>();
     }
@@ -75,7 +70,7 @@ public class FinanceService : IFinanceService
         return true;
     }
 
-    public async Task<(IEnumerable<ExpenseDto> Items, int TotalCount, int TotalPages)> GetExpensesAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null)
+    public async Task<PagedResponse<ExpenseDto>> GetExpensesAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null)
     {
         var query = _context.Expenses.AsNoTracking();
 
@@ -89,8 +84,8 @@ public class FinanceService : IFinanceService
         var totalCount = await query.CountAsync();
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-        return (items.Adapt<IEnumerable<ExpenseDto>>(), totalCount, totalPages);
+        var dtos = items.Select(e => e.Adapt<ExpenseDto>());
+        return PagedResponse<ExpenseDto>.Create(dtos, totalCount, page, pageSize);
     }
 
     public async Task<ExpenseDto?> GetExpenseByIdAsync(Guid id)
@@ -101,23 +96,19 @@ public class FinanceService : IFinanceService
 
     public async Task<ExpenseDto> CreateExpenseAsync(CreateExpenseRequest request)
     {
-        var expense = request.Adapt<Expense>();
-        _context.Expenses.Add(expense);
+        var entity = request.Adapt<Expense>();
+        _context.Expenses.Add(entity);
         await _context.SaveChangesAsync();
-        return expense.Adapt<ExpenseDto>();
+        return entity.Adapt<ExpenseDto>();
     }
 
     public async Task<ExpenseDto> UpdateExpenseAsync(Guid id, UpdateExpenseRequest request)
     {
         var entity = await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
-        if (entity == null) throw new NotFoundException($"Expense with ID {id} not found.");
+        if (entity == null)
+            throw new NotFoundException($"Expense with id {id} not found");
 
-        entity.Date = request.Date;
-        entity.Category = request.Category;
-        entity.Amount = request.Amount;
-        entity.Notes = request.Notes;
-        entity.RelatedEntityId = request.RelatedEntityId;
-
+        request.Adapt(entity);
         await _context.SaveChangesAsync();
         return entity.Adapt<ExpenseDto>();
     }

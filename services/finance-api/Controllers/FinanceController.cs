@@ -27,7 +27,7 @@ public class FinanceController : ControllerBase
         }
 
         var result = await _financeService.GetIncomesAsync(page, pageSize, startDate, endDate);
-        return Ok(new { items = result.Items, totalCount = result.TotalCount, page, pageSize, totalPages = result.TotalPages });
+        return Ok(result);
     }
 
     [HttpGet("income/{id:guid}")]
@@ -69,7 +69,7 @@ public class FinanceController : ControllerBase
         }
 
         var result = await _financeService.GetExpensesAsync(page, pageSize, startDate, endDate);
-        return Ok(new { items = result.Items, totalCount = result.TotalCount, page, pageSize, totalPages = result.TotalPages });
+        return Ok(result);
     }
 
     [HttpGet("expense/{id:guid}")]

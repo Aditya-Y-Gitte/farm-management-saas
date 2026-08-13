@@ -186,9 +186,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "Host=finance-db;Port=5432;Database=finance_db;Username=postgres;Password=${FINANCE_DB_PASSWORD:-postgres};MaxPoolSize=50"
-      Jwt__Key: ${JWT_SECRET_KEY}
+      Jwt__SecretKey: ${JWT_SECRET_KEY}
       Jwt__Issuer: farm-management-auth
-      Jwt__Audience: farm-management-users
+      Jwt__Audience: farm-management-api
       AllowedOrigins__0: http://api-gateway:5000
     ports:
       - "5004:8080"

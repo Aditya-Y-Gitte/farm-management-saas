@@ -19,22 +19,22 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<FinanceApi.Services.IFinanceService, FinanceApi.Services.FinanceService>();
 
 // Add Authentication
+var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
+    ?? throw new InvalidOperationException("JWT SecretKey not configured.");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing"))),
             ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateAudience = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "farm-management-auth",
+            ValidAudience = builder.Configuration["Jwt:Audience"] ?? "farm-management-api",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
+            ClockSkew = TimeSpan.FromSeconds(30)
         };
-        // The API Gateway validates tokens, but internal services also validate them for defense-in-depth
     });
 
 builder.Services.AddControllers();
