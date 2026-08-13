@@ -9,6 +9,8 @@ namespace ProductionApi.Models;
 /// </summary>
 public class FeedConsumption : BaseEntity
 {
+    public Guid? LivestockId { get; set; }
+
     [Required]
     public DateTime Date { get; set; }
 
@@ -17,9 +19,12 @@ public class FeedConsumption : BaseEntity
     public string FeedType { get; set; } = string.Empty; // e.g., GreenFodder, DryFodder, Concentrate, Supplements
 
     [Required]
-    public decimal QuantityKg { get; set; }
+    public decimal Quantity { get; set; }
 
-    public decimal TotalCost { get; set; }
+    [Required]
+    [MaxLength(20)]
+    public string Unit { get; set; } = string.Empty; // e.g., Kg, Lb, Bale, Bundle
 
-    public Guid? LivestockId { get; set; }
+    [MaxLength(1000)]
+    public string Notes { get; set; } = string.Empty;
 }
