@@ -23,17 +23,17 @@ public class AuthenticationService : IAuthenticationService
         _logger = logger;
     }
 
-    public async Task<(AuthResponse? Response, string? ErrorMessage)> RegisterAsync(RegisterRequest request)
+    public async Task<(AuthResponse? Response, string? ErrorMessage, int StatusCode)> RegisterAsync(RegisterRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return (null, "Email and Password are required.");
+            return (null, "Email and Password are required.", StatusCodes.Status400BadRequest);
         }
 
         var existingUser = await _userRepository.GetUserByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            return (null, "Email is already in use.");
+            return (null, "Email is already in use.", StatusCodes.Status409Conflict);
         }
 
         var user = new User
@@ -48,44 +48,46 @@ public class AuthenticationService : IAuthenticationService
         await _userRepository.CreateUserAsync(user);
         _logger.LogInformation("Created new local user: {Email}, TenantId: {TenantId}", user.Email, user.TenantId);
 
-        return await GenerateAuthResponseAsync(user);
+        var (response, error) = await GenerateAuthResponseAsync(user);
+        return (response, error, StatusCodes.Status200OK);
     }
 
-    public async Task<(AuthResponse? Response, string? ErrorMessage)> LoginAsync(LoginRequest request)
+    public async Task<(AuthResponse? Response, string? ErrorMessage, int StatusCode)> LoginAsync(LoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return (null, "Email and Password are required.");
+            return (null, "Email and Password are required.", StatusCodes.Status400BadRequest);
         }
 
         var user = await _userRepository.GetUserByEmailAsync(request.Email);
         if (user == null || string.IsNullOrEmpty(user.PasswordHash))
         {
-            return (null, "Invalid email or password.");
+            return (null, "Invalid email or password.", StatusCodes.Status401Unauthorized);
         }
 
         if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            return (null, "Invalid email or password.");
+            return (null, "Invalid email or password.", StatusCodes.Status401Unauthorized);
         }
 
         user.LastLoginAt = DateTime.UtcNow;
         await _userRepository.UpdateUserAsync(user);
 
-        return await GenerateAuthResponseAsync(user);
+        var (response, error) = await GenerateAuthResponseAsync(user);
+        return (response, error, StatusCodes.Status200OK);
     }
 
-    public async Task<(AuthResponse? Response, string? ErrorMessage)> GoogleLoginAsync(GoogleLoginRequest request)
+    public async Task<(AuthResponse? Response, string? ErrorMessage, int StatusCode)> GoogleLoginAsync(GoogleLoginRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.IdToken))
         {
-            return (null, "Google ID token is required.");
+            return (null, "Google ID token is required.", StatusCodes.Status400BadRequest);
         }
 
         var googleUser = await _googleOAuthService.ValidateGoogleTokenAsync(request.IdToken);
         if (googleUser == null)
         {
-            return (null, "Invalid Google token.");
+            return (null, "Invalid Google token.", StatusCodes.Status401Unauthorized);
         }
 
         var user = await _userRepository.GetUserByGoogleIdAsync(googleUser.GoogleId);
@@ -112,7 +114,8 @@ public class AuthenticationService : IAuthenticationService
             _logger.LogInformation("Existing user logged in via Google: {Email}", user.Email);
         }
 
-        return await GenerateAuthResponseAsync(user);
+        var (response, error) = await GenerateAuthResponseAsync(user);
+        return (response, error, StatusCodes.Status200OK);
     }
 
     private async Task<(AuthResponse Response, string? ErrorMessage)> GenerateAuthResponseAsync(User user)
