@@ -1,39 +1,20 @@
-using System.ComponentModel.DataAnnotations;
-using FarmManagement.SharedKernel.Models;
+using System;
 
-namespace CatalogApi.Models;
+namespace CatalogApi.DTOs;
 
-/// <summary>
-/// Represents a veterinary or health event for a specific animal.
-/// </summary>
-public class HealthRecord : BaseEntity
+public class HealthRecordDto
 {
-    [Required]
+    public Guid Id { get; set; }
     public Guid LivestockId { get; set; }
-
-    [Required]
     public DateTime Date { get; set; }
-
-    [Required]
-    [MaxLength(100)]
     public string Type { get; set; } = string.Empty;
-
-    [MaxLength(500)]
     public string Description { get; set; } = string.Empty;
-
-    [MaxLength(200)]
     public string Diagnosis { get; set; } = string.Empty;
-
     public string Treatment { get; set; } = string.Empty;
-
-    [MaxLength(200)]
     public string Medication { get; set; } = string.Empty;
-
-    [MaxLength(100)]
     public string Veterinarian { get; set; } = string.Empty;
-
     public string Notes { get; set; } = string.Empty;
-
-    // EF Navigation
-    public Livestock Livestock { get; set; } = null!;
+    public string TenantId { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

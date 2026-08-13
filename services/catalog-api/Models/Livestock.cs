@@ -37,4 +37,7 @@ public class Livestock : BaseEntity
     public decimal? PurchasePrice { get; set; }
 
     public DateTime? PurchaseDate { get; set; }
+
+    // EF Navigation
+    public ICollection<HealthRecord> HealthRecords { get; set; } = new List<HealthRecord>();
 }
