@@ -12,17 +12,22 @@ public class BreedingCycle : BaseEntity
     public Guid LivestockId { get; set; }
 
     [Required]
-    public DateTime HeatDate { get; set; }
+    public DateTime BreedingDate { get; set; }
 
-    public DateTime? InseminationDate { get; set; }
+    [Required]
+    [MaxLength(50)]
+    public string Method { get; set; } = string.Empty;
 
-    public DateTime? PregnancyCheckDate { get; set; }
+    public DateTime? ExpectedDeliveryDate { get; set; }
 
-    public bool? IsPregnant { get; set; }
+    public DateTime? ActualDeliveryDate { get; set; }
 
-    public DateTime? ExpectedCalvingDate { get; set; }
+    [Required]
+    [MaxLength(50)]
+    public string Status { get; set; } = string.Empty;
 
-    public DateTime? ActualCalvingDate { get; set; }
+    public string Notes { get; set; } = string.Empty;
 
-    public Guid? CalfId { get; set; }
+    // EF Navigation
+    public Livestock Livestock { get; set; } = null!;
 }

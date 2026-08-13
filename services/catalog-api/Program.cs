@@ -23,6 +23,8 @@ builder.Services.AddScoped<ILivestockRepository, LivestockRepository>();
 builder.Services.AddScoped<ILivestockService, LivestockService>();
 builder.Services.AddScoped<IHealthRecordRepository, HealthRecordRepository>();
 builder.Services.AddScoped<IHealthRecordService, HealthRecordService>();
+builder.Services.AddScoped<IBreedingCycleRepository, BreedingCycleRepository>();
+builder.Services.AddScoped<IBreedingCycleService, BreedingCycleService>();
 
 // --- JWT Authentication ---
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
