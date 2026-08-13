@@ -21,11 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Created `BreedingCycle` to track heat dates, insemination, pregnancy checks, and calving.
   - Updated `Dairy` to include `Session` (Morning/Evening) and replaced protein metrics with `SnfContent` (Solid-Not-Fat) standard.
   - Created `FeedConsumption` to track individual and herd-level feed usage and costs.
-- **Finance API**: Scaffolded a brand new `finance-api` microservice to track generalized `Income` and `Expense` ledgers. Fully integrated with JWT tenant isolation, isolated `finance_db`, and API Gateway routing.
 - **Architecture Guidelines**: Codified microservices and N-Tier standards into a root `BACKEND_GUIDELINES.md` to enforce consistency.
+- **Finance Ledger (Full Stack)**: Fully implemented the `finance-api` microservice (controllers and services), utilizing Mapster for DTO mapping. On the frontend, created `FinancePage` and `FinanceForm` for creating and viewing Income/Expense transactions.
+- **Comprehensive Localization**: Expanded the `i18next` Marathi (`mr`) and English (`en`) dictionaries to provide 100% coverage across Dashboard, Forms, and Finance modules.
 
 ### Changed
+- **Frontend UI & Glassmorphism**: Overhauled the entire frontend aesthetic with premium glassmorphism styling, responsive layouts, and modernized CSS tokens across `Dashboard`, `LivestockList`, `DairyList`, and auth pages.
+- **Centralized Constants**: Refactored `LivestockForm`, `DairyForm`, and `FinanceForm` to consume localized enums from a centralized `appConstants.ts` (tailored for Indian farming semantics) instead of using hardcoded dropdown values.
 - **DTO Mapping**: Stripped out manual DTO-to-Entity mappings (`FromEntity()`) across `catalog-api` and `production-api` and adopted **Mapster** (`.Adapt<T>()`) for clean, high-performance object mapping.
+- **Frontend Types**: Synchronized frontend Typescript definitions (`types/finance.ts`, `types/dairy.ts`, etc.) to strictly match backend DTO contracts.
+
+### Fixed
+- **Docker Compose Builds**: Resolved Mapster typing errors and strict Typescript warnings that were failing container builds in CI/CD environments.
 
 ## [0.1.0] - 2026-08-11
 
