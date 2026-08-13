@@ -7,3 +7,11 @@
 - **Tests executed**: None (documentation ticket).
 - **Known limitations**: N/A
 - **PR/branch**: `personal/agitte/FMS-101`
+
+## FMS-102
+- **Ticket**: FMS-102 — Define Target Domain Model
+- **Status**: IMPLEMENTED
+- **Implementation summary**: Designed the target domain models for Livestock, Dairy, HealthRecord, BreedingCycle, Finance, FeedConsumption, and established Ownership/Authorization boundaries with the Farm (Tenant) entity. Documented in `target-domain-model.md`.
+- **Tests executed**: None (documentation ticket).
+- **Known limitations**: N/A
+- **PR/branch**: `personal/agitte/FMS-102`
