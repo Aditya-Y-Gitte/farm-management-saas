@@ -36,6 +36,11 @@ public class LivestockRepository : ILivestockRepository
         return await _context.Livestocks.AsNoTracking().FirstOrDefaultAsync(l => l.Name == name);
     }
 
+    public async Task<Livestock?> GetByTagNumberAsync(string tagNumber)
+    {
+        return await _context.Livestocks.AsNoTracking().FirstOrDefaultAsync(l => l.TagNumber == tagNumber);
+    }
+
     public async Task<Livestock> CreateAsync(Livestock livestock)
     {
         _context.Livestocks.Add(livestock);

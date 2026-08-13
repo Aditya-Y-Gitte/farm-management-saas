@@ -43,13 +43,11 @@ public class LivestockService : ILivestockService
         // Business rule: livestock tag numbers must be unique within a tenant.
         if (!string.IsNullOrWhiteSpace(request.TagNumber))
         {
-            // We need to implement GetByTagNumberAsync or similar in repository, but for now we'll 
-            // rely on the DB constraint or just not check it here if not easily available.
-            // Wait, we need to handle the unique constraint. 
-            // I'll update this logic to just catch the exception from EF Core if needed, 
-            // or I can leave the name check if we want to enforce unique names too.
-            // Actually, the new DB constraint is on TagNumber. Let's assume we don't have GetByTagNumberAsync yet.
-            // I will just map the properties and let the repository throw if it violates the unique constraint.
+            var existing = await _repository.GetByTagNumberAsync(request.TagNumber);
+            if (existing != null)
+            {
+                throw new FarmManagement.SharedKernel.Exceptions.ConflictException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
+            }
         }
 
         var entity = new Livestock
@@ -76,7 +74,16 @@ public class LivestockService : ILivestockService
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
         {
-            throw new KeyNotFoundException($"Livestock with id '{id}' was not found.");
+            throw new FarmManagement.SharedKernel.Exceptions.NotFoundException($"Livestock with id '{id}' was not found.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.TagNumber) && request.TagNumber != entity.TagNumber)
+        {
+            var existing = await _repository.GetByTagNumberAsync(request.TagNumber);
+            if (existing != null)
+            {
+                throw new FarmManagement.SharedKernel.Exceptions.ConflictException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
+            }
         }
 
         // Apply only the mutable fields from the request. TenantId and Id remain immutable.

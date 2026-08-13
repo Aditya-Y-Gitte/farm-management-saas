@@ -45,6 +45,31 @@ namespace FarmManagement.SharedKernel.Middleware
                 Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
             };
 
+            if (exception is FarmManagement.SharedKernel.Exceptions.ConflictException conflictEx)
+            {
+                problemDetails.Status = StatusCodes.Status409Conflict;
+                problemDetails.Title = "Conflict";
+                problemDetails.Detail = conflictEx.Message;
+                problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8";
+                context.Response.StatusCode = StatusCodes.Status409Conflict;
+            }
+            else if (exception is FarmManagement.SharedKernel.Exceptions.NotFoundException notFoundEx || exception is System.Collections.Generic.KeyNotFoundException)
+            {
+                problemDetails.Status = StatusCodes.Status404NotFound;
+                problemDetails.Title = "Not Found";
+                problemDetails.Detail = exception.Message;
+                problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+            }
+            else if (exception is ArgumentException argEx)
+            {
+                problemDetails.Status = StatusCodes.Status400BadRequest;
+                problemDetails.Title = "Bad Request";
+                problemDetails.Detail = argEx.Message;
+                problemDetails.Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1";
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            }
+
             // Output detailed exception in development environment
             if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
             {
