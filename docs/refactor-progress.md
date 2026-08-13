@@ -23,3 +23,11 @@
 - **Tests executed**: None (documentation ticket).
 - **Known limitations**: N/A
 - **PR/branch**: `personal/agitte/FMS-103`
+
+## FMS-104
+- **Ticket**: FMS-104 — Refactor Architecture Documentation
+- **Status**: IMPLEMENTED
+- **Implementation summary**: Created `architecture-decisions.md` with 7 ADRs (ADR-001 to ADR-007) covering feature-based React structure, CSS token strategy, backend DTO strategy, i18n namespace structure, mobile navigation pattern, domain ownership/authorization, and dashboard architecture. Created `refactor-roadmap.md` outlining all planned epics and tickets (EPIC 1–9). Updated `refactor-progress.md`.
+- **Tests executed**: None (documentation ticket).
+- **Known limitations**: Roadmap is subject to re-prioritization based on PR review feedback.
+- **PR/branch**: `personal/agitte/FMS-104`
