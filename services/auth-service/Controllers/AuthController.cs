@@ -34,11 +34,11 @@ public class AuthController : ControllerBase
     [HttpPost("google")]
     public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
     {
-        var (response, errorMessage) = await _authenticationService.GoogleLoginAsync(request);
+        var (response, errorMessage, statusCode) = await _authenticationService.GoogleLoginAsync(request);
         
         if (errorMessage != null || response == null)
         {
-            return Unauthorized(new { message = errorMessage });
+            return Problem(statusCode: statusCode, title: "Google Login Failed", detail: errorMessage);
         }
 
         SetRefreshTokenCookie(response.RefreshToken);
@@ -51,11 +51,11 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var (response, errorMessage) = await _authenticationService.RegisterAsync(request);
+        var (response, errorMessage, statusCode) = await _authenticationService.RegisterAsync(request);
         
         if (errorMessage != null || response == null)
         {
-            return BadRequest(new { message = errorMessage });
+            return Problem(statusCode: statusCode, title: "Registration Failed", detail: errorMessage);
         }
 
         SetRefreshTokenCookie(response.RefreshToken);
@@ -68,11 +68,11 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var (response, errorMessage) = await _authenticationService.LoginAsync(request);
+        var (response, errorMessage, statusCode) = await _authenticationService.LoginAsync(request);
         
         if (errorMessage != null || response == null)
         {
-            return Unauthorized(new { message = errorMessage });
+            return Problem(statusCode: statusCode, title: "Login Failed", detail: errorMessage);
         }
 
         SetRefreshTokenCookie(response.RefreshToken);
@@ -89,7 +89,7 @@ public class AuthController : ControllerBase
         var refreshToken = Request.Cookies["refreshToken"];
         if (string.IsNullOrEmpty(refreshToken))
         {
-            return Unauthorized(new { message = "Refresh token not found." });
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Refresh Failed", detail: "Refresh token not found.");
         }
 
         var result = await _jwtService.RefreshTokensAsync(refreshToken);
@@ -97,7 +97,7 @@ public class AuthController : ControllerBase
         {
             // Clear the invalid cookie
             Response.Cookies.Delete("refreshToken");
-            return Unauthorized(new { message = "Invalid or expired refresh token." });
+            return Problem(statusCode: StatusCodes.Status401Unauthorized, title: "Refresh Failed", detail: "Invalid or expired refresh token.");
         }
 
         var (newAccessToken, newRefreshToken) = result.Value;
