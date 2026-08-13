@@ -13,7 +13,7 @@ public interface IDairyRepository
 {
     Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
     Task<Dairy?> GetByIdAsync(Guid id);
-    Task<Dairy?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date);
+    Task<Dairy?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session);
     Task<Dairy> CreateAsync(Dairy dairy);
     Task<Dairy> UpdateAsync(Dairy dairy);
     Task<bool> DeleteAsync(Guid id);

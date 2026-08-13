@@ -12,7 +12,7 @@ public interface IDairyService
 {
     Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize);
     Task<DairyDto?> GetByIdAsync(Guid id);
-    Task<DairyDto?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date);
+    Task<DairyDto?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session);
     Task<DairyDto> CreateAsync(CreateDairyRequest request);
     Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request);
     Task<bool> DeleteAsync(Guid id);

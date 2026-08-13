@@ -37,10 +37,10 @@ public class DairyRepository : IDairyRepository
         return await _context.Dairies.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
     }
 
-    public async Task<Dairy?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
+    public async Task<Dairy?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session)
     {
         return await _context.Dairies.AsNoTracking()
-            .FirstOrDefaultAsync(d => d.LivestockId == livestockId && d.Date.Date == date.Date);
+            .FirstOrDefaultAsync(d => d.LivestockId == livestockId && d.Date.Date == date.Date && d.Session == session);
     }
 
     public async Task<Dairy> CreateAsync(Dairy dairy)

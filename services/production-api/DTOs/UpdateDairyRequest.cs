@@ -26,6 +26,9 @@ public class UpdateDairyRequest
     [Range(0, 100, ErrorMessage = "Fat content must be between 0 and 100.")]
     public decimal FatContent { get; set; }
 
+    [Range(0, 100, ErrorMessage = "Protein content must be between 0 and 100.")]
+    public decimal? ProteinContent { get; set; }
+
     [Range(0, 100, ErrorMessage = "SNF content must be between 0 and 100.")]
     public decimal SnfContent { get; set; }
 

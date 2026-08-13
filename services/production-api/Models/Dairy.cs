@@ -27,6 +27,9 @@ public class Dairy : BaseEntity
     public decimal FatContent { get; set; }
 
     [Range(0, 100)]
+    public decimal? ProteinContent { get; set; }
+
+    [Range(0, 100)]
     public decimal SnfContent { get; set; }
 
     [MaxLength(50)]
