@@ -15,3 +15,11 @@
 - **Tests executed**: None (documentation ticket).
 - **Known limitations**: N/A
 - **PR/branch**: `personal/agitte/FMS-102`
+
+## FMS-103
+- **Ticket**: FMS-103 — Define FE/BE API Contract
+- **Status**: IMPLEMENTED
+- **Implementation summary**: Defined the standard RESTful API contracts for Livestock, Health, Breeding, Dairy, Dashboard, and Finance domains. Established RFC 7807 (Problem Details) as the standard error contract. Documented in `api-contract.md`.
+- **Tests executed**: None (documentation ticket).
+- **Known limitations**: N/A
+- **PR/branch**: `personal/agitte/FMS-103`
