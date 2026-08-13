@@ -37,6 +37,7 @@ public class ProductionDbContext : DbContext
             entity.HasQueryFilter(e => e.TenantId == _tenantId);
             entity.HasIndex(e => e.TenantId);
             entity.HasIndex(e => e.Date);
+            entity.Property(e => e.Quantity).HasPrecision(18, 2);
         });
     }
 

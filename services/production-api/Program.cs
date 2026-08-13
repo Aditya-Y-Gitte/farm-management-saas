@@ -21,6 +21,8 @@ builder.Services.AddHttpContextAccessor();
 // --- Services & Repositories ---
 builder.Services.AddScoped<IDairyRepository, DairyRepository>();
 builder.Services.AddScoped<IDairyService, DairyService>();
+builder.Services.AddScoped<IFeedConsumptionRepository, FeedConsumptionRepository>();
+builder.Services.AddScoped<IFeedConsumptionService, FeedConsumptionService>();
 
 // --- JWT Authentication ---
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"]
