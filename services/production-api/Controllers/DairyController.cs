@@ -49,12 +49,12 @@ public class DairyController : ControllerBase
     }
 
     /// <summary>
-    /// Returns a dairy record for a specific livestock on a specific date.
+    /// Returns a dairy record for a specific livestock on a specific date and session.
     /// </summary>
     [HttpGet("livestock/{livestockId:guid}/date")]
-    public async Task<IActionResult> GetByLivestockIdAndDate(Guid livestockId, [FromQuery] DateTime date)
+    public async Task<IActionResult> GetByLivestockDateAndSession(Guid livestockId, [FromQuery] DateTime date, [FromQuery] string session)
     {
-        var record = await _dairyService.GetByLivestockIdAndDateAsync(livestockId, date);
+        var record = await _dairyService.GetByLivestockDateAndSessionAsync(livestockId, date, session);
         if (record is null) return NotFound();
         return Ok(record);
     }

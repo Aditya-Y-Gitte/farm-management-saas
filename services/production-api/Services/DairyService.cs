@@ -38,22 +38,22 @@ public class DairyService : IDairyService
         return entity?.Adapt<DairyDto>();
     }
 
-    public async Task<DairyDto?> GetByLivestockIdAndDateAsync(Guid livestockId, DateTime date)
+    public async Task<DairyDto?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session)
     {
-        var entity = await _repository.GetByLivestockIdAndDateAsync(livestockId, date);
+        var entity = await _repository.GetByLivestockDateAndSessionAsync(livestockId, date, session);
         return entity?.Adapt<DairyDto>();
     }
 
     public async Task<DairyDto> CreateAsync(CreateDairyRequest request)
     {
-        // Business rule: one dairy record per livestock per day.
-        var existing = await _repository.GetByLivestockIdAndDateAsync(request.LivestockId, request.Date);
+        // Business rule: one dairy record per livestock per day per session.
+        var existing = await _repository.GetByLivestockDateAndSessionAsync(request.LivestockId, request.Date, request.Session);
         if (existing != null)
         {
-            _logger.LogWarning("Duplicate dairy record. LivestockId: {LivestockId}, Date: {Date}",
-                request.LivestockId, request.Date.Date);
-            throw new ArgumentException(
-                $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' already exists.");
+            _logger.LogWarning("Duplicate dairy record. LivestockId: {LivestockId}, Date: {Date}, Session: {Session}",
+                request.LivestockId, request.Date.Date, request.Session);
+            throw new FarmManagement.SharedKernel.Exceptions.ConflictException(
+                $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' during '{request.Session}' session already exists.");
         }
 
         var entity = new Dairy
@@ -63,6 +63,7 @@ public class DairyService : IDairyService
             Session = request.Session,
             MilkYield = request.MilkYield,
             FatContent = request.FatContent,
+            ProteinContent = request.ProteinContent,
             SnfContent = request.SnfContent,
             Quality = request.Quality
         };
@@ -77,7 +78,15 @@ public class DairyService : IDairyService
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
         {
-            throw new KeyNotFoundException($"Dairy record with id '{id}' was not found.");
+            throw new FarmManagement.SharedKernel.Exceptions.NotFoundException($"Dairy record with id '{id}' was not found.");
+        }
+
+        // Business rule: Check if updating to an existing livestock+date+session combination (excluding self)
+        var existing = await _repository.GetByLivestockDateAndSessionAsync(request.LivestockId, request.Date, request.Session);
+        if (existing != null && existing.Id != id)
+        {
+            throw new FarmManagement.SharedKernel.Exceptions.ConflictException(
+                $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' during '{request.Session}' session already exists.");
         }
 
         // Apply only mutable fields. TenantId and Id remain immutable.
@@ -86,6 +95,7 @@ public class DairyService : IDairyService
         entity.Session = request.Session;
         entity.MilkYield = request.MilkYield;
         entity.FatContent = request.FatContent;
+        entity.ProteinContent = request.ProteinContent;
         entity.SnfContent = request.SnfContent;
         entity.Quality = request.Quality;
 

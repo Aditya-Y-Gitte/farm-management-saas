@@ -15,6 +15,7 @@ public class DairyDto
     public string Session { get; set; } = string.Empty;
     public decimal MilkYield { get; set; }
     public decimal FatContent { get; set; }
+    public decimal? ProteinContent { get; set; }
     public decimal SnfContent { get; set; }
     public string Quality { get; set; } = string.Empty;
     public string TenantId { get; set; } = string.Empty;
