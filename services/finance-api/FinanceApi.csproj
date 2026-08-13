@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\FarmManagement.SharedKernel\SharedKernel.csproj" />
+    <ProjectReference Include="..\FarmManagement.SharedKernel\FarmManagement.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -70,7 +70,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseSharedExceptionHandling();
 
 if (app.Environment.IsDevelopment())
 {
