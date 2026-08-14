@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { getLivestocks } from '../../services/livestockService';
-import { Livestock } from '../../types/livestock';
+import { getLivestocks } from '../../../services/livestockService';
+import { Livestock } from '../../../types/livestock';
 import './Livestock.css';
 
 interface LivestockListProps {

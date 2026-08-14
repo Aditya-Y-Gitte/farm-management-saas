@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { useAuth } from '../../auth/AuthContext';
+import { useAuth } from '../../features/auth/context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { registerAuthFunctions } from '../../services/apiClient';
 import './AppShell.css';

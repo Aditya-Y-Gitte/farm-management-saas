@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import config from '../config/app.config';
+import config from '../../../config/app.config';
 
 // --- Types ---
 export interface AuthUser {

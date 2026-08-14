@@ -1,8 +1,8 @@
 // DairyList.tsx
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getDairies } from '../../services/dairyService';
-import { Dairy } from '../../types/dairy';
+import { getDairies } from '../../../services/dairyService';
+import { Dairy } from '../../../types/dairy';
 import './Dairy.css';
 
 interface DairyListProps {

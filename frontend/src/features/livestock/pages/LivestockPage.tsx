@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import LivestockList from '../components/livestock/LivestockList';
-import LivestockForm from '../components/livestock/LivestockForm';
-import '../pages/PageCommon.css';
+import LivestockList from '../components/LivestockList';
+import LivestockForm from '../components/LivestockForm';
+import '../../../theme/PageCommon.css';
 
 const LivestockPage: React.FC = () => {
   const { t } = useTranslation();

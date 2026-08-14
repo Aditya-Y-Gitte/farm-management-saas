@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createIncome, createExpense } from '../../services/FinanceService';
-import { CreateIncomeRequest, CreateExpenseRequest } from '../../types/finance';
-import { TRANSACTION_TYPES, INCOME_SOURCES, EXPENSE_CATEGORIES } from '../../constants/appConstants';
+import { createIncome, createExpense } from '../../../services/FinanceService';
+import { CreateIncomeRequest, CreateExpenseRequest } from '../../../types/finance';
+import { TRANSACTION_TYPES, INCOME_SOURCES, EXPENSE_CATEGORIES } from '../../../constants/appConstants';
 
 interface FinanceFormProps {
     onTransactionCreated: () => void;
