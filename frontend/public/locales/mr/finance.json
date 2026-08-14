@@ -1,0 +1,43 @@
+{
+  "totalIncome": "एकूण उत्पन्न",
+  "totalExpenses": "एकूण खर्च",
+  "netProfit": "निव्वळ नफा",
+  "addTransaction": "व्यवहार जोडा",
+  "income": "उत्पन्न",
+  "expense": "खर्च",
+  "expenses": "खर्च",
+  "fields": {
+    "category": "श्रेणी",
+    "notes": "शेरा",
+    "amount": "रक्कम",
+    "totalAmount": "एकूण रक्कम (₹)",
+    "quantity": "प्रमाण",
+    "rate": "दर",
+    "buyerName": "खरेदीदाराचे नाव"
+  },
+  "actions": {
+    "saveTransaction": "व्यवहार जतन करा",
+    "backToLedger": "नोंदवहीवर परत जा"
+  },
+  "empty": {
+    "noIncome": "कोणत्याही उत्पन्नाच्या नोंदी आढळल्या नाहीत.",
+    "noExpense": "कोणत्याही खर्चाच्या नोंदी आढळल्या नाहीत."
+  },
+  "errors": {
+    "fetchFailed": "आर्थिक नोंदी आणण्यात अयशस्वी"
+  },
+  "category": {
+    "milkSales": "दूध विक्री",
+    "manureSales": "शेणखत विक्री",
+    "animalSales": "पशु विक्री",
+    "subsidy": "सरकारी अनुदान",
+    "other": "इतर",
+    "feed": "चारा आणि खाद्य",
+    "veterinary": "पशुवैद्यकीय आणि औषधोपचार",
+    "labor": "मजुरी",
+    "equipment": "उपकरणे आणि देखभाल",
+    "animalPurchase": "पशु खरेदी",
+    "miscellaneous": "किरकोळ खर्च"
+  },
+  "title": "फायनान्स लेजर"
+}

@@ -1,0 +1,41 @@
+{
+  "addLog": "Add Dairy Log",
+  "addRecord": "Add Dairy Record",
+  "records": "Dairy Records",
+  "fields": {
+    "date": "Date",
+    "dateLabel": "Date:",
+    "yield": "Milk Yield",
+    "yieldLabel": "Milk Yield:",
+    "fat": "Fat Content",
+    "fatLabel": "Fat Content:",
+    "protein": "Protein Content",
+    "proteinLabel": "Protein Content:",
+    "quality": "Quality",
+    "qualityLabel": "Quality:",
+    "yieldLiters": "Milk Yield (Liters)",
+    "fatPercent": "Fat Content (%)",
+    "snfPercent": "SNF Content (%)",
+    "session": "Session",
+    "yieldL": "Milk Yield (L)",
+    "fatP": "Fat %",
+    "snfP": "SNF %"
+  },
+  "session": {
+    "morning": "Morning",
+    "evening": "Evening"
+  },
+  "quality": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor"
+  },
+  "actions": {
+    "saveRecord": "Save Record"
+  },
+  "empty": {
+    "noRecords": "No dairy records found."
+  },
+  "title": "Dairy Management"
+}

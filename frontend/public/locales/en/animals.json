@@ -1,0 +1,66 @@
+{
+  "add": "Add Livestock",
+  "fields": {
+    "id": "Livestock ID:",
+    "name": "Name",
+    "nameLabel": "Name:",
+    "species": "Species",
+    "speciesLabel": "Species:",
+    "breed": "Breed",
+    "breedLabel": "Breed:",
+    "dob": "Date of Birth",
+    "dobLabel": "Date of Birth:",
+    "gender": "Gender",
+    "genderLabel": "Gender:",
+    "tagRequired": "Tag Number (Required)",
+    "nameAlias": "Name/Alias",
+    "acquisitionType": "Acquisition Type",
+    "purchasePriceRs": "Purchase Price (₹)",
+    "purchaseDate": "Purchase Date",
+    "tag": "Tag Number",
+    "tagShort": "Tag",
+    "type": "Type",
+    "purchasePrice": "Purchase Price"
+  },
+  "species": {
+    "cow": "Cow",
+    "bull": "Bull",
+    "buffalo": "Buffalo",
+    "goat": "Goat",
+    "sheep": "Sheep"
+  },
+  "gender": {
+    "female": "Female",
+    "male": "Male"
+  },
+  "status": {
+    "active": "Active",
+    "sold": "Sold",
+    "deceased": "Deceased",
+    "lost": "Lost"
+  },
+  "source": {
+    "bornOnFarm": "BornOnFarm",
+    "purchased": "Purchased",
+    "gifted": "Gifted"
+  },
+  "actions": {
+    "addNew": "Add New Livestock",
+    "save": "Save Livestock",
+    "viewProfile": "View Profile",
+    "backToDirectory": "Back to Directory"
+  },
+  "directory": "Livestock Directory",
+  "empty": {
+    "noLivestock": "No livestock found."
+  },
+  "errors": {
+    "notFound": "Livestock not found"
+  },
+  "sections": {
+    "general": "General Information",
+    "acquisition": "Acquisition Details"
+  },
+  "profileTitle": "Livestock Profile",
+  "title": "Livestock Management"
+}

@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "cycles": "प्रजनन चक्रे"
+  },
+  "actions": {
+    "addCycle": "चक्र जोडा"
+  },
+  "fields": {
+    "startDate": "सुरुवातीची तारीख",
+    "inseminationDate": "बीजारोपण तारीख",
+    "expectedCalving": "अपेक्षित प्रसूती",
+    "status": "स्थिती"
+  },
+  "status": {
+    "successful": "यशस्वी",
+    "pendingOrFailed": "प्रलंबित/अयशस्वी"
+  },
+  "empty": {
+    "noCycles": "कोणतीही प्रजनन चक्रे आढळली नाहीत."
+  }
+}

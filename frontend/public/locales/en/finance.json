@@ -1,0 +1,43 @@
+{
+  "totalIncome": "Total Income",
+  "totalExpenses": "Total Expenses",
+  "netProfit": "Net Profit",
+  "addTransaction": "Add Transaction",
+  "income": "Income",
+  "expense": "Expense",
+  "expenses": "Expenses",
+  "fields": {
+    "category": "Category",
+    "notes": "Notes",
+    "amount": "Amount",
+    "totalAmount": "Total Amount (₹)",
+    "quantity": "Quantity",
+    "rate": "Rate",
+    "buyerName": "Buyer Name"
+  },
+  "actions": {
+    "saveTransaction": "Save Transaction",
+    "backToLedger": "Back to Ledger"
+  },
+  "empty": {
+    "noIncome": "No income records found.",
+    "noExpense": "No expense records found."
+  },
+  "errors": {
+    "fetchFailed": "Failed to fetch finances"
+  },
+  "category": {
+    "milkSales": "Milk Sales",
+    "manureSales": "Manure/Dung Sales",
+    "animalSales": "Animal Sales",
+    "subsidy": "Government Subsidy",
+    "other": "Other",
+    "feed": "Feed & Fodder",
+    "veterinary": "Veterinary & Medicine",
+    "labor": "Labor",
+    "equipment": "Equipment & Maintenance",
+    "animalPurchase": "Animal Purchase",
+    "miscellaneous": "Miscellaneous"
+  },
+  "title": "Finance Ledger"
+}

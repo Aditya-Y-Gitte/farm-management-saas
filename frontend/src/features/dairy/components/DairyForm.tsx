@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createDairy } from '../../../services/dairyService';
+import { DAIRY_SESSION_I18N_MAP, DAIRY_QUALITY_I18N_MAP } from '../../../utils/i18nMappings';
 import { CreateDairyRequest } from '../../../types/dairy';
 import { DAIRY_SESSIONS, DAIRY_QUALITIES } from '../../../constants/appConstants';
 import './Dairy.css';
@@ -11,7 +12,7 @@ interface DairyFormProps {
 }
 
 const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
     const [formData, setFormData] = useState<CreateDairyRequest>({
         livestockId: '',
         date: '',
@@ -49,57 +50,57 @@ const DairyForm: React.FC<DairyFormProps> = ({ onDairyCreated }) => {
 
     return (
         <div className="dairy-form-container">
-            <h2 style={{ marginTop: 0, marginBottom: '24px' }}>{t('Add Dairy Record')}</h2>
+            <h2 style={{ marginTop: 0, marginBottom: '24px' }}>{t('milk:addRecord')}</h2>
             
             {error && <div className="login-error">{error}</div>}
             
             <form onSubmit={handleSubmit} className="grid grid-cols-2">
                 <div className="form-group">
-                    <label htmlFor="livestockId">{t('Livestock ID (Tag or GUID)')}</label>
+                    <label htmlFor="livestockId">{t('animals:fields.id')}</label>
                     <input className="form-control" id="livestockId" name="livestockId" type="text" value={formData.livestockId} onChange={handleChange} required />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="date">{t('Date')}</label>
+                    <label htmlFor="date">{t('milk:fields.date')}</label>
                     <input className="form-control" id="date" name="date" type="date" value={formData.date} onChange={handleChange} required />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="session">{t('Session')}</label>
+                    <label htmlFor="session">{t('milk:fields.session')}</label>
                     <select className="form-control" id="session" name="session" value={formData.session} onChange={handleChange} required>
                         {DAIRY_SESSIONS.map(session => (
-                            <option key={session} value={session}>{t(session)}</option>
+                            <option key={session} value={session}>{t(DAIRY_SESSION_I18N_MAP[session] || session as any)}</option>
                         ))}
                     </select>
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="milkYield">{t('Milk Yield (Liters)')}</label>
+                    <label htmlFor="milkYield">{t('milk:fields.yieldLiters')}</label>
                     <input className="form-control" id="milkYield" name="milkYield" type="number" step="0.1" value={formData.milkYield || ''} onChange={handleChange} required />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="fatContent">{t('Fat Content (%)')}</label>
+                    <label htmlFor="fatContent">{t('milk:fields.fatPercent')}</label>
                     <input className="form-control" id="fatContent" name="fatContent" type="number" step="0.1" value={formData.fatContent || ''} onChange={handleChange} />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="snfContent">{t('SNF Content (%)')}</label>
+                    <label htmlFor="snfContent">{t('milk:fields.snfPercent')}</label>
                     <input className="form-control" id="snfContent" name="snfContent" type="number" step="0.1" value={formData.snfContent || ''} onChange={handleChange} />
                 </div>
                 
                 <div className="form-group">
-                    <label htmlFor="quality">{t('Quality')}</label>
+                    <label htmlFor="quality">{t('milk:fields.quality')}</label>
                     <select className="form-control" id="quality" name="quality" value={formData.quality} onChange={handleChange}>
                         {DAIRY_QUALITIES.map(quality => (
-                            <option key={quality} value={quality}>{t(quality)}</option>
+                            <option key={quality} value={quality}>{t(DAIRY_QUALITY_I18N_MAP[quality] || quality as any)}</option>
                         ))}
                     </select>
                 </div>
                 
                 <div style={{ gridColumn: '1 / -1', marginTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
                     <button type="submit" className="btn btn-primary" disabled={isSubmitting} style={{ minWidth: '150px' }}>
-                        {isSubmitting ? t('Saving...') : t('Save Record')}
+                        {isSubmitting ? t('common:states.saving') : t('milk:actions.saveRecord')}
                     </button>
                 </div>
             </form>

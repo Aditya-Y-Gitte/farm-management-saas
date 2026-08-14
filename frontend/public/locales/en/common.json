@@ -1,0 +1,26 @@
+{
+  "appTitle": "Farm Management SaaS",
+  "actions": {
+    "add": "Add",
+    "save": "Save",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "hideForm": "Hide Form",
+    "optional": "Optional",
+    "confirm": "Confirm",
+    "backToList": "Back to List",
+    "refresh": "Refresh"
+  },
+  "states": {
+    "loading": "Checking...",
+    "saving": "Saving..."
+  },
+  "errors": {
+    "generic": "An error occurred",
+    "defaultTitle": "Error",
+    "defaultMessage": "Unable to load this content. Please try again."
+  },
+  "fields": {
+    "actions": "Actions"
+  }
+}

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getLivestocks } from '../../../services/livestockService';
+import { STATUS_I18N_MAP } from '../../../utils/i18nMappings';
 import { Livestock } from '../../../types/livestock';
 import './Livestock.css';
 
@@ -11,7 +12,7 @@ interface LivestockListProps {
 }
 
 const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
     const [livestocks, setLivestocks] = useState<Livestock[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,17 +35,17 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
 
     return (
         <div className="livestock-container">
-            <h2>{t('Livestock Directory')}</h2>
+            <h2>{t('animals:directory')}</h2>
             <div className="table-responsive">
                 <table className="livestock-table">
                     <thead>
                         <tr>
-                            <th>{t('Tag Number')}</th>
-                            <th>{t('Name')}</th>
-                            <th>{t('Species')}</th>
-                            <th>{t('Breed')}</th>
-                            <th>{t('Status')}</th>
-                            <th>{t('Actions')}</th>
+                            <th>{t('animals:fields.tag')}</th>
+                            <th>{t('animals:fields.name')}</th>
+                            <th>{t('animals:fields.species')}</th>
+                            <th>{t('animals:fields.breed')}</th>
+                            <th>{t('breeding:fields.status')}</th>
+                            <th>{t('common:fields.actions')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,19 +57,19 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
                                 <td>{livestock.breed}</td>
                                 <td>
                                     <span className={`status-badge status-${livestock.status?.toLowerCase()}`}>
-                                        {t(livestock.status || 'Active')}
+                                        {t(STATUS_I18N_MAP[livestock.status || 'Active'] || (livestock.status || 'Active') as any)}
                                     </span>
                                 </td>
                                 <td>
                                     <Link to={`/livestock/${livestock.id}`} className="btn btn-secondary btn-sm">
-                                        {t('View Profile')}
+                                        {t('animals:actions.viewProfile')}
                                     </Link>
                                 </td>
                             </tr>
                         ))}
                         {livestocks.length === 0 && (
                             <tr>
-                                <td colSpan={6} className="text-center">{t('No livestock found.')}</td>
+                                <td colSpan={6} className="text-center">{t('animals:empty.noLivestock')}</td>
                             </tr>
                         )}
                     </tbody>

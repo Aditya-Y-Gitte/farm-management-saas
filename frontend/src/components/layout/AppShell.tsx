@@ -9,7 +9,7 @@ import './AppShell.css';
 const AppShell: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, logout, accessToken, refreshAccessToken } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
 
   // Register auth functions with the API client
   useEffect(() => {
@@ -34,7 +34,7 @@ const AppShell: React.FC = () => {
         {/* Top Bar */}
         <header className="app-shell__topbar">
           <div className="topbar__left">
-            <h2 className="topbar__title">{t('Farm Management SaaS')}</h2>
+            <h2 className="topbar__title">{t('common:appTitle')}</h2>
           </div>
 
           <div className="topbar__right">

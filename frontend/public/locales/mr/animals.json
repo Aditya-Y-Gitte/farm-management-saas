@@ -1,0 +1,66 @@
+{
+  "add": "पशुधन जोडा",
+  "fields": {
+    "id": "पशुधन आयडी:",
+    "name": "नाव",
+    "nameLabel": "नाव:",
+    "species": "प्रजाती",
+    "speciesLabel": "प्रजाती:",
+    "breed": "जात",
+    "breedLabel": "जात:",
+    "dob": "जन्मतारीख",
+    "dobLabel": "जन्मतारीख:",
+    "gender": "लिंग",
+    "genderLabel": "लिंग:",
+    "tagRequired": "टॅग क्रमांक (आवश्यक)",
+    "nameAlias": "नाव/टोपणनाव",
+    "acquisitionType": "अधिग्रहणाचा प्रकार",
+    "purchasePriceRs": "खरेदी किंमत (₹)",
+    "purchaseDate": "खरेदीची तारीख",
+    "tag": "टॅग क्रमांक",
+    "tagShort": "टॅग",
+    "type": "प्रकार",
+    "purchasePrice": "खरेदी किंमत"
+  },
+  "species": {
+    "cow": "गाय",
+    "bull": "बैल",
+    "buffalo": "म्हैस",
+    "goat": "शेळी",
+    "sheep": "मेंढी"
+  },
+  "gender": {
+    "female": "मादी",
+    "male": "नर"
+  },
+  "status": {
+    "active": "सक्रिय",
+    "sold": "विकले",
+    "deceased": "मृत",
+    "lost": "हरवले"
+  },
+  "source": {
+    "bornOnFarm": "शेतावर जन्मलेले",
+    "purchased": "विकत घेतलेले",
+    "gifted": "भेट मिळालेले"
+  },
+  "actions": {
+    "addNew": "नवीन पशुधन जोडा",
+    "save": "पशुधन जतन करा",
+    "viewProfile": "प्रोफाइल पहा",
+    "backToDirectory": "निर्देशिकेवर परत जा"
+  },
+  "directory": "पशुधन निर्देशिका",
+  "empty": {
+    "noLivestock": "कोणतेही पशुधन आढळले नाही."
+  },
+  "errors": {
+    "notFound": "पशुधन आढळले नाही"
+  },
+  "sections": {
+    "general": "सामान्य माहिती",
+    "acquisition": "अधिग्रहणाचा तपशील"
+  },
+  "profileTitle": "पशुधन प्रोफाइल",
+  "title": "पशुधन व्यवस्थापन"
+}

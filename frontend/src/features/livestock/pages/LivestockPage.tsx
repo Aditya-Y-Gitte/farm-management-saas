@@ -5,7 +5,7 @@ import LivestockForm from '../components/LivestockForm';
 import '../../../theme/PageCommon.css';
 
 const LivestockPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
   const [showForm, setShowForm] = useState(false);
   const [refreshKey, setRefreshKey] = useState(false);
 
@@ -17,9 +17,9 @@ const LivestockPage: React.FC = () => {
   return (
     <div className="page">
       <div className="page__header">
-        <h1>🐄 {t('Livestock Management')}</h1>
+        <h1>🐄 {t('animals:title')}</h1>
         <button className="page__action-btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? t('Cancel') : `+ ${t('Add Livestock')}`}
+          {showForm ? t('common:actions.cancel') : `+ ${t('animals:add')}`}
         </button>
       </div>
 

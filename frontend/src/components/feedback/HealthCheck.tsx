@@ -9,7 +9,7 @@ import { Button } from '../ui/Button';
 import { RefreshCw, Power } from 'lucide-react';
 
 const HealthCheck: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
   const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [isRestartDialogOpen, setIsRestartDialogOpen] = useState(false);
@@ -27,20 +27,20 @@ const HealthCheck: React.FC = () => {
 
   return (
     <Card style={{ maxWidth: 400, margin: 'var(--space-8) auto' }}>
-      <Card.Header title={t('System Health')} />
+      <Card.Header title={t('health:backendHealth')} />
       <Card.Body>
         {isHealthy === null ? (
-          <Alert variant="info" title={t('Checking...')}>
-            {t('Verifying backend connectivity.')}
+          <Alert variant="info" title={t('common:states.loading')}>
+            {t('health:verifyingConnectivity')}
           </Alert>
         ) : isHealthy ? (
-          <Alert variant="success" title={t('Healthy')}>
-            {t('Backend is connected and responding.')}
+          <Alert variant="success" title={t('health:backendHealthy')}>
+            {t('health:backendConnected')}
           </Alert>
         ) : (
           <ErrorState 
-            title={t('Offline')} 
-            message={t('Backend is currently unreachable.')}
+            title={t('health:backendNotHealthy')} 
+            message={t('health:backendUnreachable')}
             onRetry={checkHealth}
             isRetrying={loading}
           />
@@ -52,7 +52,7 @@ const HealthCheck: React.FC = () => {
           onClick={() => setIsRestartDialogOpen(true)}
           leftIcon={<Power size={16} />}
         >
-          {t('Restart Backend')}
+          {t('health:restartBackend')}
         </Button>
         <Button 
           variant="secondary" 
@@ -60,16 +60,16 @@ const HealthCheck: React.FC = () => {
           loading={loading}
           leftIcon={<RefreshCw size={16} />}
         >
-          {t('Refresh')}
+          {t('common:actions.retry', { defaultValue: 'Refresh' })}
         </Button>
       </Card.Footer>
 
       <ConfirmDialog
         isOpen={isRestartDialogOpen}
         onClose={() => setIsRestartDialogOpen(false)}
-        title={t('Restart Backend')}
-        message={t('Are you sure you want to restart the backend? This will briefly disconnect all users.')}
-        confirmText={t('Restart')}
+        title={t('health:restartBackend')}
+        message={t('health:restartBackendMessage')}
+        confirmText={t('health:restartBackend')}
         isDestructive={true}
         onConfirm={async () => {
           // Simulate API call

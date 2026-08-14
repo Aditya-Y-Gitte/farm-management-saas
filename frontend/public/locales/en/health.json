@@ -1,0 +1,28 @@
+{
+  "backendHealth": "System Health",
+  "backendHealthy": "Healthy",
+  "backendNotHealthy": "Offline",
+  "verifyingConnectivity": "Verifying backend connectivity.",
+  "backendConnected": "Backend is connected and responding.",
+  "backendUnreachable": "Backend is currently unreachable.",
+  "restartBackend": "Restart Backend",
+  "restartBackendMessage": "Are you sure you want to restart the backend? This will briefly disconnect all users.",
+  "fields": {
+    "healthStatus": "Health Status:",
+    "medication": "Medication:",
+    "vaccination": "Vaccination:",
+    "condition": "Condition",
+    "treatment": "Treatment",
+    "veterinarian": "Veterinarian",
+    "cost": "Cost"
+  },
+  "sections": {
+    "records": "Health Records"
+  },
+  "actions": {
+    "addRecord": "Add Record"
+  },
+  "empty": {
+    "noRecords": "No health records found."
+  }
+}
