@@ -9,6 +9,7 @@ import LivestockPage from '../features/livestock/pages/LivestockPage';
 import DairyPage from '../features/dairy/pages/DairyPage';
 import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
 import FinancePage from '../features/finance/pages/FinancePage';
+import TasksPage from '../features/tasks/pages/TasksPage';
 import './App.css';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/livestock/:id" element={<LivestockProfilePage />} />
             <Route path="/dairy" element={<DairyPage />} />
             <Route path="/finances" element={<FinancePage />} />
+            <Route path="/tasks" element={<TasksPage />} />
           </Route>
 
           {/* Default redirect */}

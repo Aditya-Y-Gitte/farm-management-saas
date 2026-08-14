@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import BottomNav from './BottomNav';
 import { useAuth } from '../../features/auth/context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { registerAuthFunctions } from '../../services/apiClient';
 import './AppShell.css';
 
 const AppShell: React.FC = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, logout, accessToken, refreshAccessToken } = useAuth();
-  const { t, i18n } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
+  const { t, i18n } = useTranslation(['common']);
 
   // Register auth functions with the API client
   useEffect(() => {
@@ -24,11 +24,8 @@ const AppShell: React.FC = () => {
   };
 
   return (
-    <div className={`app-shell ${sidebarCollapsed ? 'app-shell--sidebar-collapsed' : ''}`}>
-      <Sidebar
-        isCollapsed={sidebarCollapsed}
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+    <div className="app-shell">
+      <Sidebar />
 
       <div className="app-shell__main">
         {/* Top Bar */}
@@ -69,6 +66,9 @@ const AppShell: React.FC = () => {
         <main className="app-shell__content">
           <Outlet />
         </main>
+
+        {/* Mobile Bottom Navigation */}
+        <BottomNav />
       </div>
     </div>
   );

@@ -12,10 +12,6 @@
   flex-direction: column;
 }
 
-.app-shell--sidebar-collapsed .app-shell__main {
-  margin-left: 80px;
-}
-
 /* Top Bar */
 .app-shell__topbar {
   display: flex;
@@ -150,6 +146,8 @@
 @media (max-width: 768px) {
   .app-shell__main {
     margin-left: 0;
+    /* Add padding for BottomNav */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
   .app-shell__topbar {
     padding: var(--space-4);
