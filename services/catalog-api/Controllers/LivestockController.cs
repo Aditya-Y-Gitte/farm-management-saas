@@ -79,14 +79,4 @@ public class LivestockController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>
-    /// Returns the total livestock count for this tenant.
-    /// Consumed by the API Gateway metrics aggregation endpoint.
-    /// </summary>
-    [HttpGet("count")]
-    public async Task<IActionResult> GetCount()
-    {
-        var count = await _livestockService.GetCountAsync();
-        return Ok(new { totalLivestock = count });
-    }
 }

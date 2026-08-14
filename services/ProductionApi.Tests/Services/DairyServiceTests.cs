@@ -14,14 +14,16 @@ namespace ProductionApi.Tests.Services
     public class DairyServiceTests
     {
         private readonly Mock<IDairyRepository> _mockRepo;
+        private readonly Mock<IDateTimeService> _mockDateTime;
         private readonly Mock<ILogger<DairyService>> _mockLogger;
         private readonly DairyService _service;
 
         public DairyServiceTests()
         {
             _mockRepo = new Mock<IDairyRepository>();
+            _mockDateTime = new Mock<IDateTimeService>();
             _mockLogger = new Mock<ILogger<DairyService>>();
-            _service = new DairyService(_mockRepo.Object, _mockLogger.Object);
+            _service = new DairyService(_mockRepo.Object, _mockDateTime.Object, _mockLogger.Object);
         }
 
         [Fact]

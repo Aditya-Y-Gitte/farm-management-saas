@@ -11,5 +11,5 @@ public interface ILivestockRepository
     Task<Livestock> CreateAsync(Livestock livestock);
     Task<Livestock> UpdateAsync(Livestock livestock);
     Task<bool> DeleteAsync(Guid id);
-    Task<int> GetCountAsync();
+    Task<CatalogApi.DTOs.CatalogSummaryDto> GetSummaryAsync();
 }

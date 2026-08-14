@@ -6,6 +6,7 @@ import './DashboardPage.css';
 
 interface CatalogSummary {
   totalLivestock: number;
+  attentionCount: number;
 }
 
 interface ProductionSummary {
@@ -115,6 +116,7 @@ const DashboardPage: React.FC = () => {
 
       <div className="dashboard__cards">
         {renderMetricCard('🐄', t('Total Livestock'), catalog.data?.totalLivestock ?? 0, '#15803d', catalog)}
+        {renderMetricCard('⚠️', t('Attention Needed'), catalog.data?.attentionCount ?? 0, '#ea580c', catalog)}
         {renderMetricCard('🥛', t('Milk Today'), `${(production.data?.totalMilkToday ?? 0).toFixed(1)} L`, '#0369a1', production)}
         {renderMetricCard('📅', t('Milk This Week'), `${(production.data?.totalMilkThisWeek ?? 0).toFixed(1)} L`, '#a21caf', production)}
         {renderMetricCard('💰', t('Balance'), `$${(finance.data?.netBalance ?? 0).toFixed(2)}`, '#059669', finance)}

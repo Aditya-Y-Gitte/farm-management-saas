@@ -65,8 +65,16 @@ public class LivestockRepository : ILivestockRepository
         return true;
     }
 
-    public async Task<int> GetCountAsync()
+    public async Task<CatalogApi.DTOs.CatalogSummaryDto> GetSummaryAsync()
     {
-        return await _context.Livestocks.AsNoTracking().CountAsync();
+        var query = _context.Livestocks.AsNoTracking();
+        var total = await query.CountAsync();
+        var attention = await query.CountAsync(l => LivestockStatuses.RequiringAttention.Contains(l.Status));
+
+        return new CatalogApi.DTOs.CatalogSummaryDto
+        {
+            TotalLivestock = total,
+            AttentionCount = attention
+        };
     }
 }

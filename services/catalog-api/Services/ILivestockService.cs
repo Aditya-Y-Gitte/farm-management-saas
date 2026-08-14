@@ -14,5 +14,5 @@ public interface ILivestockService
     Task<LivestockDto> CreateAsync(CreateLivestockRequest request);
     Task<LivestockDto> UpdateAsync(Guid id, UpdateLivestockRequest request);
     Task<bool> DeleteAsync(Guid id);
-    Task<int> GetCountAsync();
+    Task<CatalogSummaryDto> GetSummaryAsync();
 }

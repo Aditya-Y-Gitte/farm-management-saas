@@ -67,18 +67,16 @@ public class DairyRepository : IDairyRepository
         return true;
     }
 
-    public async Task<DairySummaryDto> GetSummaryAsync()
+    public async Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc)
     {
-        var today = DateTime.UtcNow.Date;
-        var weekStart = today.AddDays(-(int)today.DayOfWeek);
         var query = _context.Dairies.AsNoTracking();
 
         var totalRecords = await query.CountAsync();
         var todayMilk = await query
-            .Where(d => d.Date.Date == today)
+            .Where(d => d.Date >= todayStartUtc && d.Date < todayEndUtc)
             .SumAsync(d => d.MilkYield);
         var weekMilk = await query
-            .Where(d => d.Date.Date >= weekStart)
+            .Where(d => d.Date >= weekStartUtc && d.Date < weekEndUtc)
             .SumAsync(d => d.MilkYield);
         var avgFat = totalRecords > 0
             ? await query.AverageAsync(d => d.FatContent)
