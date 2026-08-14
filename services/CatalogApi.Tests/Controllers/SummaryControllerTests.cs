@@ -20,10 +20,11 @@ public class SummaryControllerTests
     }
 
     [Fact]
-    public async Task GetSummary_ReturnsOkWithCount()
+    public async Task GetSummary_ReturnsOkWithData()
     {
         // Arrange
-        _mockService.Setup(s => s.GetCountAsync()).ReturnsAsync(42);
+        var mockData = new CatalogSummaryDto { TotalLivestock = 42, AttentionCount = 5 };
+        _mockService.Setup(s => s.GetSummaryAsync()).ReturnsAsync(mockData);
 
         // Act
         var result = await _controller.GetSummary();
@@ -32,5 +33,6 @@ public class SummaryControllerTests
         var okResult = Assert.IsType<OkObjectResult>(result);
         var dto = Assert.IsType<CatalogSummaryDto>(okResult.Value);
         Assert.Equal(42, dto.TotalLivestock);
+        Assert.Equal(5, dto.AttentionCount);
     }
 }

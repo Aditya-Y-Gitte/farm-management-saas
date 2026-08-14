@@ -109,8 +109,8 @@ public class LivestockService : ILivestockService
         return await _repository.DeleteAsync(id);
     }
 
-    public async Task<int> GetCountAsync()
+    public async Task<CatalogSummaryDto> GetSummaryAsync()
     {
-        return await _repository.GetCountAsync();
+        return await _repository.GetSummaryAsync();
     }
 }

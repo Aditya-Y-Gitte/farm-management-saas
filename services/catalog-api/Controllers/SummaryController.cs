@@ -20,11 +20,7 @@ public class SummaryController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetSummary()
     {
-        var count = await _livestockService.GetCountAsync();
-        var dto = new CatalogSummaryDto
-        {
-            TotalLivestock = count
-        };
-        return Ok(dto);
+        var summary = await _livestockService.GetSummaryAsync();
+        return Ok(summary);
     }
 }

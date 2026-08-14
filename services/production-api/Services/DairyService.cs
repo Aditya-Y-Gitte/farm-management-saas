@@ -15,11 +15,13 @@ namespace ProductionApi.Services;
 public class DairyService : IDairyService
 {
     private readonly IDairyRepository _repository;
+    private readonly IDateTimeService _dateTimeService;
     private readonly ILogger<DairyService> _logger;
 
-    public DairyService(IDairyRepository repository, ILogger<DairyService> logger)
+    public DairyService(IDairyRepository repository, IDateTimeService dateTimeService, ILogger<DairyService> logger)
     {
         _repository = repository;
+        _dateTimeService = dateTimeService;
         _logger = logger;
     }
 
@@ -113,6 +115,9 @@ public class DairyService : IDairyService
     public async Task<DairySummaryDto> GetSummaryAsync()
     {
         _logger.LogInformation("Fetching dairy summary");
-        return await _repository.GetSummaryAsync();
+        var today = _dateTimeService.GetTodayBoundariesUtc();
+        var week = _dateTimeService.GetThisWeekBoundariesUtc();
+
+        return await _repository.GetSummaryAsync(today.StartUtc, today.EndUtc, week.StartUtc, week.EndUtc);
     }
 }

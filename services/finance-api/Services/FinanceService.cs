@@ -125,8 +125,8 @@ public class FinanceService : IFinanceService
 
     public async Task<FinanceSummaryDto> GetSummaryAsync()
     {
-        var today = DateTime.UtcNow.Date;
-        var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        var now = DateTime.UtcNow;
+        var startOfMonth = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
 
         var totalIncome = await _context.Incomes.AsNoTracking()
             .Where(i => i.Date >= startOfMonth)

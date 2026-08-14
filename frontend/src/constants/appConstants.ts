@@ -17,6 +17,8 @@ export const LIVESTOCK_GENDERS = Object.values(LivestockGender);
 
 export enum LivestockStatus {
     Active = 'Active',       // Currently on farm
+    Sick = 'Sick',           // Needs attention
+    NeedsAttention = 'Needs Attention', // Needs attention
     Sold = 'Sold',           // Sold to someone else
     Deceased = 'Deceased',   // Passed away
     Lost = 'Lost'            // Stolen or lost
