@@ -4,5 +4,13 @@
   "milk": "Dairy",
   "finance": "Finance Ledger",
   "breeding": "Breeding",
-  "health": "Health"
+  "health": "Health",
+  "tasks": "Tasks",
+  "more": "More",
+  "home": "Home",
+  "crops": "Crops",
+  "inventory": "Inventory",
+  "settings": "Settings",
+  "profile": "Profile",
+  "logout": "Logout"
 }

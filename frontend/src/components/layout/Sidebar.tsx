@@ -1,53 +1,80 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getEnabledModules } from '../../config/app.config';
+import { 
+  getPrimaryNavigation, 
+  getSecondaryNavigation, 
+  getActionNavigation 
+} from '../../config/navigation.config';
+import { useAuth } from '../../features/auth/context/AuthContext';
 import './Sidebar.css';
 
-interface SidebarProps {
-  isCollapsed: boolean;
-  onToggle: () => void;
-}
+interface SidebarProps {}
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
+const Sidebar: React.FC<SidebarProps> = () => {
   const location = useLocation();
-  const enabledModules = getEnabledModules();
-  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
+  const { t } = useTranslation(['common', 'navigation']);
+  const { logout } = useAuth();
+
+  const primaryItems = getPrimaryNavigation();
+  const secondaryItems = getSecondaryNavigation();
+  const actionItems = getActionNavigation();
 
   return (
-    <aside className={`sidebar ${isCollapsed ? 'sidebar--collapsed' : ''}`}>
+    <aside className="sidebar">
       <div className="sidebar__header">
-        {!isCollapsed && <span className="sidebar__logo">🌾 {t('common:appTitle', { defaultValue: 'FarmOS' })}</span>}
-        <button className="sidebar__toggle" onClick={onToggle} aria-label="Toggle sidebar">
-          {isCollapsed ? '☰' : '✕'}
-        </button>
+        <span className="sidebar__logo">🌾 {t('common:appTitle', { defaultValue: 'FarmOS' })}</span>
       </div>
 
-      <nav className="sidebar__nav">
-        {enabledModules.map((module) => {
-          // map livestock to animals internally for the namespace key if preferred, 
-          // or just ensure navigation.json has both. Let's use the module id directly.
-          const nsKey = module.id === 'livestock' ? 'animals' : module.id;
+      <nav className="sidebar__nav sidebar__nav--primary">
+        {primaryItems.map((item) => {
+          const isActive = location.pathname.startsWith(item.path || '');
           return (
             <NavLink
-              key={module.id}
-              to={module.path}
-              className={({ isActive }) =>
-                `sidebar__link ${isActive ? 'sidebar__link--active' : ''}`
-              }
-              title={module.description}
+              key={item.id}
+              to={item.path || '#'}
+              className={`sidebar__link ${isActive ? 'sidebar__link--active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
             >
-              <span className="sidebar__icon">{module.icon}</span>
-              {!isCollapsed && <span className="sidebar__label">{t(`navigation:${nsKey}`, { defaultValue: module.label }) as React.ReactNode}</span>}
+              <item.icon className="sidebar__icon" aria-hidden="true" />
+              <span className="sidebar__label">{t(item.translationKey)}</span>
             </NavLink>
           );
         })}
       </nav>
 
+      <div className="sidebar__divider" />
+
+      <nav className="sidebar__nav sidebar__nav--secondary">
+        {secondaryItems.map((item) => {
+          const isActive = location.pathname.startsWith(item.path || '');
+          return (
+            <NavLink
+              key={item.id}
+              to={item.path || '#'}
+              className={`sidebar__link ${isActive ? 'sidebar__link--active' : ''}`}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <item.icon className="sidebar__icon" aria-hidden="true" />
+              <span className="sidebar__label">{t(item.translationKey)}</span>
+            </NavLink>
+          );
+        })}
+
+        {actionItems.map((item) => (
+          <button
+            key={item.id}
+            className="sidebar__link sidebar__link--action"
+            onClick={item.id === 'logout' ? logout : undefined}
+          >
+            <item.icon className="sidebar__icon" aria-hidden="true" />
+            <span className="sidebar__label">{t(item.translationKey)}</span>
+          </button>
+        ))}
+      </nav>
+
       <div className="sidebar__footer">
-        {!isCollapsed && (
-          <span className="sidebar__version">v2.0.0</span>
-        )}
+        <span className="sidebar__version">v2.0.0</span>
       </div>
     </aside>
   );
