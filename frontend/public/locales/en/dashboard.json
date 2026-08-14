@@ -1,0 +1,22 @@
+{
+  "title": "Farm Dashboard",
+  "metrics": {
+    "totalLivestock": "Total Livestock",
+    "totalMilkToday": "Total Milk (Today)",
+    "totalMilkThisWeek": "Milk This Week",
+    "activeAlerts": "Attention Needed",
+    "balance": "Balance"
+  },
+  "analytics": {
+    "livestock": "Livestock Analytics",
+    "dairy": "Dairy Analytics",
+    "milkQuality": "Average Milk Quality"
+  },
+  "errors": {
+    "loadQualityFailed": "Failed to load quality data"
+  },
+  "empty": {
+    "noProductionData": "No production data",
+    "noProductionRecords": "No milk records have been logged yet."
+  }
+}

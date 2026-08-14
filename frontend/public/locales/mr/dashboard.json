@@ -1,0 +1,22 @@
+{
+  "title": "फार्म डॅशबोर्ड",
+  "metrics": {
+    "totalLivestock": "एकूण पशुधन",
+    "totalMilkToday": "एकूण दूध (आज)",
+    "totalMilkThisWeek": "या आठवड्यातील दूध",
+    "activeAlerts": "लक्ष देणे आवश्यक आहे",
+    "balance": "शिल्लक"
+  },
+  "analytics": {
+    "livestock": "पशुधन विश्लेषण",
+    "dairy": "दुग्धशाळा विश्लेषण",
+    "milkQuality": "सरासरी दुधाची गुणवत्ता"
+  },
+  "errors": {
+    "loadQualityFailed": "गुणवत्ता डेटा लोड करण्यात अयशस्वी"
+  },
+  "empty": {
+    "noProductionData": "कोणताही उत्पादन डेटा नाही",
+    "noProductionRecords": "अद्याप कोणत्याही दुधाच्या नोंदी केलेल्या नाहीत."
+  }
+}

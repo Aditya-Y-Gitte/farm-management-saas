@@ -29,7 +29,7 @@ interface FinanceSummary {
 }
 
 const DashboardPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
   
   const [catalog, setCatalog] = useState<{ data: CatalogSummary | null; loading: boolean; error: string | null }>({ data: null, loading: true, error: null });
   const [production, setProduction] = useState<{ data: ProductionSummary | null; loading: boolean; error: string | null }>({ data: null, loading: true, error: null });
@@ -113,24 +113,24 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="dashboard">
       <div className="dashboard__header">
-        <h1>{t('Farm Dashboard')}</h1>
+        <h1>{t('dashboard:title')}</h1>
         <span className="dashboard__updated">
           Last updated: {new Date().toLocaleTimeString()}
         </span>
       </div>
 
       <div className="dashboard__cards">
-        {renderMetricCard('🐄', t('Total Livestock'), catalog.data?.totalLivestock ?? 0, '#15803d', catalog)}
-        {renderMetricCard('⚠️', t('Attention Needed'), catalog.data?.attentionCount ?? 0, '#ea580c', catalog)}
-        {renderMetricCard('🥛', t('Milk Today'), `${(production.data?.totalMilkToday ?? 0).toFixed(1)} L`, '#0369a1', production)}
-        {renderMetricCard('📅', t('Milk This Week'), `${(production.data?.totalMilkThisWeek ?? 0).toFixed(1)} L`, '#a21caf', production)}
-        {renderMetricCard('💰', t('Balance'), `$${(finance.data?.netBalance ?? 0).toFixed(2)}`, '#059669', finance)}
+        {renderMetricCard('🐄', t('dashboard:metrics.totalLivestock'), catalog.data?.totalLivestock ?? 0, '#15803d', catalog)}
+        {renderMetricCard('⚠️', t('dashboard:metrics.activeAlerts'), catalog.data?.attentionCount ?? 0, '#ea580c', catalog)}
+        {renderMetricCard('🥛', t('dashboard:metrics.totalMilkToday'), `${(production.data?.totalMilkToday ?? 0).toFixed(1)} L`, '#0369a1', production)}
+        {renderMetricCard('📅', t('dashboard:metrics.totalMilkThisWeek'), `${(production.data?.totalMilkThisWeek ?? 0).toFixed(1)} L`, '#a21caf', production)}
+        {renderMetricCard('💰', t('dashboard:metrics.balance'), `$${(finance.data?.netBalance ?? 0).toFixed(2)}`, '#059669', finance)}
       </div>
 
       <div className="dashboard__charts">
         {production.loading ? (
           <div className="chart-panel" aria-busy="true">
-            <h3>{t('Average Milk Quality')}</h3>
+            <h3>{t('dashboard:analytics.milkQuality')}</h3>
             <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-end', height: '250px', padding: 'var(--space-4) 0' }}>
                <Skeleton height="60%" width="50px" />
                <Skeleton height="80%" width="50px" />
@@ -141,18 +141,18 @@ const DashboardPage: React.FC = () => {
           </div>
         ) : production.error ? (
           <ErrorState 
-            title={t('Failed to load quality data')} 
+            title={t('dashboard:errors.loadQualityFailed')} 
             message={production.error} 
           />
         ) : production.data?.totalRecords === 0 ? (
           <EmptyState
-            title={t('No production data')}
-            description={t('No milk records have been logged yet.')}
+            title={t('dashboard:empty.noProductionData')}
+            description={t('dashboard:empty.noProductionRecords')}
             icon={<span style={{ fontSize: '2rem' }}>🥛</span>}
           />
         ) : (
           <div className="chart-panel">
-            <h3>{t('Average Milk Quality')}</h3>
+            <h3>{t('dashboard:analytics.milkQuality')}</h3>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={qualityData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />

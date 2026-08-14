@@ -5,7 +5,7 @@ import DairyForm from '../components/DairyForm';
 import '../../../theme/PageCommon.css';
 
 const DairyPage: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
   const [showForm, setShowForm] = useState(false);
   const [refreshKey, setRefreshKey] = useState(false);
 
@@ -17,9 +17,9 @@ const DairyPage: React.FC = () => {
   return (
     <div className="page">
       <div className="page__header">
-        <h1>🥛 {t('Dairy Management')}</h1>
+        <h1>🥛 {t('milk:title')}</h1>
         <button className="page__action-btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? t('Cancel') : `+ ${t('Add Dairy Log')}`}
+          {showForm ? t('common:actions.cancel') : `+ ${t('milk:addLog')}`}
         </button>
       </div>
 

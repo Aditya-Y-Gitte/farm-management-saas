@@ -1,0 +1,28 @@
+{
+  "backendHealth": "सिस्टम आरोग्य",
+  "backendHealthy": "निरोगी",
+  "backendNotHealthy": "ऑफलाइन",
+  "verifyingConnectivity": "बॅकएंड कनेक्टिव्हिटी तपासत आहे.",
+  "backendConnected": "बॅकएंड जोडलेले आहे आणि प्रतिसाद देत आहे.",
+  "backendUnreachable": "बॅकएंड सध्या पोहोचण्याबाहेर आहे.",
+  "restartBackend": "बॅकएंड रीस्टार्ट करा",
+  "restartBackendMessage": "तुम्हाला नक्की बॅकएंड रीस्टार्ट करायचे आहे का? हे सर्व वापरकर्त्यांना थोडक्यात डिस्कनेक्ट करेल.",
+  "fields": {
+    "healthStatus": "आरोग्याची स्थिती:",
+    "medication": "औषधोपचार:",
+    "vaccination": "लसीकरण:",
+    "condition": "स्थिती",
+    "treatment": "उपचार",
+    "veterinarian": "पशुवैद्य",
+    "cost": "खर्च"
+  },
+  "sections": {
+    "records": "आरोग्य नोंदी"
+  },
+  "actions": {
+    "addRecord": "नोंद जोडा"
+  },
+  "empty": {
+    "noRecords": "कोणत्याही आरोग्य नोंदी आढळल्या नाहीत."
+  }
+}

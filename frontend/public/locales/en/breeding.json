@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "cycles": "Breeding Cycles"
+  },
+  "actions": {
+    "addCycle": "Add Cycle"
+  },
+  "fields": {
+    "startDate": "Start Date",
+    "inseminationDate": "Insemination Date",
+    "expectedCalving": "Expected Calving",
+    "status": "Status"
+  },
+  "status": {
+    "successful": "Successful",
+    "pendingOrFailed": "Pending/Failed"
+  },
+  "empty": {
+    "noCycles": "No breeding cycles found."
+  }
+}

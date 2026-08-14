@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createIncome, createExpense } from '../../../services/financeService';
+import { INCOME_SOURCE_I18N_MAP, EXPENSE_CATEGORY_I18N_MAP } from '../../../utils/i18nMappings';
 import { CreateIncomeRequest, CreateExpenseRequest } from '../../../types/finance';
 import { TRANSACTION_TYPES, INCOME_SOURCES, EXPENSE_CATEGORIES } from '../../../constants/appConstants';
 
@@ -9,7 +10,7 @@ interface FinanceFormProps {
 }
 
 const FinanceForm: React.FC<FinanceFormProps> = ({ onTransactionCreated }) => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
     const [transactionType, setTransactionType] = useState<typeof TRANSACTION_TYPES[keyof typeof TRANSACTION_TYPES]>(TRANSACTION_TYPES.INCOME);
     
     const [formData, setFormData] = useState({
@@ -68,7 +69,7 @@ const FinanceForm: React.FC<FinanceFormProps> = ({ onTransactionCreated }) => {
             }
             onTransactionCreated();
         } catch (err: any) {
-            setError(err.response?.data?.message || err.message || t('An error occurred'));
+            setError(err.response?.data?.message || err.message || t('common:errors.generic'));
         } finally {
             setIsSubmitting(false);
         }
@@ -83,7 +84,7 @@ const FinanceForm: React.FC<FinanceFormProps> = ({ onTransactionCreated }) => {
                     onClick={() => handleTypeChange(TRANSACTION_TYPES.INCOME)}
                     style={{ flex: 1 }}
                 >
-                    {t('Income')}
+                    {t('finance:income')}
                 </button>
                 <button 
                     type="button"
@@ -91,7 +92,7 @@ const FinanceForm: React.FC<FinanceFormProps> = ({ onTransactionCreated }) => {
                     onClick={() => handleTypeChange(TRANSACTION_TYPES.EXPENSE)}
                     style={{ flex: 1 }}
                 >
-                    {t('Expense')}
+                    {t('finance:expense')}
                 </button>
             </div>
 
@@ -99,50 +100,50 @@ const FinanceForm: React.FC<FinanceFormProps> = ({ onTransactionCreated }) => {
 
             <form onSubmit={handleSubmit} className="grid grid-cols-2" style={{ gap: 'var(--space-md)' }}>
                 <div className="form-group">
-                    <label htmlFor="date">{t('Date')} *</label>
+                    <label htmlFor="date">{t('milk:fields.date')} *</label>
                     <input className="form-control" id="date" name="date" type="date" value={formData.date} onChange={handleChange} required />
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="category">{t('Category')} *</label>
+                    <label htmlFor="category">{t('finance:fields.category')} *</label>
                     <select className="form-control" id="category" name="category" value={formData.category} onChange={handleChange} required>
                         {transactionType === TRANSACTION_TYPES.INCOME 
-                            ? INCOME_SOURCES.map(source => <option key={source} value={source}>{t(source)}</option>)
-                            : EXPENSE_CATEGORIES.map(category => <option key={category} value={category}>{t(category)}</option>)
+                            ? INCOME_SOURCES.map(source => <option key={source} value={source}>{t(INCOME_SOURCE_I18N_MAP[source] || source as any)}</option>)
+                            : EXPENSE_CATEGORIES.map(category => <option key={category} value={category}>{t(EXPENSE_CATEGORY_I18N_MAP[category] || category as any)}</option>)
                         }
                     </select>
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="amount">{t('Total Amount (₹)')} *</label>
+                    <label htmlFor="amount">{t('finance:fields.totalAmount')} *</label>
                     <input className="form-control" id="amount" name="amount" type="number" step="0.01" min="0.01" value={formData.amount || ''} onChange={handleChange} required />
                 </div>
 
                 {transactionType === TRANSACTION_TYPES.INCOME && (
                     <>
                         <div className="form-group">
-                            <label htmlFor="quantity">{t('Quantity')} ({t('Optional')})</label>
+                            <label htmlFor="quantity">{t('finance:fields.quantity')} ({t('common:actions.optional')})</label>
                             <input className="form-control" id="quantity" name="quantity" type="number" step="0.01" value={formData.quantity || ''} onChange={handleChange} />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="rate">{t('Rate')} ({t('Optional')})</label>
+                            <label htmlFor="rate">{t('finance:fields.rate')} ({t('common:actions.optional')})</label>
                             <input className="form-control" id="rate" name="rate" type="number" step="0.01" value={formData.rate || ''} onChange={handleChange} />
                         </div>
                         <div className="form-group">
-                            <label htmlFor="buyerName">{t('Buyer Name')} ({t('Optional')})</label>
+                            <label htmlFor="buyerName">{t('finance:fields.buyerName')} ({t('common:actions.optional')})</label>
                             <input className="form-control" id="buyerName" name="buyerName" type="text" value={formData.buyerName} onChange={handleChange} />
                         </div>
                     </>
                 )}
 
                 <div className="form-group" style={{ gridColumn: '1 / -1' }}>
-                    <label htmlFor="notes">{t('Notes')} ({t('Optional')})</label>
+                    <label htmlFor="notes">{t('finance:fields.notes')} ({t('common:actions.optional')})</label>
                     <textarea className="form-control" id="notes" name="notes" rows={3} value={formData.notes} onChange={handleChange}></textarea>
                 </div>
 
                 <div style={{ gridColumn: '1 / -1', marginTop: 'var(--space-md)', display: 'flex', justifyContent: 'flex-end' }}>
                     <button type="submit" className={`btn ${transactionType === TRANSACTION_TYPES.INCOME ? 'btn-primary' : 'btn-danger'}`} disabled={isSubmitting} style={{ minWidth: '150px' }}>
-                        {isSubmitting ? t('Saving...') : t('Save Transaction')}
+                        {isSubmitting ? t('common:states.saving') : t('finance:actions.saveTransaction')}
                     </button>
                 </div>
             </form>

@@ -19,10 +19,10 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   className = '',
   ...props
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
 
-  const defaultTitle = t('Error');
-  const defaultMessage = t('Unable to load this content. Please try again.');
+  const defaultTitle = t('common:errors.defaultTitle', { defaultValue: 'Error' });
+  const defaultMessage = t('common:errors.defaultMessage', { defaultValue: 'Unable to load this content. Please try again.' });
 
   return (
     <div className={`ui-error-state ${className}`} role="alert" {...props}>
@@ -38,7 +38,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
           loading={isRetrying}
           leftIcon={<RefreshCw size={16} />}
         >
-          {t('Retry')}
+          {t('common:actions.retry', { defaultValue: 'Retry' })}
         </Button>
       )}
     </div>

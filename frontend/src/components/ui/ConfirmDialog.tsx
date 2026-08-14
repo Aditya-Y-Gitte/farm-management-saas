@@ -24,7 +24,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancelText,
   isDestructive = false,
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
   const [isConfirming, setIsConfirming] = useState(false);
 
   const handleConfirm = async () => {
@@ -47,8 +47,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     onClose();
   };
 
-  const cText = confirmText || t('Confirm');
-  const cancelTxt = cancelText || t('Cancel');
+  const cText = confirmText || t('common:actions.confirm', { defaultValue: 'Confirm' });
+  const cancelTxt = cancelText || t('common:actions.cancel', { defaultValue: 'Cancel' });
 
   const footer = (
     <>
