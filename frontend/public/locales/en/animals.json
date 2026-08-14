@@ -62,5 +62,29 @@
     "acquisition": "Acquisition Details"
   },
   "profileTitle": "Livestock Profile",
-  "title": "Livestock Management"
+  "title": "Livestock Management",
+  "form": {
+    "title": "Add New Animal",
+    "name": "Name",
+    "tagNumber": "Tag Number",
+    "species": "Species",
+    "gender": "Gender",
+    "breed": "Breed",
+    "dateOfBirth": "Date of Birth",
+    "status": "Status",
+    "acquisitionType": "Acquisition Type",
+    "purchasePrice": "Purchase Price (₹)",
+    "purchaseDate": "Purchase Date",
+    "errors": {
+      "tagRequired": "Tag Number is required",
+      "nameRequired": "Name is required",
+      "speciesRequired": "Species is required",
+      "genderRequired": "Gender is required",
+      "duplicateTag": "An animal with this Tag Number already exists",
+      "serverError": "Failed to add animal. Please try again."
+    },
+    "success": {
+      "created": "Animal added successfully"
+    }
+  }
 }
