@@ -4,6 +4,9 @@ import { getCatalogSummary } from '../../../services/livestockService';
 import { getDairySummary } from '../../../services/dairyService';
 import { getFinanceSummary } from '../../../services/financeService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
+import { Skeleton } from '../../../components/ui/Skeleton';
+import { EmptyState } from '../../../components/ui/EmptyState';
+import { ErrorState } from '../../../components/ui/ErrorState';
 import './DashboardPage.css';
 
 interface CatalogSummary {
@@ -126,9 +129,27 @@ const DashboardPage: React.FC = () => {
 
       <div className="dashboard__charts">
         {production.loading ? (
-          <p>Loading chart...</p>
+          <div className="chart-panel" aria-busy="true">
+            <h3>{t('Average Milk Quality')}</h3>
+            <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-end', height: '250px', padding: 'var(--space-4) 0' }}>
+               <Skeleton height="60%" width="50px" />
+               <Skeleton height="80%" width="50px" />
+               <Skeleton height="40%" width="50px" />
+               <Skeleton height="100%" width="50px" />
+               <Skeleton height="70%" width="50px" />
+            </div>
+          </div>
         ) : production.error ? (
-          <p style={{ color: '#ef4444' }}>⚠️ Failed to load production quality data.</p>
+          <ErrorState 
+            title={t('Failed to load quality data')} 
+            message={production.error} 
+          />
+        ) : production.data?.totalRecords === 0 ? (
+          <EmptyState
+            title={t('No production data')}
+            description={t('No milk records have been logged yet.')}
+            icon={<span style={{ fontSize: '2rem' }}>🥛</span>}
+          />
         ) : (
           <div className="chart-panel">
             <h3>{t('Average Milk Quality')}</h3>
