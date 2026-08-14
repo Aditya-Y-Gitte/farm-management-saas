@@ -62,5 +62,29 @@
     "acquisition": "अधिग्रहणाचा तपशील"
   },
   "profileTitle": "पशुधन प्रोफाइल",
-  "title": "पशुधन व्यवस्थापन"
+  "title": "पशुधन व्यवस्थापन",
+  "form": {
+    "title": "नवीन पशुधन जोडा",
+    "name": "नाव",
+    "tagNumber": "टॅग क्रमांक",
+    "species": "प्रजाती",
+    "gender": "लिंग",
+    "breed": "जात",
+    "dateOfBirth": "जन्मतारीख",
+    "status": "स्थिती",
+    "acquisitionType": "अधिग्रहणाचा प्रकार",
+    "purchasePrice": "खरेदी किंमत (₹)",
+    "purchaseDate": "खरेदीची तारीख",
+    "errors": {
+      "tagRequired": "टॅग क्रमांक आवश्यक आहे",
+      "nameRequired": "नाव आवश्यक आहे",
+      "speciesRequired": "प्रजाती आवश्यक आहे",
+      "genderRequired": "लिंग आवश्यक आहे",
+      "duplicateTag": "या टॅग क्रमांकाचे पशुधन आधीच अस्तित्वात आहे",
+      "serverError": "पशुधन जोडण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+    },
+    "success": {
+      "created": "पशुधन यशस्वीरित्या जोडले"
+    }
+  }
 }

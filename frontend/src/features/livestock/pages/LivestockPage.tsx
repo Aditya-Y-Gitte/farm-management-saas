@@ -1,35 +1,23 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import LivestockList from '../components/LivestockList';
-import LivestockForm from '../components/LivestockForm';
 import '../../../theme/PageCommon.css';
 
 const LivestockPage: React.FC = () => {
-  const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
-  const [showForm, setShowForm] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(false);
-
-  const handleCreated = useCallback(() => {
-    setRefreshKey(prev => !prev);
-    setShowForm(false);
-  }, []);
+  const { t } = useTranslation(['animals']);
+  const navigate = useNavigate();
 
   return (
     <div className="page">
       <div className="page__header">
-        <h1>🐄 {t('animals:title')}</h1>
-        <button className="page__action-btn" onClick={() => setShowForm(!showForm)}>
-          {showForm ? t('common:actions.cancel') : `+ ${t('animals:add')}`}
+        <h1>🐄 {t('animals:title', { defaultValue: 'Livestock Management' })}</h1>
+        <button className="page__action-btn" onClick={() => navigate('/livestock/add')}>
+          + {t('animals:add', { defaultValue: 'Add Livestock' })}
         </button>
       </div>
 
-      {showForm && (
-        <div className="page__form-panel">
-          <LivestockForm onLivestockCreated={handleCreated} />
-        </div>
-      )}
-
-      <LivestockList refresh={refreshKey} />
+      <LivestockList />
     </div>
   );
 };

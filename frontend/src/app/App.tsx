@@ -6,10 +6,10 @@ import AppShell from '../components/layout/AppShell';
 import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
 import LivestockPage from '../features/livestock/pages/LivestockPage';
+import AddLivestockPage from '../features/livestock/pages/AddLivestockPage';
 import DairyPage from '../features/dairy/pages/DairyPage';
 import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
 import FinancePage from '../features/finance/pages/FinancePage';
-import TasksPage from '../features/tasks/pages/TasksPage';
 import './App.css';
 
 function App() {
@@ -30,10 +30,10 @@ function App() {
           >
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/livestock" element={<LivestockPage />} />
+            <Route path="/livestock/add" element={<AddLivestockPage />} />
             <Route path="/livestock/:id" element={<LivestockProfilePage />} />
             <Route path="/dairy" element={<DairyPage />} />
             <Route path="/finances" element={<FinancePage />} />
-            <Route path="/tasks" element={<TasksPage />} />
           </Route>
 
           {/* Default redirect */}

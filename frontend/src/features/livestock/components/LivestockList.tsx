@@ -8,10 +8,10 @@ import { Livestock } from '../../../types/livestock';
 import './Livestock.css';
 
 interface LivestockListProps {
-    refresh: boolean;
+    refresh?: boolean;
 }
 
-const LivestockList: React.FC<LivestockListProps> = ({ refresh }) => {
+const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
     const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
     const [livestocks, setLivestocks] = useState<Livestock[]>([]);
     const [loading, setLoading] = useState(true);
