@@ -6,42 +6,42 @@
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: var(--space-xl);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: var(--space-md);
+  margin-bottom: var(--space-8);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-4);
 }
 
 .dashboard__header h1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--text-2xl);
   font-weight: 800;
-  color: var(--text-main);
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .dashboard__updated {
-  font-size: var(--font-size-sm);
-  color: var(--text-muted);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
 .dashboard__cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--space-lg);
-  margin-bottom: var(--space-xl);
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
 .metric-card {
-  background: var(--bg-card);
+  background: var(--color-surface);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-lg);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-4);
   transition: all var(--transition-normal);
   position: relative;
   overflow: hidden;
@@ -55,21 +55,21 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background: var(--accent, var(--primary));
+  background: var(--accent, var(--color-primary));
 }
 
 .metric-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  background: var(--bg-card-solid);
+  background: var(--color-surface-solid);
 }
 
 .metric-card__icon {
-  font-size: var(--font-size-2xl);
-  background: var(--primary-light);
-  color: var(--primary-hover);
-  padding: var(--space-sm);
-  border-radius: var(--border-radius);
+  font-size: var(--text-2xl);
+  background: var(--color-primary-light);
+  color: var(--color-primary-hover);
+  padding: var(--space-2);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,41 +83,41 @@
 .metric-card__value {
   font-size: 2rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: var(--color-text);
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 .metric-card__label {
-  font-size: var(--font-size-sm);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   margin-top: 4px;
 }
 
 .dashboard__charts {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: var(--space-6);
 }
 
 .chart-panel {
-  background: var(--bg-card);
+  background: var(--color-surface);
   backdrop-filter: var(--glass-backdrop);
   -webkit-backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
   box-shadow: var(--shadow-sm);
 }
 
 .chart-panel h3 {
-  font-size: var(--font-size-lg);
+  font-size: var(--text-lg);
   font-weight: 700;
-  color: var(--text-main);
-  margin: 0 0 var(--space-lg);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: var(--space-sm);
+  color: var(--color-text);
+  margin: 0 0 var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
 }
 
 .dashboard-loading,
@@ -127,20 +127,20 @@
   align-items: center;
   justify-content: center;
   min-height: 300px;
-  color: var(--text-muted);
+  color: var(--color-text-muted);
   font-weight: 500;
-  font-size: var(--font-size-base);
+  font-size: var(--text-base);
 }
 
 .dashboard-error h3 {
   color: var(--warning);
-  font-size: var(--font-size-lg);
+  font-size: var(--text-lg);
 }
 
 @media (max-width: 768px) {
   .dashboard__header {
     flex-direction: column;
-    gap: var(--space-sm);
+    gap: var(--space-2);
   }
   
   .dashboard__cards {
