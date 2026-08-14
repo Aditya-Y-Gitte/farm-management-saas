@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import DairyList from '../components/dairy/DairyList';
-import DairyForm from '../components/dairy/DairyForm';
-import '../pages/PageCommon.css';
+import DairyList from '../components/DairyList';
+import DairyForm from '../components/DairyForm';
+import '../../../theme/PageCommon.css';
 
 const DairyPage: React.FC = () => {
   const { t } = useTranslation();

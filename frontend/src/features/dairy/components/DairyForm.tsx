@@ -1,9 +1,9 @@
 // DairyForm.tsx
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createDairy } from '../../services/dairyService';
-import { CreateDairyRequest } from '../../types/dairy';
-import { DAIRY_SESSIONS, DAIRY_QUALITIES } from '../../constants/appConstants';
+import { createDairy } from '../../../services/dairyService';
+import { CreateDairyRequest } from '../../../types/dairy';
+import { DAIRY_SESSIONS, DAIRY_QUALITIES } from '../../../constants/appConstants';
 import './Dairy.css';
 
 interface DairyFormProps {

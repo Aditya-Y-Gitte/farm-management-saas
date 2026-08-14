@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getLivestocks } from '../services/livestockService';
-import { getDairies } from '../services/dairyService';
-import { Livestock } from '../types/livestock';
-import { Dairy } from '../types/dairy';
+import { getLivestocks } from '../../../services/livestockService';
+import { getDairies } from '../../../services/dairyService';
+import { Livestock } from '../../../types/livestock';
+import { Dairy } from '../../../types/dairy';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
 

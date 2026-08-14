@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getIncomes, getExpenses } from '../services/FinanceService';
-import { Income, Expense } from '../types/finance';
-import { TRANSACTION_TYPES } from '../constants/appConstants';
-import FinanceForm from '../components/finance/FinanceForm';
-import './PageCommon.css';
+import { getIncomes, getExpenses } from '../../../services/FinanceService';
+import { Income, Expense } from '../../../types/finance';
+import { TRANSACTION_TYPES } from '../../../constants/appConstants';
+import FinanceForm from '../components/FinanceForm';
+import '../../../theme/PageCommon.css';
 
 const FinancePage: React.FC = () => {
     const { t } = useTranslation();

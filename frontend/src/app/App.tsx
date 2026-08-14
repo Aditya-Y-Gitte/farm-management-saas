@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthContext';
-import ProtectedRoute from './auth/ProtectedRoute';
-import AppShell from './components/layout/AppShell';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import LivestockPage from './pages/LivestockPage';
-import DairyPage from './pages/DairyPage';
-import LivestockProfilePage from './pages/LivestockProfilePage';
-import FinancePage from './pages/FinancePage';
+import { AuthProvider } from '../features/auth/context/AuthContext';
+import ProtectedRoute from '../features/auth/components/ProtectedRoute';
+import AppShell from '../components/layout/AppShell';
+import LoginPage from '../features/auth/pages/LoginPage';
+import DashboardPage from '../features/dashboard/pages/DashboardPage';
+import LivestockPage from '../features/livestock/pages/LivestockPage';
+import DairyPage from '../features/dairy/pages/DairyPage';
+import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
+import FinancePage from '../features/finance/pages/FinancePage';
 import './App.css';
 
 function App() {

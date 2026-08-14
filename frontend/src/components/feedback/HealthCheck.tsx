@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '../services/api';
+import api from '../../services/api';
 
 const HealthCheck: React.FC = () => {
   const { t } = useTranslation();

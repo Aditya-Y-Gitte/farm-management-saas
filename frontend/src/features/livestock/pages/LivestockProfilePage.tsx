@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getLivestock } from '../services/livestockService';
-import { Livestock } from '../types/livestock';
-import './PageCommon.css';
+import { getLivestock } from '../../../services/livestockService';
+import { Livestock } from '../../../types/livestock';
+import '../../../theme/PageCommon.css';
 
 const LivestockProfilePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();

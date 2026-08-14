@@ -1,9 +1,9 @@
 // LivestockForm.tsx
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createLivestock } from '../../services/livestockService';
-import { CreateLivestockRequest } from '../../types/livestock';
-import { LIVESTOCK_SPECIES, LIVESTOCK_GENDERS, LIVESTOCK_STATUSES, ACQUISITION_TYPES } from '../../constants/appConstants';
+import { createLivestock } from '../../../services/livestockService';
+import { CreateLivestockRequest } from '../../../types/livestock';
+import { LIVESTOCK_SPECIES, LIVESTOCK_GENDERS, LIVESTOCK_STATUSES, ACQUISITION_TYPES } from '../../../constants/appConstants';
 
 interface LivestockFormProps {
     onLivestockCreated: () => void;
