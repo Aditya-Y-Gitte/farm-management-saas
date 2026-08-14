@@ -96,14 +96,12 @@ sequenceDiagram
     GW->>FE: 200 OK [{livestock}]
 
     Note over FE,PROD: Metrics Aggregation
-    FE->>GW: GET /api/gateway/metrics
-    par Fan-out
-        GW->>CAT: GET /api/catalog/livestock/count
-        GW->>PROD: GET /api/production/dairy/summary
-    end
-    CAT->>GW: {totalLivestock: 42}
-    PROD->>GW: {totalMilkToday: 156.5, ...}
-    GW->>FE: Aggregated metrics response
+    FE->>GW: GET /api/catalog/summary
+    FE->>GW: GET /api/production/summary
+    FE->>GW: GET /api/finance/summary
+    CAT-->>FE: 200 OK {totalLivestock: 42}
+    PROD-->>FE: 200 OK {totalMilkToday: 156.5, ...}
+    FIN-->>FE: 200 OK {netBalance: 5000.0}
 ```
 
 ---

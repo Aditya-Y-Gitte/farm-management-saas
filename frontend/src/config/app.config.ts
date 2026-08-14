@@ -37,7 +37,7 @@ const config: AppConfig = {
       label: 'Dashboard',
       icon: '📊',
       path: '/dashboard',
-      apiBasePath: '/api/gateway/metrics',
+      apiBasePath: '',
       enabled: true,
       description: 'Farm overview with aggregated metrics from all services'
     },

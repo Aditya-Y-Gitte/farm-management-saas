@@ -37,8 +37,7 @@ public class GatewayIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         {
             "/api/catalog/livestock",
             "/api/production/dairy",
-            "/api/finance/incomes",
-            "/api/gateway/metrics"
+            "/api/finance/incomes"
         };
 
         foreach (var route in routes)
