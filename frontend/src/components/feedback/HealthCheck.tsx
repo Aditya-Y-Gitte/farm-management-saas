@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import api from '../../services/api';
+import { checkBackendHealth } from '../../services/healthService';
 
 const HealthCheck: React.FC = () => {
   const { t } = useTranslation();
@@ -8,16 +8,8 @@ const HealthCheck: React.FC = () => {
 
   useEffect(() => {
     const checkHealth = async () => {
-      try {
-        const response = await api.get('/health');
-        if (response.status === 200) {
-          setIsHealthy(true);
-        } else {
-          setIsHealthy(false);
-        }
-      } catch (error) {
-        setIsHealthy(false);
-      }
+      const healthy = await checkBackendHealth();
+      setIsHealthy(healthy);
     };
 
     checkHealth();

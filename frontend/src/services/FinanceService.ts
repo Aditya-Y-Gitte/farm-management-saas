@@ -23,3 +23,8 @@ export const createExpense = async (expense: CreateExpenseRequest): Promise<Expe
   const response = await apiClient.post(`${BASE_PATH}/expense`, expense);
   return response.data;
 };
+
+export const getFinanceSummary = async () => {
+  const response = await apiClient.get(`${BASE_PATH}/summary`);
+  return response.data;
+};

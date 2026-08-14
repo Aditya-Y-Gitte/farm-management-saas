@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { createIncome, createExpense } from '../../../services/FinanceService';
+import { createIncome, createExpense } from '../../../services/financeService';
 import { CreateIncomeRequest, CreateExpenseRequest } from '../../../types/finance';
 import { TRANSACTION_TYPES, INCOME_SOURCES, EXPENSE_CATEGORIES } from '../../../constants/appConstants';
 

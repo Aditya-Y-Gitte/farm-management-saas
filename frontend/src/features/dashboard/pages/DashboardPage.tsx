@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import apiClient from '../../../services/apiClient';
+import { getCatalogSummary } from '../../../services/livestockService';
+import { getDairySummary } from '../../../services/dairyService';
+import { getFinanceSummary } from '../../../services/financeService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import './DashboardPage.css';
 
@@ -33,31 +35,31 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     const fetchAll = async () => {
       // Independent fetches
-      const catalogPromise = apiClient.get('/api/catalog/summary');
-      const productionPromise = apiClient.get('/api/production/summary');
-      const financePromise = apiClient.get('/api/finance/summary');
+      const catalogPromise = getCatalogSummary();
+      const productionPromise = getDairySummary();
+      const financePromise = getFinanceSummary();
 
       const results = await Promise.allSettled([catalogPromise, productionPromise, financePromise]);
 
       // Catalog
       if (results[0].status === 'fulfilled') {
-        setCatalog({ data: results[0].value.data, loading: false, error: null });
+        setCatalog({ data: results[0].value, loading: false, error: null });
       } else {
-        setCatalog({ data: null, loading: false, error: results[0].reason?.response?.data?.detail || 'Failed to load catalog' });
+        setCatalog({ data: null, loading: false, error: results[0].reason?.message || 'Failed to load catalog' });
       }
 
       // Production
       if (results[1].status === 'fulfilled') {
-        setProduction({ data: results[1].value.data, loading: false, error: null });
+        setProduction({ data: results[1].value, loading: false, error: null });
       } else {
-        setProduction({ data: null, loading: false, error: results[1].reason?.response?.data?.detail || 'Failed to load production' });
+        setProduction({ data: null, loading: false, error: results[1].reason?.message || 'Failed to load production' });
       }
 
       // Finance
       if (results[2].status === 'fulfilled') {
-        setFinance({ data: results[2].value.data, loading: false, error: null });
+        setFinance({ data: results[2].value, loading: false, error: null });
       } else {
-        setFinance({ data: null, loading: false, error: results[2].reason?.response?.data?.detail || 'Failed to load finance' });
+        setFinance({ data: null, loading: false, error: results[2].reason?.message || 'Failed to load finance' });
       }
     };
 

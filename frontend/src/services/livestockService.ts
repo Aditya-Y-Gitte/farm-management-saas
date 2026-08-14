@@ -38,3 +38,8 @@ export const getLivestockCount = async (): Promise<{ totalLivestock: number }> =
   const response = await apiClient.get(`${BASE_PATH}/count`);
   return response.data;
 };
+
+export const getCatalogSummary = async () => {
+  const response = await apiClient.get('/api/catalog/summary');
+  return response.data;
+};
