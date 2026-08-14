@@ -1,0 +1,10 @@
+.ui-icon-button {
+  padding: var(--space-2);
+  min-width: var(--touch-target-min);
+}
+
+.ui-icon-button .ui-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,116 @@
+.ui-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+  width: 100%;
+}
+
+.ui-input-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.ui-input-label--required::after {
+  content: '*';
+  color: var(--color-danger);
+  margin-left: var(--space-1);
+}
+
+.ui-input-description {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.ui-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ui-input-field {
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-solid);
+  color: var(--color-text);
+  font-family: var(--font-base);
+  font-size: var(--text-base);
+  transition: all var(--transition-fast);
+  min-height: var(--touch-target-min);
+  outline: none;
+}
+
+.ui-input-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--color-primary-light);
+}
+
+.ui-input-field:disabled {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Error State */
+.ui-input-field--error {
+  border-color: var(--color-danger);
+}
+
+.ui-input-field--error:focus {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(239, 68, 68, 0.4);
+}
+
+.ui-input-error-text {
+  font-size: var(--text-sm);
+  color: var(--color-danger);
+  margin-top: var(--space-1);
+}
+
+/* Icons */
+.ui-input-icon--left {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.ui-input-icon--right {
+  position: absolute;
+  right: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.ui-input-field--with-left-icon {
+  padding-left: calc(var(--space-8) + var(--space-2));
+}
+
+.ui-input-field--with-right-icon {
+  padding-right: calc(var(--space-8) + var(--space-2));
+}
+
+/* Select specific styles */
+.ui-select-field {
+  appearance: none; /* Remove native arrow */
+  padding-right: calc(var(--space-8) + var(--space-2));
+  cursor: pointer;
+}
+
+.ui-select-caret {
+  position: absolute;
+  right: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+/* TextArea specific styles */
+.ui-textarea-field {
+  resize: vertical;
+  min-height: 80px;
+}
