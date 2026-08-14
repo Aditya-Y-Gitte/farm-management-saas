@@ -122,4 +122,25 @@ public class FinanceService : IFinanceService
         await _context.SaveChangesAsync();
         return true;
     }
+
+    public async Task<FinanceSummaryDto> GetSummaryAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+        var startOfMonth = new DateTime(today.Year, today.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var totalIncome = await _context.Incomes.AsNoTracking()
+            .Where(i => i.Date >= startOfMonth)
+            .SumAsync(i => i.Amount);
+
+        var totalExpense = await _context.Expenses.AsNoTracking()
+            .Where(e => e.Date >= startOfMonth)
+            .SumAsync(e => e.Amount);
+
+        return new FinanceSummaryDto
+        {
+            TotalIncomeThisMonth = totalIncome,
+            TotalExpenseThisMonth = totalExpense,
+            NetBalance = totalIncome - totalExpense
+        };
+    }
 }

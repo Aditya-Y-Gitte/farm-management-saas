@@ -119,65 +119,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // --- Metrics Aggregation Endpoint ---
-// Fans out to Catalog and Production APIs and aggregates farm metrics
-app.MapGet("/api/gateway/metrics", async (HttpContext httpContext, IHttpClientFactory httpClientFactory) =>
-{
-    // Forward the Authorization header to downstream services
-    var authHeader = httpContext.Request.Headers.Authorization.FirstOrDefault();
-    if (string.IsNullOrEmpty(authHeader))
-    {
-        return Results.Unauthorized();
-    }
-
-    var catalogClient = httpClientFactory.CreateClient("CatalogApi");
-    catalogClient.DefaultRequestHeaders.Add("Authorization", authHeader);
-
-    var productionClient = httpClientFactory.CreateClient("ProductionApi");
-    productionClient.DefaultRequestHeaders.Add("Authorization", authHeader);
-
-    try
-    {
-        // 30-second timeout: Render free-tier containers sleep after 15 min idle and
-        // take 30-50s to wake up. A 5s timeout would 504 on every cold start.
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-
-        // Fan-out: call both services in parallel
-        var catalogTask = catalogClient.GetStringAsync("/api/catalog/livestock/count", cts.Token);
-        var productionTask = productionClient.GetStringAsync("/api/production/dairy/summary", cts.Token);
-
-        await Task.WhenAll(catalogTask, productionTask);
-
-        var catalogData = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(catalogTask.Result);
-        var productionData = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(productionTask.Result);
-
-        return Results.Ok(new
-        {
-            livestock = catalogData,
-            dairy = productionData,
-            aggregatedAt = DateTime.UtcNow
-        });
-    }
-    catch (OperationCanceledException)
-    {
-        return Results.Problem(
-            title: "Metrics Timeout",
-            detail: "One or more downstream services did not respond in time. Please try again.",
-            statusCode: 504
-        );
-    }
-    catch (Exception ex)
-    {
-        // Do not leak internal error details to the client in production
-        var detail = app.Environment.IsDevelopment()
-            ? ex.Message
-            : "An error occurred while aggregating metrics.";
-        return Results.Problem(
-            title: "Failed to aggregate metrics",
-            detail: detail,
-            statusCode: 502
-        );
-    }
-}).RequireAuthorization("authenticated");
+// REMOVED in FMS-222: Dashboard aggregation is now handled via Frontend Composition
 
 // --- Health check aggregating downstream services ---
 app.MapGet("/health", async (IHttpClientFactory httpClientFactory) =>

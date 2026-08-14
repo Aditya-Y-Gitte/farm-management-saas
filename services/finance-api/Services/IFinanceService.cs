@@ -16,4 +16,6 @@ public interface IFinanceService
     Task<ExpenseDto> CreateExpenseAsync(CreateExpenseRequest request);
     Task<ExpenseDto> UpdateExpenseAsync(Guid id, UpdateExpenseRequest request);
     Task<bool> DeleteExpenseAsync(Guid id);
+
+    Task<FinanceSummaryDto> GetSummaryAsync();
 }
