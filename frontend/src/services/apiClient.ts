@@ -1,6 +1,26 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import config from '../config/app.config';
 
+export class ApiError extends Error {
+  public status: number;
+  public title: string;
+  public detail: string;
+  public type?: string;
+  public instance?: string;
+  public traceId?: string;
+  
+  constructor(status: number, data: any, defaultMessage: string) {
+    super(data?.detail || data?.title || defaultMessage);
+    this.name = 'ApiError';
+    this.status = status;
+    this.title = data?.title || 'Error';
+    this.detail = data?.detail || defaultMessage;
+    this.type = data?.type;
+    this.instance = data?.instance;
+    this.traceId = data?.traceId;
+  }
+}
+
 // Module-level token getter — set by AuthContext
 let getAccessToken: () => string | null = () => null;
 let refreshAccessToken: () => Promise<string | null> = async () => null;
@@ -106,7 +126,30 @@ apiClient.interceptors.response.use(
       }
     }
 
-    return Promise.reject(error);
+    // Standardize error to ApiError
+    let apiError: ApiError;
+    if (error.response) {
+      const status = error.response.status;
+      const data = error.response.data;
+      let defaultMessage = 'An unexpected error occurred';
+      
+      switch (status) {
+        case 400: defaultMessage = 'Validation failed'; break;
+        case 401: defaultMessage = 'Authentication required'; break;
+        case 403: defaultMessage = 'Permission denied'; break;
+        case 404: defaultMessage = 'Resource not found'; break;
+        case 409: defaultMessage = 'Business conflict'; break;
+        case 500: case 502: case 503: case 504: defaultMessage = 'Server unavailable'; break;
+      }
+      
+      apiError = new ApiError(status, data, defaultMessage);
+    } else if (error.request) {
+      apiError = new ApiError(0, null, 'Network error or timeout');
+    } else {
+      apiError = new ApiError(0, null, error.message);
+    }
+
+    return Promise.reject(apiError);
   }
 );
 

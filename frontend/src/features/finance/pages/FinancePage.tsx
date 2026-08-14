@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getIncomes, getExpenses } from '../../../services/FinanceService';
+import { getIncomes, getExpenses } from '../../../services/financeService';
 import { Income, Expense } from '../../../types/finance';
 import { TRANSACTION_TYPES } from '../../../constants/appConstants';
 import FinanceForm from '../components/FinanceForm';
