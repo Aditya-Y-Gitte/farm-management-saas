@@ -1,31 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { checkBackendHealth } from '../../services/healthService';
+import { Card } from '../ui/Card';
+import { Alert } from '../ui/Alert';
+import { Button } from '../ui/Button';
+import { RefreshCw } from 'lucide-react';
 
 const HealthCheck: React.FC = () => {
   const { t } = useTranslation();
   const [isHealthy, setIsHealthy] = useState<boolean | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkHealth = async () => {
-      const healthy = await checkBackendHealth();
-      setIsHealthy(healthy);
-    };
-
-    checkHealth();
+  const checkHealth = useCallback(async () => {
+    setLoading(true);
+    const healthy = await checkBackendHealth();
+    setIsHealthy(healthy);
+    setLoading(false);
   }, []);
 
+  useEffect(() => {
+    checkHealth();
+  }, [checkHealth]);
+
   return (
-    <div>
-      <h2>{t('Backend Health')}</h2>
-      {isHealthy === null ? (
-        <p>{t('Checking...')}</p>
-      ) : isHealthy ? (
-        <p>{t('Backend is healthy')}</p>
-      ) : (
-        <p>{t('Backend is not healthy')}</p>
-      )}
-    </div>
+    <Card style={{ maxWidth: 400, margin: 'var(--space-8) auto' }}>
+      <Card.Header title={t('System Health')} />
+      <Card.Body>
+        {isHealthy === null ? (
+          <Alert variant="info" title={t('Checking...')}>
+            {t('Verifying backend connectivity.')}
+          </Alert>
+        ) : isHealthy ? (
+          <Alert variant="success" title={t('Healthy')}>
+            {t('Backend is connected and responding.')}
+          </Alert>
+        ) : (
+          <Alert variant="error" title={t('Offline')}>
+            {t('Backend is currently unreachable.')}
+          </Alert>
+        )}
+      </Card.Body>
+      <Card.Footer>
+        <Button 
+          variant="secondary" 
+          onClick={checkHealth} 
+          loading={loading}
+          leftIcon={<RefreshCw size={16} />}
+        >
+          {t('Refresh')}
+        </Button>
+      </Card.Footer>
+    </Card>
   );
 };
 

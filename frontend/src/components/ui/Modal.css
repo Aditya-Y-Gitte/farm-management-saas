@@ -1,0 +1,105 @@
+.ui-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.4); /* Slate 900 with opacity */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: var(--space-4);
+  /* Optional: we removed heavy glass-backdrop per feedback, keeping it simple */
+}
+
+.ui-modal-content {
+  background-color: var(--color-surface-solid);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  animation: modalFadeIn var(--transition-fast) ease-out;
+}
+
+.ui-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ui-modal-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.ui-modal-body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.ui-modal-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  background-color: var(--color-background);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* BottomSheet Presentation Variant */
+.ui-bottom-sheet-overlay {
+  align-items: flex-end;
+  padding: 0;
+}
+
+.ui-bottom-sheet-content {
+  max-width: 100%;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  animation: bottomSheetSlideUp var(--transition-normal) ease-out;
+}
+
+@keyframes bottomSheetSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 769px) {
+  /* BottomSheet behaves like a normal modal on desktop */
+  .ui-bottom-sheet-overlay {
+    align-items: center;
+    padding: var(--space-4);
+  }
+  
+  .ui-bottom-sheet-content {
+    max-width: 500px;
+    border-radius: var(--radius-xl);
+    animation: modalFadeIn var(--transition-fast) ease-out;
+  }
+}

@@ -1,0 +1,100 @@
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-base);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--transition-normal);
+  outline: none;
+  min-height: var(--touch-target-min);
+  text-decoration: none;
+}
+
+.ui-button:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-color: var(--color-primary);
+}
+
+.ui-button:disabled,
+.ui-button--loading {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.ui-button:active:not(:disabled):not(.ui-button--loading) {
+  transform: scale(0.98);
+}
+
+/* Primary */
+.ui-button--primary {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
+/* Secondary */
+.ui-button--secondary {
+  background-color: var(--color-surface-solid);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.ui-button--secondary:hover:not(:disabled) {
+  background-color: var(--color-surface-alt);
+}
+
+/* Danger */
+.ui-button--danger {
+  background-color: var(--color-danger);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-button--danger:hover:not(:disabled) {
+  background-color: #dc2626; /* darker red */
+  box-shadow: var(--shadow-md);
+}
+
+.ui-button--danger:focus-visible {
+  box-shadow: 0 0 0 var(--focus-ring-width) rgba(239, 68, 68, 0.4);
+  border-color: var(--color-danger);
+}
+
+/* Ghost */
+.ui-button--ghost {
+  background-color: transparent;
+  color: var(--color-text);
+}
+
+.ui-button--ghost:hover:not(:disabled) {
+  background-color: var(--color-surface-alt);
+}
+
+/* Icons & Spinners */
+.ui-button__icon {
+  display: inline-flex;
+}
+
+.ui-button__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

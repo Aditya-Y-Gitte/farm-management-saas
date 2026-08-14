@@ -1,0 +1,124 @@
+.ui-toast-container {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  z-index: 100;
+  pointer-events: none; /* Let clicks pass through empty space */
+  max-width: 400px;
+}
+
+.ui-toast {
+  pointer-events: auto; /* Re-enable clicks on the toast itself */
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background-color: var(--color-surface-solid);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: toastSlideIn var(--transition-normal) ease-out forwards;
+}
+
+.ui-toast--removing {
+  animation: toastSlideOut var(--transition-normal) ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+}
+
+.ui-toast__icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ui-toast__content {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--line-height-normal);
+}
+
+.ui-toast__close {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  margin-left: var(--space-2);
+}
+
+.ui-toast__close:hover {
+  color: var(--color-text);
+}
+
+.ui-toast__close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  border-radius: var(--radius-sm);
+}
+
+/* Variants */
+.ui-toast--success .ui-toast__icon { color: var(--color-success); }
+.ui-toast--error .ui-toast__icon { color: var(--color-danger); }
+.ui-toast--warning .ui-toast__icon { color: var(--color-warning); }
+.ui-toast--info .ui-toast__icon { color: var(--color-primary); }
+
+@media (max-width: 768px) {
+  .ui-toast-container {
+    bottom: var(--space-4);
+    right: var(--space-4);
+    left: var(--space-4);
+    max-width: none;
+  }
+  
+  .ui-toast {
+    width: 100%;
+  }
+
+  @keyframes toastSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes toastSlideOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+}
