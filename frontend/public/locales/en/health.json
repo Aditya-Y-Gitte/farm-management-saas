@@ -24,5 +24,31 @@
   },
   "empty": {
     "noRecords": "No health records found."
+  },
+  "timeline": {
+    "title": "Health Timeline",
+    "addRecord": "Add Health Record",
+    "viewDetails": "View details",
+    "hideDetails": "Hide details",
+    "empty": "No health records found",
+    "loadMore": "Load older records"
+  },
+  "form": {
+    "date": "Date",
+    "type": "Type (e.g. Vaccination, Illness)",
+    "description": "Description",
+    "diagnosis": "Diagnosis",
+    "treatment": "Treatment Details",
+    "medication": "Medication",
+    "veterinarian": "Veterinarian",
+    "notes": "Additional Notes",
+    "errors": {
+      "dateRequired": "Date is required",
+      "typeRequired": "Type is required",
+      "maxLength": "Maximum {{max}} characters"
+    },
+    "success": {
+      "created": "Health record added successfully"
+    }
   }
 }
