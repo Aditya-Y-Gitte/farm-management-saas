@@ -86,5 +86,14 @@
     "success": {
       "created": "Animal added successfully"
     }
+  },
+  "list": {
+    "searchPlaceholder": "Search by Tag Number or Name...",
+    "allSpecies": "All Species",
+    "allStatuses": "All Statuses",
+    "noAnimals": "No animals have been added yet.",
+    "noResults": "No animals match your search.",
+    "viewProfile": "View Profile",
+    "retry": "Retry"
   }
 }

@@ -1,85 +1,90 @@
 /* Livestock.css */
 
-.livestock-container,
-.livestock-form-container {
+.livestock-container {
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
 }
 
-.livestock-container h2,
-.livestock-form-container h2 {
+.livestock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+.livestock-header h2 {
     font-size: var(--text-xl);
     color: var(--color-text);
-    margin-bottom: var(--space-6);
     font-weight: 700;
+    margin: 0;
 }
 
-/* Table Responsive wrapper */
-.table-responsive {
-    overflow-x: auto;
+/* Filters & Search */
+.livestock-filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
     background: var(--color-surface);
     backdrop-filter: var(--glass-backdrop);
     -webkit-backdrop-filter: var(--glass-backdrop);
     border: var(--glass-border);
     border-radius: var(--radius-xl);
+    padding: var(--space-4);
     box-shadow: var(--shadow-sm);
 }
 
-.livestock-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+@media (min-width: 768px) {
+    .livestock-filters {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+    
+    .livestock-filters > * {
+        flex: 1;
+    }
 }
 
-.livestock-table th {
-    background-color: var(--color-surface-alt);
-    padding: var(--space-4);
-    font-weight: 600;
-    color: var(--color-text-muted);
+/* Grid Layout */
+.livestock-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+}
+
+@media (min-width: 768px) {
+    .livestock-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .livestock-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-6);
+    }
+}
+
+/* Card custom layout */
+.livestock-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.livestock-card__meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: var(--text-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--color-border);
 }
 
-.livestock-table td {
-    padding: var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-    vertical-align: middle;
+.livestock-card__meta-label {
+    color: var(--color-text-muted);
 }
 
-.livestock-table tr:last-child td {
-    border-bottom: none;
-}
-
-.livestock-table tr:hover td {
-    background-color: rgba(255, 255, 255, 0.4);
-}
-
-/* Status Badges */
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: var(--radius-full);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.status-active {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-hover);
-}
-
-.status-sold {
-    background-color: #fef3c7;
-    color: var(--warning);
-}
-
-.status-deceased {
-    background-color: #fee2e2;
-    color: var(--danger);
-}
-
-.text-center {
-    text-align: center;
+.livestock-card__meta-value {
+    color: var(--color-text);
+    font-weight: 500;
 }
