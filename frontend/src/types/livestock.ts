@@ -1,12 +1,4 @@
-export interface HealthRecord {
-    id: string;
-    date: string;
-    condition: string;
-    treatment: string;
-    veterinarian: string;
-    cost: number;
-    followUpDate?: string;
-}
+import { HealthRecord } from './health';
 
 export interface BreedingCycle {
     id: string;
