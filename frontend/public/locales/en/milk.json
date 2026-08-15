@@ -37,5 +37,27 @@
   "empty": {
     "noRecords": "No dairy records found."
   },
-  "title": "Dairy Management"
+  "title": "Dairy Management",
+  "record": {
+    "title": "Record Milk",
+    "subtitle": "Enter daily milk production details",
+    "animal": "Animal",
+    "selectAnimal": "-- Select Animal --",
+    "date": "Date",
+    "session": "Session",
+    "yield": "Yield (Liters)",
+    "fat": "Fat %",
+    "snf": "SNF %",
+    "actions": {
+      "save": "Save",
+      "saveAndContinue": "Save & Continue"
+    },
+    "errors": {
+      "required": "Animal and valid Milk Yield (>0) are required.",
+      "duplicate": "A milk record already exists for this animal, date, and session."
+    },
+    "success": {
+      "savedAndContinue": "Record saved successfully. Ready for next entry."
+    }
+  }
 }
