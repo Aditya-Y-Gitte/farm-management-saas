@@ -33,6 +33,14 @@ public class DairyService : IDairyService
         return PagedResponse<DairyDto>.Create(dtos, totalCount, page, pageSize);
     }
 
+    public async Task<PagedResponse<DairyDto>> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize)
+    {
+        _logger.LogInformation("Fetching dairy records for livestock {LivestockId}. Page: {Page}, PageSize: {PageSize}", livestockId, page, pageSize);
+        var (items, totalCount) = await _repository.GetByLivestockIdAsync(livestockId, page, pageSize);
+        var dtos = items.Select(i => i.Adapt<DairyDto>());
+        return PagedResponse<DairyDto>.Create(dtos, totalCount, page, pageSize);
+    }
+
     public async Task<DairyDto?> GetByIdAsync(Guid id)
     {
         _logger.LogInformation("Fetching dairy record: {Id}", id);
@@ -112,12 +120,12 @@ public class DairyService : IDairyService
         return await _repository.DeleteAsync(id);
     }
 
-    public async Task<DairySummaryDto> GetSummaryAsync()
+    public async Task<DairySummaryDto> GetSummaryAsync(Guid? livestockId = null)
     {
         _logger.LogInformation("Fetching dairy summary");
         var today = _dateTimeService.GetTodayBoundariesUtc();
         var week = _dateTimeService.GetThisWeekBoundariesUtc();
 
-        return await _repository.GetSummaryAsync(today.StartUtc, today.EndUtc, week.StartUtc, week.EndUtc);
+        return await _repository.GetSummaryAsync(today.StartUtc, today.EndUtc, week.StartUtc, week.EndUtc, livestockId);
     }
 }

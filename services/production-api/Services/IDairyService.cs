@@ -11,10 +11,11 @@ namespace ProductionApi.Services;
 public interface IDairyService
 {
     Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize);
+    Task<PagedResponse<DairyDto>> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize);
     Task<DairyDto?> GetByIdAsync(Guid id);
     Task<DairyDto?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session);
     Task<DairyDto> CreateAsync(CreateDairyRequest request);
     Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request);
     Task<bool> DeleteAsync(Guid id);
-    Task<DairySummaryDto> GetSummaryAsync();
+    Task<DairySummaryDto> GetSummaryAsync(Guid? livestockId = null);
 }

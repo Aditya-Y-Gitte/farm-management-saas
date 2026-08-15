@@ -67,9 +67,13 @@ public class DairyRepository : IDairyRepository
         return true;
     }
 
-    public async Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc)
+    public async Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc, Guid? livestockId = null)
     {
         var query = _context.Dairies.AsNoTracking();
+        if (livestockId.HasValue)
+        {
+            query = query.Where(d => d.LivestockId == livestockId.Value);
+        }
 
         var totalRecords = await query.CountAsync();
         var todayMilk = await query
@@ -93,5 +97,18 @@ public class DairyRepository : IDairyRepository
             AverageFatContent = avgFat,
             AverageSnfContent = avgSnf
         };
+    }
+
+    public async Task<(IEnumerable<Dairy> Items, int TotalCount)> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize)
+    {
+        var query = _context.Dairies.AsNoTracking().Where(d => d.LivestockId == livestockId);
+        var totalCount = await query.CountAsync();
+        var items = await query
+            .OrderByDescending(d => d.Date)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (items, totalCount);
     }
 }

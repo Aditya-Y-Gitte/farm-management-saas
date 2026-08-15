@@ -60,6 +60,19 @@ public class DairyController : ControllerBase
     }
 
     /// <summary>
+    /// Returns a paginated list of dairy records for a specific livestock.
+    /// </summary>
+    [HttpGet("livestock/{livestockId:guid}")]
+    public async Task<IActionResult> GetByLivestockId(Guid livestockId, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1 || pageSize > 100) pageSize = 20;
+
+        var result = await _dairyService.GetByLivestockIdAsync(livestockId, page, pageSize);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Creates a new dairy production record.
     /// </summary>
     [HttpPost]
@@ -95,9 +108,9 @@ public class DairyController : ControllerBase
     /// Consumed by the API Gateway metrics aggregation endpoint.
     /// </summary>
     [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary()
+    public async Task<IActionResult> GetSummary([FromQuery] Guid? livestockId = null)
     {
-        var summary = await _dairyService.GetSummaryAsync();
+        var summary = await _dairyService.GetSummaryAsync(livestockId);
         return Ok(summary);
     }
 }
