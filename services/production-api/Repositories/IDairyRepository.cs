@@ -11,7 +11,7 @@ namespace ProductionApi.Repositories;
 /// </summary>
 public interface IDairyRepository
 {
-    Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
+    Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null, Guid? livestockId = null, string? session = null);
     Task<Dairy?> GetByIdAsync(Guid id);
     Task<Dairy?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session);
     Task<Dairy> CreateAsync(Dairy dairy);
@@ -19,4 +19,5 @@ public interface IDairyRepository
     Task<bool> DeleteAsync(Guid id);
     Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc, Guid? livestockId = null);
     Task<(IEnumerable<Dairy> Items, int TotalCount)> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize);
+    Task<IEnumerable<DairyTrendPointDto>> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null);
 }

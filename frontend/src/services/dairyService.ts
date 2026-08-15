@@ -1,11 +1,11 @@
 import apiClient from './apiClient';
-import { Dairy, CreateDairyRequest } from '../types/dairy';
+import { Dairy, CreateDairyRequest, DairyTrendPointDto } from '../types/dairy';
 import { PaginatedResponse } from './livestockService';
 
 const BASE_PATH = '/api/production/dairy';
 
-export const getDairies = async (page = 1, pageSize = 20): Promise<PaginatedResponse<Dairy>> => {
-  const response = await apiClient.get(BASE_PATH, { params: { page, pageSize } });
+export const getDairies = async (params: { page?: number, pageSize?: number, startDate?: string, endDate?: string, livestockId?: string, session?: string } = {}): Promise<PaginatedResponse<Dairy>> => {
+  const response = await apiClient.get(BASE_PATH, { params });
   return response.data;
 };
 
@@ -35,5 +35,10 @@ export const deleteDairy = async (id: string): Promise<void> => {
 export const getDairySummary = async (livestockId?: string) => {
   const params = livestockId ? { livestockId } : undefined;
   const response = await apiClient.get(`${BASE_PATH}/summary`, { params });
+  return response.data;
+};
+
+export const getDairyTrends = async (params: { startDate: string, endDate: string, livestockId?: string, session?: string }): Promise<{ points: DairyTrendPointDto[] }> => {
+  const response = await apiClient.get(`${BASE_PATH}/trends`, { params });
   return response.data;
 };
