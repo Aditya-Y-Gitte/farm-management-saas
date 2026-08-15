@@ -7,10 +7,15 @@ import { Dairy } from '../../../types/dairy';
 import './Dairy.css';
 
 interface DairyListProps {
-    refresh: boolean;
+    filters?: {
+        startDate?: string;
+        endDate?: string;
+        livestockId?: string;
+        session?: string;
+    };
 }
 
-const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
+const DairyList: React.FC<DairyListProps> = ({ filters }) => {
     const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
     const [dairies, setDairies] = useState<Dairy[]>([]);
     const [loading, setLoading] = useState(true);
@@ -19,14 +24,16 @@ const DairyList: React.FC<DairyListProps> = ({ refresh }) => {
         const fetchDairies = async () => {
             setLoading(true);
             try {
-                const data = await getDairies();
+                const data = await getDairies({
+                    ...filters
+                });
                 setDairies(data.items || []);
             } finally {
                 setLoading(false);
             }
         };
         fetchDairies();
-    }, [refresh]);
+    }, [filters?.startDate, filters?.endDate, filters?.livestockId, filters?.session]);
 
     if (loading) {
         return <div className="loading-spinner"></div>;

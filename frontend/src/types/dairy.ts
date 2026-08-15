@@ -10,6 +10,14 @@ export interface Dairy {
     quality: string;
 }
 
+export interface DairyTrendPointDto {
+    date: string;
+    totalMilk: number;
+    averageFat: number;
+    averageProtein?: number;
+    averageSnf: number;
+}
+
 export interface CreateDairyRequest {
     livestockId: string;
     date: string;

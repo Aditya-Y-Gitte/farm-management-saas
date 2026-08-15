@@ -25,10 +25,10 @@ public class DairyService : IDairyService
         _logger = logger;
     }
 
-    public async Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize)
+    public async Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null, Guid? livestockId = null, string? session = null)
     {
         _logger.LogInformation("Fetching dairy records. Page: {Page}, PageSize: {PageSize}", page, pageSize);
-        var (items, totalCount) = await _repository.GetAllAsync(page, pageSize);
+        var (items, totalCount) = await _repository.GetAllAsync(page, pageSize, startDate, endDate, livestockId, session);
         var dtos = items.Select(i => i.Adapt<DairyDto>());
         return PagedResponse<DairyDto>.Create(dtos, totalCount, page, pageSize);
     }
@@ -127,5 +127,12 @@ public class DairyService : IDairyService
         var week = _dateTimeService.GetThisWeekBoundariesUtc();
 
         return await _repository.GetSummaryAsync(today.StartUtc, today.EndUtc, week.StartUtc, week.EndUtc, livestockId);
+    }
+
+    public async Task<DairyTrendResponse> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null)
+    {
+        _logger.LogInformation("Fetching dairy trends from {StartDate} to {EndDate}", startDate, endDate);
+        var points = await _repository.GetTrendsAsync(startDate, endDate, livestockId, session);
+        return new DairyTrendResponse { Points = points };
     }
 }

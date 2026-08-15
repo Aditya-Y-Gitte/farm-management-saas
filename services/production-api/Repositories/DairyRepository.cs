@@ -19,9 +19,27 @@ public class DairyRepository : IDairyRepository
         _context = context;
     }
 
-    public async Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize)
+    public async Task<(IEnumerable<Dairy> Items, int TotalCount)> GetAllAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null, Guid? livestockId = null, string? session = null)
     {
         var query = _context.Dairies.AsNoTracking();
+
+        if (startDate.HasValue)
+        {
+            query = query.Where(d => d.Date >= startDate.Value);
+        }
+        if (endDate.HasValue)
+        {
+            query = query.Where(d => d.Date < endDate.Value);
+        }
+        if (livestockId.HasValue)
+        {
+            query = query.Where(d => d.LivestockId == livestockId.Value);
+        }
+        if (!string.IsNullOrEmpty(session))
+        {
+            query = query.Where(d => d.Session == session);
+        }
+
         var totalCount = await query.CountAsync();
         var items = await query
             .OrderByDescending(d => d.Date)
@@ -110,5 +128,35 @@ public class DairyRepository : IDairyRepository
             .ToListAsync();
 
         return (items, totalCount);
+    }
+
+    public async Task<IEnumerable<DairyTrendPointDto>> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null)
+    {
+        var query = _context.Dairies.AsNoTracking()
+            .Where(d => d.Date >= startDate && d.Date < endDate);
+
+        if (livestockId.HasValue)
+        {
+            query = query.Where(d => d.LivestockId == livestockId.Value);
+        }
+        if (!string.IsNullOrEmpty(session))
+        {
+            query = query.Where(d => d.Session == session);
+        }
+
+        var points = await query
+            .GroupBy(d => d.Date.Date)
+            .Select(g => new DairyTrendPointDto
+            {
+                Date = g.Key,
+                TotalMilk = g.Sum(d => d.MilkYield),
+                AverageFat = g.Average(d => d.FatContent),
+                AverageProtein = g.Average(d => d.ProteinContent),
+                AverageSnf = g.Average(d => d.SnfContent)
+            })
+            .OrderBy(p => p.Date)
+            .ToListAsync();
+
+        return points;
     }
 }

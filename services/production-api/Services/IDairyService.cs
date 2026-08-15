@@ -10,7 +10,7 @@ namespace ProductionApi.Services;
 /// </summary>
 public interface IDairyService
 {
-    Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize);
+    Task<PagedResponse<DairyDto>> GetAllAsync(int page, int pageSize, DateTime? startDate = null, DateTime? endDate = null, Guid? livestockId = null, string? session = null);
     Task<PagedResponse<DairyDto>> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize);
     Task<DairyDto?> GetByIdAsync(Guid id);
     Task<DairyDto?> GetByLivestockDateAndSessionAsync(Guid livestockId, DateTime date, string session);
@@ -18,4 +18,5 @@ public interface IDairyService
     Task<DairyDto> UpdateAsync(Guid id, UpdateDairyRequest request);
     Task<bool> DeleteAsync(Guid id);
     Task<DairySummaryDto> GetSummaryAsync(Guid? livestockId = null);
+    Task<DairyTrendResponse> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null);
 }

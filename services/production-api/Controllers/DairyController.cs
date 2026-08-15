@@ -28,12 +28,18 @@ public class DairyController : ControllerBase
     /// Returns a paginated list of dairy records for the authenticated tenant.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 20,
+        [FromQuery] DateTime? startDate = null,
+        [FromQuery] DateTime? endDate = null,
+        [FromQuery] Guid? livestockId = null,
+        [FromQuery] string? session = null)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
 
-        var result = await _dairyService.GetAllAsync(page, pageSize);
+        var result = await _dairyService.GetAllAsync(page, pageSize, startDate, endDate, livestockId, session);
         return Ok(result);
     }
 
@@ -112,5 +118,24 @@ public class DairyController : ControllerBase
     {
         var summary = await _dairyService.GetSummaryAsync(livestockId);
         return Ok(summary);
+    }
+
+    /// <summary>
+    /// Returns aggregated dairy production points for a specified date range.
+    /// Useful for chart trends.
+    /// </summary>
+    [HttpGet("trends")]
+    public async Task<IActionResult> GetTrends(
+        [FromQuery] DateTime startDate,
+        [FromQuery] DateTime endDate,
+        [FromQuery] Guid? livestockId = null,
+        [FromQuery] string? session = null)
+    {
+        if (startDate >= endDate)
+        {
+            return BadRequest(new { message = "startDate must be before endDate" });
+        }
+        var trends = await _dairyService.GetTrendsAsync(startDate, endDate, livestockId, session);
+        return Ok(trends);
     }
 }
