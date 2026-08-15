@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { getLivestock } from '../../../services/livestockService';
 import { getDairySummary, getDairiesByLivestockId } from '../../../services/dairyService';
 import { getBreedingCyclesByLivestockId } from '../../../services/breedingService';
+import { getHealthRecordsByLivestockId } from '../../../services/healthService';
 import { GENDER_I18N_MAP, STATUS_I18N_MAP, ACQUISITION_I18N_MAP } from '../../../utils/i18nMappings';
 import { Livestock } from '../../../types/livestock';
 import { BreedingCycle } from '../../../types/breeding';
+import { HealthRecord } from '../../../types/health';
 import { Dairy } from '../../../types/dairy';
 import { Card } from '../../../components/ui/Card';
 import { Badge, BadgeProps } from '../../../components/ui/Badge';
@@ -35,6 +37,141 @@ const getStatusVariant = (status: string): BadgeProps['variant'] => {
     if (s === 'deceased' || s === 'lost' || s === 'failed') return 'danger';
     if (s === 'pregnant' || s === 'inseminated') return 'neutral';
     return 'neutral';
+};
+
+const healthTimelineCache: Record<string, { items: HealthRecord[], page: number, hasMore: boolean }> = {};
+
+const HealthTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
+    const { t } = useTranslation(['health', 'common', 'animals']);
+    const navigate = useNavigate();
+    
+    const cached = healthTimelineCache[livestockId] || { items: [], page: 1, hasMore: true };
+    const [history, setHistory] = useState<HealthRecord[]>(cached.items);
+    const [page, setPage] = useState(cached.page);
+    const [hasMore, setHasMore] = useState(cached.hasMore);
+    const [loading, setLoading] = useState(history.length === 0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    const [expandedEvents, setExpandedEvents] = useState<Record<string, boolean>>({});
+
+    const fetchHistory = async (pageNum: number, isLoadMore = false) => {
+        isLoadMore ? setLoadingMore(true) : setLoading(true);
+        setError(null);
+        try {
+            const data = await getHealthRecordsByLivestockId(livestockId, pageNum, 10);
+            const newItems = isLoadMore ? [...history, ...data.items] : data.items;
+            const more = data.page * data.pageSize < data.totalCount;
+            
+            setHistory(newItems);
+            setHasMore(more);
+            healthTimelineCache[livestockId] = { items: newItems, page: pageNum, hasMore: more };
+        } catch (err: any) {
+            setError(err);
+        } finally {
+            isLoadMore ? setLoadingMore(false) : setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (history.length === 0 && loading) {
+            fetchHistory(1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [livestockId]);
+
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchHistory(nextPage, true);
+    };
+
+    const toggleExpand = (id: string) => {
+        setExpandedEvents(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                <Skeleton width="100%" height="4rem" />
+                <Skeleton width="100%" height="4rem" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <ErrorState 
+                title={t('common:errors.title', { defaultValue: 'Error' })}
+                message={error.message || t('common:errors.defaultMessage', { defaultValue: 'Failed to load health history' })}
+                onRetry={() => fetchHistory(page)}
+            />
+        );
+    }
+
+    return (
+        <div style={{ marginTop: 'var(--space-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--space-md)' }}>
+                <Button onClick={() => navigate(`/livestock/${livestockId}/health/add`)}>
+                    {t('health:timeline.addRecord', { defaultValue: 'Add Health Record' })}
+                </Button>
+            </div>
+
+            {history.length === 0 ? (
+                <EmptyState title={t('health:timeline.empty', { defaultValue: 'No health records found' })} />
+            ) : (
+                <div style={{ position: 'relative', paddingLeft: '24px', borderLeft: '2px solid var(--border-color)' }}>
+                    {history.map((record) => (
+                        <div key={record.id} style={{ position: 'relative', marginBottom: 'var(--space-lg)' }}>
+                            <div style={{
+                                position: 'absolute',
+                                left: '-31px',
+                                top: '8px',
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                backgroundColor: 'var(--color-primary)',
+                                border: '2px solid var(--bg-primary)'
+                            }} />
+                            <div style={{ marginBottom: '4px', fontWeight: 600, color: 'var(--text-muted)' }}>
+                                {new Date(record.date).toLocaleDateString()}
+                            </div>
+                            <Card>
+                                <Card.Body>
+                                    <div style={{ fontWeight: 600, fontSize: 'var(--font-size-lg)' }}>{record.type}</div>
+                                    <div style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-sm)' }}>{record.description}</div>
+                                    
+                                    {expandedEvents[record.id] && (
+                                        <div style={{ marginTop: 'var(--space-md)', paddingTop: 'var(--space-md)', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                                            {record.diagnosis && <div><strong>{t('health:form.diagnosis', { defaultValue: 'Diagnosis' })}:</strong> {record.diagnosis}</div>}
+                                            {record.treatment && <div><strong>{t('health:form.treatment', { defaultValue: 'Treatment' })}:</strong> {record.treatment}</div>}
+                                            {record.medication && <div><strong>{t('health:form.medication', { defaultValue: 'Medication' })}:</strong> {record.medication}</div>}
+                                            {record.veterinarian && <div><strong>{t('health:form.veterinarian', { defaultValue: 'Veterinarian' })}:</strong> {record.veterinarian}</div>}
+                                            {record.notes && <div><strong>{t('health:form.notes', { defaultValue: 'Notes' })}:</strong> {record.notes}</div>}
+                                        </div>
+                                    )}
+                                    
+                                    <Button variant="secondary" onClick={() => toggleExpand(record.id)} style={{ marginTop: 'var(--space-sm)' }}>
+                                        {expandedEvents[record.id] 
+                                            ? t('health:timeline.hideDetails', { defaultValue: 'Hide details' }) 
+                                            : t('health:timeline.viewDetails', { defaultValue: 'View details' })}
+                                    </Button>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    ))}
+                    
+                    {hasMore && (
+                        <div style={{ textAlign: 'center', marginTop: 'var(--space-lg)' }}>
+                            <Button variant="secondary" onClick={handleLoadMore} disabled={loadingMore}>
+                                {loadingMore ? t('common:loading', { defaultValue: 'Loading...' }) : t('health:timeline.loadMore', { defaultValue: 'Load older records' })}
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
 };
 
 const breedingTimelineCache: Record<string, { items: BreedingCycle[], page: number, hasMore: boolean }> = {};
@@ -317,14 +454,18 @@ const LivestockProfilePage: React.FC = () => {
         if (!livestock) return [];
         const events: ActivityEvent[] = [];
 
-        // Health Records
-        (livestock.healthRecords || []).forEach(hr => {
+        // Health Records (We don't use livestock.healthRecords anymore for history, 
+        // but if FMS-403 still wants it for the overview feed, we need to map the new type).
+        // Since livestock.healthRecords might be empty now, we should ideally fetch the latest health event
+        // or just rely on what is in `history` state. But this is the Overview tab.
+        // For simplicity, we'll map any available healthRecords if the backend still returns them.
+        (livestock.healthRecords as any[] || []).forEach(hr => {
             events.push({
                 id: hr.id,
                 date: new Date(hr.date),
                 type: 'health',
                 title: t('health:sections.records', { defaultValue: 'Health Record' }),
-                description: hr.condition
+                description: hr.type || hr.type
             });
         });
 
@@ -445,36 +586,7 @@ const LivestockProfilePage: React.FC = () => {
         },
         {
             label: t('animals:profile.tabs.health', { defaultValue: 'Health' }),
-            content: (
-                <div style={{ marginTop: 'var(--space-md)' }}>
-                    {livestock.healthRecords && livestock.healthRecords.length > 0 ? (
-                        <div className="table-responsive">
-                            <table className="livestock-table">
-                                <thead>
-                                    <tr>
-                                        <th>{t('milk:fields.date', { defaultValue: 'Date' })}</th>
-                                        <th>{t('health:fields.condition', { defaultValue: 'Condition' })}</th>
-                                        <th>{t('health:fields.treatment', { defaultValue: 'Treatment' })}</th>
-                                        <th>{t('health:fields.veterinarian', { defaultValue: 'Veterinarian' })}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {livestock.healthRecords.map(record => (
-                                        <tr key={record.id}>
-                                            <td>{new Date(record.date).toLocaleDateString()}</td>
-                                            <td>{record.condition}</td>
-                                            <td>{record.treatment}</td>
-                                            <td>{record.veterinarian}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <EmptyState title={t('health:empty.noRecords')} />
-                    )}
-                </div>
-            )
+            content: <HealthTimelineTab livestockId={id!} />
         },
         {
             label: t('animals:profile.tabs.breeding', { defaultValue: 'Breeding' }),
