@@ -2,20 +2,41 @@
   "sections": {
     "cycles": "Breeding Cycles"
   },
-  "actions": {
-    "addCycle": "Add Cycle"
+  "timeline": {
+    "title": "Breeding History",
+    "addRecord": "Add Breeding Record",
+    "editRecord": "Edit Breeding Record",
+    "loadMore": "Load older records",
+    "viewDetails": "View / Edit",
+    "hideDetails": "Hide details",
+    "empty": "No breeding records found."
   },
-  "fields": {
-    "startDate": "Start Date",
-    "inseminationDate": "Insemination Date",
-    "expectedCalving": "Expected Calving",
-    "status": "Status"
+  "form": {
+    "breedingDate": "Breeding Date",
+    "method": "Method",
+    "expectedDeliveryDate": "Expected Delivery",
+    "actualDeliveryDate": "Actual Delivery",
+    "status": "Status",
+    "notes": "Notes",
+    "errors": {
+      "dateRequired": "Date is required",
+      "deliveryBeforeBreeding": "Delivery cannot be before breeding date"
+    },
+    "success": {
+      "created": "Breeding record added successfully",
+      "updated": "Breeding record updated successfully"
+    }
   },
   "status": {
+    "inseminated": "Inseminated",
+    "pregnant": "Pregnant",
+    "delivered": "Delivered",
+    "failed": "Failed",
     "successful": "Successful",
     "pendingOrFailed": "Pending/Failed"
   },
-  "empty": {
-    "noCycles": "No breeding cycles found."
+  "method": {
+    "ai": "Artificial Insemination",
+    "natural": "Natural"
   }
 }

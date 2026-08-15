@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getLivestock } from '../../../services/livestockService';
 import { getDairySummary, getDairiesByLivestockId } from '../../../services/dairyService';
+import { getBreedingCyclesByLivestockId } from '../../../services/breedingService';
 import { GENDER_I18N_MAP, STATUS_I18N_MAP, ACQUISITION_I18N_MAP } from '../../../utils/i18nMappings';
 import { Livestock } from '../../../types/livestock';
+import { BreedingCycle } from '../../../types/breeding';
 import { Dairy } from '../../../types/dairy';
 import { Card } from '../../../components/ui/Card';
 import { Badge, BadgeProps } from '../../../components/ui/Badge';
@@ -27,11 +29,166 @@ interface ActivityEvent {
 
 const getStatusVariant = (status: string): BadgeProps['variant'] => {
     const s = status.toLowerCase();
-    if (s === 'active') return 'success';
+    if (s === 'active' || s === 'delivered') return 'success';
     if (s === 'sold') return 'neutral';
     if (s === 'sick') return 'warning';
-    if (s === 'deceased' || s === 'lost') return 'danger';
+    if (s === 'deceased' || s === 'lost' || s === 'failed') return 'danger';
+    if (s === 'pregnant' || s === 'inseminated') return 'neutral';
     return 'neutral';
+};
+
+const breedingTimelineCache: Record<string, { items: BreedingCycle[], page: number, hasMore: boolean }> = {};
+
+const BreedingTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
+    const { t } = useTranslation(['breeding', 'common', 'animals']);
+    const navigate = useNavigate();
+    
+    const cached = breedingTimelineCache[livestockId] || { items: [], page: 1, hasMore: true };
+    const [history, setHistory] = useState<BreedingCycle[]>(cached.items);
+    const [page, setPage] = useState(cached.page);
+    const [hasMore, setHasMore] = useState(cached.hasMore);
+    const [loading, setLoading] = useState(history.length === 0);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
+
+    const [expandedEvents, setExpandedEvents] = useState<Record<string, boolean>>({});
+
+    const fetchHistory = async (pageNum: number, isLoadMore = false) => {
+        isLoadMore ? setLoadingMore(true) : setLoading(true);
+        setError(null);
+        try {
+            const data = await getBreedingCyclesByLivestockId(livestockId, pageNum, 10);
+            const newItems = isLoadMore ? [...history, ...data.items] : data.items;
+            const more = data.page * data.pageSize < data.totalCount;
+            
+            setHistory(newItems);
+            setHasMore(more);
+            breedingTimelineCache[livestockId] = { items: newItems, page: pageNum, hasMore: more };
+        } catch (err: any) {
+            setError(err);
+        } finally {
+            isLoadMore ? setLoadingMore(false) : setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (history.length === 0 && loading) {
+            fetchHistory(1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [livestockId]);
+
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchHistory(nextPage, true);
+    };
+
+    const toggleExpand = (id: string) => {
+        setExpandedEvents(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                <Skeleton width="100%" height="4rem" />
+                <Skeleton width="100%" height="4rem" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <ErrorState 
+                title={t('common:errors.title', { defaultValue: 'Error' })}
+                message={error.message || t('common:errors.defaultMessage', { defaultValue: 'Failed to load breeding history' })}
+                onRetry={() => fetchHistory(page)}
+            />
+        );
+    }
+
+    return (
+        <div style={{ marginTop: 'var(--space-md)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--space-md)' }}>
+                <Button onClick={() => navigate(`/livestock/${livestockId}/breeding/add`)}>
+                    {t('breeding:timeline.addRecord', { defaultValue: 'Add Breeding Record' })}
+                </Button>
+            </div>
+
+            {history.length === 0 ? (
+                <EmptyState title={t('breeding:timeline.empty', { defaultValue: 'No breeding records found' })} />
+            ) : (
+                <div style={{ position: 'relative', paddingLeft: '24px', borderLeft: '2px solid var(--border-color)' }}>
+                    {history.map((record) => (
+                        <div key={record.id} style={{ position: 'relative', marginBottom: 'var(--space-lg)' }}>
+                            <div style={{
+                                position: 'absolute',
+                                left: '-31px',
+                                top: '8px',
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                backgroundColor: 'var(--color-primary)',
+                                border: '2px solid var(--bg-primary)'
+                            }} />
+                            <div style={{ marginBottom: '4px', fontWeight: 600, color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                                <span>{new Date(record.breedingDate).toLocaleDateString()}</span>
+                                <span>
+                                    <Badge variant={getStatusVariant(record.status)}>
+                                        {t(`breeding:status.${record.status.toLowerCase()}`, { defaultValue: record.status })}
+                                    </Badge>
+                                </span>
+                            </div>
+                            <Card>
+                                <Card.Body>
+                                    <div style={{ fontWeight: 600, fontSize: 'var(--font-size-lg)', marginBottom: 'var(--space-sm)' }}>
+                                        {t(`breeding:method.${record.method.toLowerCase()}`, { defaultValue: record.method })}
+                                    </div>
+                                    
+                                    {record.expectedDeliveryDate && (
+                                        <div style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-sm)' }}>
+                                            <strong>{t('breeding:form.expectedDeliveryDate', { defaultValue: 'Expected Delivery' })}:</strong> {new Date(record.expectedDeliveryDate).toLocaleDateString()}
+                                        </div>
+                                    )}
+
+                                    {record.actualDeliveryDate && (
+                                        <div style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-sm)' }}>
+                                            <strong>{t('breeding:form.actualDeliveryDate', { defaultValue: 'Actual Delivery' })}:</strong> {new Date(record.actualDeliveryDate).toLocaleDateString()}
+                                        </div>
+                                    )}
+                                    
+                                    {expandedEvents[record.id] && (
+                                        <div style={{ marginTop: 'var(--space-md)', paddingTop: 'var(--space-md)', borderTop: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+                                            {record.notes && <div><strong>{t('breeding:form.notes', { defaultValue: 'Notes' })}:</strong> {record.notes}</div>}
+                                            <div style={{ marginTop: 'var(--space-sm)' }}>
+                                                <Button variant="secondary" onClick={() => navigate(`/livestock/${livestockId}/breeding/${record.id}/edit`)}>
+                                                    {t('breeding:timeline.editRecord', { defaultValue: 'Edit Record' })}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    )}
+                                    
+                                    <Button variant="secondary" onClick={() => toggleExpand(record.id)} style={{ marginTop: 'var(--space-sm)' }}>
+                                        {expandedEvents[record.id] 
+                                            ? t('breeding:timeline.hideDetails', { defaultValue: 'Hide details' }) 
+                                            : t('breeding:timeline.viewDetails', { defaultValue: 'View / Edit' })}
+                                    </Button>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    ))}
+                    
+                    {hasMore && (
+                        <div style={{ textAlign: 'center', marginTop: 'var(--space-lg)' }}>
+                            <Button variant="secondary" onClick={handleLoadMore} disabled={loadingMore}>
+                                {loadingMore ? t('common:loading', { defaultValue: 'Loading...' }) : t('breeding:timeline.loadMore', { defaultValue: 'Load older records' })}
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
 };
 
 const milkHistoryCache: Record<string, Dairy[]> = {};
@@ -65,6 +222,7 @@ const MilkHistoryTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
 
     useEffect(() => {
         fetchHistory();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [livestockId]);
 
     if (loading) {
@@ -170,14 +328,14 @@ const LivestockProfilePage: React.FC = () => {
             });
         });
 
-        // Breeding Cycles
-        (livestock.breedingCycles || []).forEach(bc => {
+        // Breeding Cycles (legacy reference mapping just in case we need it for Overview feed on FMS-405 develop base)
+        (livestock.breedingCycles as any[] || []).forEach(bc => {
             events.push({
                 id: bc.id,
-                date: new Date(bc.cycleStartDate),
+                date: new Date(bc.breedingDate || bc.cycleStartDate),
                 type: 'breeding',
                 title: t('breeding:sections.cycles', { defaultValue: 'Breeding Cycle' }),
-                description: bc.isSuccessful ? t('breeding:status.successful', { defaultValue: 'Successful' }) : t('breeding:status.pendingOrFailed', { defaultValue: 'Pending/Failed' })
+                description: bc.status || (bc.isSuccessful ? t('breeding:status.successful', { defaultValue: 'Successful' }) : t('breeding:status.pendingOrFailed', { defaultValue: 'Pending/Failed' }))
             });
         });
 
@@ -320,40 +478,7 @@ const LivestockProfilePage: React.FC = () => {
         },
         {
             label: t('animals:profile.tabs.breeding', { defaultValue: 'Breeding' }),
-            content: (
-                <div style={{ marginTop: 'var(--space-md)' }}>
-                    {livestock.breedingCycles && livestock.breedingCycles.length > 0 ? (
-                        <div className="table-responsive">
-                            <table className="livestock-table">
-                                <thead>
-                                    <tr>
-                                        <th>{t('breeding:fields.startDate', { defaultValue: 'Start Date' })}</th>
-                                        <th>{t('breeding:fields.inseminationDate', { defaultValue: 'Insemination' })}</th>
-                                        <th>{t('breeding:fields.expectedCalving', { defaultValue: 'Expected Calving' })}</th>
-                                        <th>{t('breeding:fields.status', { defaultValue: 'Status' })}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {livestock.breedingCycles.map(cycle => (
-                                        <tr key={cycle.id}>
-                                            <td>{new Date(cycle.cycleStartDate).toLocaleDateString()}</td>
-                                            <td>{cycle.inseminationDate ? new Date(cycle.inseminationDate).toLocaleDateString() : '-'}</td>
-                                            <td>{cycle.expectedCalvingDate ? new Date(cycle.expectedCalvingDate).toLocaleDateString() : '-'}</td>
-                                            <td>
-                                                <Badge variant={cycle.isSuccessful ? 'success' : 'neutral'}>
-                                                    {cycle.isSuccessful ? t('breeding:status.successful', { defaultValue: 'Successful' }) : t('breeding:status.pendingOrFailed', { defaultValue: 'Pending/Failed' })}
-                                                </Badge>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    ) : (
-                        <EmptyState title={t('breeding:empty.noCycles')} />
-                    )}
-                </div>
-            )
+            content: <BreedingTimelineTab livestockId={id!} />
         },
         {
             label: t('animals:profile.tabs.milkHistory', { defaultValue: 'Milk History' }),

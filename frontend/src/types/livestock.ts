@@ -8,16 +8,7 @@ export interface HealthRecord {
     followUpDate?: string;
 }
 
-export interface BreedingCycle {
-    id: string;
-    cycleStartDate: string;
-    inseminationDate?: string;
-    expectedCalvingDate?: string;
-    actualCalvingDate?: string;
-    isSuccessful: boolean;
-    notes?: string;
-}
-
+import { BreedingCycle } from './breeding';
 export interface Livestock {
     id: string;
     tagNumber: string;

@@ -2,20 +2,41 @@
   "sections": {
     "cycles": "प्रजनन चक्रे"
   },
-  "actions": {
-    "addCycle": "चक्र जोडा"
+  "timeline": {
+    "title": "प्रजनन इतिहास",
+    "addRecord": "प्रजनन नोंद जोडा",
+    "editRecord": "प्रजनन नोंद संपादित करा",
+    "loadMore": "जुने रेकॉर्ड लोड करा",
+    "viewDetails": "पहा / संपादित करा",
+    "hideDetails": "तपशील लपवा",
+    "empty": "कोणतीही प्रजनन चक्रे आढळली नाहीत."
   },
-  "fields": {
-    "startDate": "सुरुवातीची तारीख",
-    "inseminationDate": "बीजारोपण तारीख",
-    "expectedCalving": "अपेक्षित प्रसूती",
-    "status": "स्थिती"
+  "form": {
+    "breedingDate": "प्रजनन तारीख",
+    "method": "पद्धत",
+    "expectedDeliveryDate": "अपेक्षित प्रसूती",
+    "actualDeliveryDate": "प्रत्यक्ष प्रसूती",
+    "status": "स्थिती",
+    "notes": "नोंदी",
+    "errors": {
+      "dateRequired": "तारीख आवश्यक आहे",
+      "deliveryBeforeBreeding": "प्रसूतीची तारीख प्रजनन तारखेपूर्वी असू शकत नाही"
+    },
+    "success": {
+      "created": "प्रजनन नोंद यशस्वीरित्या जोडली",
+      "updated": "प्रजनन नोंद यशस्वीरित्या अद्यतनित केली"
+    }
   },
   "status": {
+    "inseminated": "बीजारोपण केले",
+    "pregnant": "गर्भवती",
+    "delivered": "प्रसूती झाली",
+    "failed": "अयशस्वी",
     "successful": "यशस्वी",
     "pendingOrFailed": "प्रलंबित/अयशस्वी"
   },
-  "empty": {
-    "noCycles": "कोणतीही प्रजनन चक्रे आढळली नाहीत."
+  "method": {
+    "ai": "कृत्रिम बीजारोपण (AI)",
+    "natural": "नैसर्गिक"
   }
 }

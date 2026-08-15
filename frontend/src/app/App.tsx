@@ -7,6 +7,8 @@ import LoginPage from '../features/auth/pages/LoginPage';
 import DashboardPage from '../features/dashboard/pages/DashboardPage';
 import LivestockPage from '../features/livestock/pages/LivestockPage';
 import AddLivestockPage from '../features/livestock/pages/AddLivestockPage';
+import AddBreedingRecordPage from '../features/breeding/pages/AddBreedingRecordPage';
+import EditBreedingRecordPage from '../features/breeding/pages/EditBreedingRecordPage';
 import DairyPage from '../features/dairy/pages/DairyPage';
 import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
 import FinancePage from '../features/finance/pages/FinancePage';
@@ -32,6 +34,8 @@ function App() {
             <Route path="/livestock" element={<LivestockPage />} />
             <Route path="/livestock/add" element={<AddLivestockPage />} />
             <Route path="/livestock/:id" element={<LivestockProfilePage />} />
+            <Route path="/livestock/:id/breeding/add" element={<AddBreedingRecordPage />} />
+            <Route path="/livestock/:id/breeding/:cycleId/edit" element={<EditBreedingRecordPage />} />
             <Route path="/dairy" element={<DairyPage />} />
             <Route path="/finances" element={<FinancePage />} />
           </Route>
