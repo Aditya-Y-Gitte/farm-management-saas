@@ -17,5 +17,6 @@ public interface IDairyRepository
     Task<Dairy> CreateAsync(Dairy dairy);
     Task<Dairy> UpdateAsync(Dairy dairy);
     Task<bool> DeleteAsync(Guid id);
-    Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc);
+    Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc, Guid? livestockId = null);
+    Task<(IEnumerable<Dairy> Items, int TotalCount)> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize);
 }

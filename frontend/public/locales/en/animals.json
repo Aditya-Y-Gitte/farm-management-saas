@@ -57,6 +57,19 @@
   "errors": {
     "notFound": "Livestock not found"
   },
+  "profile": {
+    "tabs": {
+      "overview": "Overview",
+      "health": "Health",
+      "breeding": "Breeding",
+      "milkHistory": "Milk History",
+      "details": "Details"
+    },
+    "todayMilk": "Today's Milk",
+    "recentActivity": "Recent Activity",
+    "noRecentActivity": "No recent activity recorded",
+    "viewHistory": "View History"
+  },
   "sections": {
     "general": "General Information",
     "acquisition": "Acquisition Details"

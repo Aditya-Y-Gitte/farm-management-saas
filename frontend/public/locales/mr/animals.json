@@ -57,6 +57,19 @@
   "errors": {
     "notFound": "पशुधन आढळले नाही"
   },
+  "profile": {
+    "tabs": {
+      "overview": "आढावा",
+      "health": "आरोग्य",
+      "breeding": "प्रजनन",
+      "milkHistory": "दुधाचा इतिहास",
+      "details": "तपशील"
+    },
+    "todayMilk": "आजचे दूध",
+    "recentActivity": "अलीकडील क्रियाकलाप",
+    "noRecentActivity": "कोणतीही अलीकडील क्रियाकलाप नाही",
+    "viewHistory": "इतिहास पहा"
+  },
   "sections": {
     "general": "सामान्य माहिती",
     "acquisition": "अधिग्रहणाचा तपशील"
