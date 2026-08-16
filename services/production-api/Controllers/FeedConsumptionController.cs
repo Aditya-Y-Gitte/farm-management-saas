@@ -6,7 +6,7 @@ using ProductionApi.Services;
 namespace ProductionApi.Controllers;
 
 [ApiController]
-[Route("api/feed-consumptions")]
+[Route("api/production/feed-consumptions")]
 [Authorize]
 public class FeedConsumptionController : ControllerBase
 {

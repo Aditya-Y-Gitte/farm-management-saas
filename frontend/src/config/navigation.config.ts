@@ -9,6 +9,7 @@ import {
   Settings, 
   User, 
   LogOut,
+  Leaf,
   LucideIcon 
 } from 'lucide-react';
 
@@ -25,7 +26,8 @@ export type NavTranslationKey =
   | 'navigation:settings'
   | 'navigation:profile'
   | 'navigation:logout'
-  | 'navigation:more';
+  | 'navigation:more'
+  | 'navigation:feed';
 
 export interface NavItem {
   id: string;
@@ -78,6 +80,14 @@ export const NAVIGATION_CONFIG: NavItem[] = [
     translationKey: 'navigation:finance',
     path: '/finances',
     icon: Coins,
+    section: 'secondary',
+    enabled: true,
+  },
+  {
+    id: 'feed',
+    translationKey: 'navigation:feed',
+    path: '/feed',
+    icon: Leaf,
     section: 'secondary',
     enabled: true,
   },

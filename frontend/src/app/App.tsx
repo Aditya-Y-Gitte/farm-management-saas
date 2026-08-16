@@ -14,6 +14,8 @@ import DairyPage from '../features/dairy/pages/DairyPage';
 import AddDairyRecordPage from '../features/dairy/pages/AddDairyRecordPage';
 import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
 import FinancePage from '../features/finance/pages/FinancePage';
+import FeedPage from '../features/feed/pages/FeedPage';
+import FeedAddPage from '../features/feed/pages/FeedAddPage';
 import './App.css';
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
             <Route path="/dairy" element={<DairyPage />} />
             <Route path="/dairy/record" element={<AddDairyRecordPage />} />
             <Route path="/finances" element={<FinancePage />} />
+            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/feed/add" element={<FeedAddPage />} />
           </Route>
 
           {/* Default redirect */}

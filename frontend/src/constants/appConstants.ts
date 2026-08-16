@@ -74,3 +74,20 @@ export enum DairyQuality {
 }
 export const DAIRY_QUALITIES = Object.values(DairyQuality);
 
+
+export enum FeedType {
+    GreenFodder = 'GreenFodder',
+    DryFodder = 'DryFodder',
+    Concentrate = 'Concentrate',
+    Supplements = 'Supplements',
+    Other = 'Other'
+}
+export const FEED_TYPES = Object.values(FeedType);
+
+export enum FeedUnit {
+    Kg = 'Kg',
+    Lb = 'Lb',
+    Bale = 'Bale',
+    Bundle = 'Bundle'
+}
+export const FEED_UNITS = Object.values(FeedUnit);
