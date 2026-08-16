@@ -1,22 +1,21 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Card } from '../../../components/ui/Card';
 import { AddHealthRecordForm } from '../components/AddHealthRecordForm';
 import '../../../theme/PageCommon.css';
-import '../../livestock/components/Livestock.css';
 
-const AddHealthRecordPage: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+const GlobalAddHealthRecordPage: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation(['health']);
 
     const handleSuccess = () => {
-        navigate(`/livestock/${id}`);
+        // Return to dashboard after successful global creation
+        navigate('/dashboard');
     };
 
     const handleCancel = () => {
-        navigate(`/livestock/${id}`);
+        navigate('/dashboard');
     };
 
     return (
@@ -30,7 +29,6 @@ const AddHealthRecordPage: React.FC = () => {
             <Card style={{ maxWidth: '600px', margin: '0 auto', marginTop: 'var(--space-md)' }}>
                 <Card.Body>
                     <AddHealthRecordForm 
-                        initialLivestockId={id} 
                         onSuccess={handleSuccess} 
                         onCancel={handleCancel} 
                     />
@@ -40,4 +38,4 @@ const AddHealthRecordPage: React.FC = () => {
     );
 };
 
-export default AddHealthRecordPage;
+export default GlobalAddHealthRecordPage;

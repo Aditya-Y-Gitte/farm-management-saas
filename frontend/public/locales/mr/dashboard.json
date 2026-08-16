@@ -34,9 +34,10 @@
     "additional": "अतिरिक्त माहिती"
   },
   "actions": {
-    "logMilk": "दूध नोंदवा",
+    "recordMilk": "दूध नोंदवा",
     "addAnimal": "प्राणी जोडा",
-    "logFeed": "खाद्य नोंदवा"
+    "recordTreatment": "उपचार नोंदवा",
+    "viewAnimals": "प्राणी पहा"
   },
   "lastUpdated": "शेवटचे अपडेट:"
 }
