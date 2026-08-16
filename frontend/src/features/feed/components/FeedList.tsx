@@ -4,9 +4,11 @@ import { getFeedConsumptions } from '../../../services/feedService';
 import { FeedConsumptionDto } from '../../../types/feed';
 import { FEED_TYPE_I18N_MAP, FEED_UNIT_I18N_MAP } from '../../../utils/i18nMappings';
 import { Button } from '../../../components/ui/Button';
+import { useFormatters } from '../../../utils/useFormatters';
 
 const FeedList: React.FC = () => {
     const { t } = useTranslation(['feed', 'common']);
+    const { formatDate, formatNumber } = useFormatters();
     
     const [records, setRecords] = useState<FeedConsumptionDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -73,10 +75,10 @@ const FeedList: React.FC = () => {
                     <tbody>
                         {records.map(r => (
                             <tr key={r.id}>
-                                <td>{new Date(r.date).toLocaleDateString()}</td>
+                                <td>{formatDate(r.date)}</td>
                                 <td>{r.livestockId ? r.livestockId.substring(0, 8) + '...' : t('feed:fields.herdWide')}</td>
                                 <td>{t(FEED_TYPE_I18N_MAP[r.feedType] || r.feedType as any)}</td>
-                                <td>{r.quantity} {t(FEED_UNIT_I18N_MAP[r.unit] || r.unit as any)}</td>
+                                <td>{formatNumber(r.quantity)} {t(FEED_UNIT_I18N_MAP[r.unit] || r.unit as any)}</td>
                                 <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.notes}</td>
                             </tr>
                         ))}

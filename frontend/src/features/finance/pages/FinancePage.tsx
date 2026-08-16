@@ -5,10 +5,12 @@ import { INCOME_SOURCE_I18N_MAP, EXPENSE_CATEGORY_I18N_MAP } from '../../../util
 import { Income, Expense, FinanceSummaryDto } from '../../../types/finance';
 import { TRANSACTION_TYPES } from '../../../constants/appConstants';
 import FinanceForm from '../components/FinanceForm';
+import { useFormatters } from '../../../utils/useFormatters';
 import '../../../theme/PageCommon.css';
 
 const FinancePage: React.FC = () => {
     const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
+    const { formatDate, formatCurrency } = useFormatters();
     
     // Ledger states
     const [incomes, setIncomes] = useState<Income[]>([]);
@@ -124,7 +126,7 @@ const FinancePage: React.FC = () => {
                         {t('finance:summary.thisMonth', 'This Month')} - {t('finance:summary.totalIncome', 'Total Income')}
                     </span>
                     <span style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--success)' }}>
-                        {loadingSummary ? '...' : `₹${summary?.totalIncomeThisMonth?.toLocaleString() || 0}`}
+                        {loadingSummary ? '...' : `+${formatCurrency(summary?.totalIncomeThisMonth || 0)}`}
                     </span>
                 </div>
                 <div className="glass-card" style={{ padding: 'var(--space-lg)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -132,7 +134,7 @@ const FinancePage: React.FC = () => {
                         {t('finance:summary.thisMonth', 'This Month')} - {t('finance:summary.totalExpenses', 'Total Expenses')}
                     </span>
                     <span style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--danger)' }}>
-                        {loadingSummary ? '...' : `₹${summary?.totalExpenseThisMonth?.toLocaleString() || 0}`}
+                        {loadingSummary ? '...' : `-${formatCurrency(summary?.totalExpenseThisMonth || 0)}`}
                     </span>
                 </div>
                 <div className="glass-card" style={{ padding: 'var(--space-lg)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -140,7 +142,7 @@ const FinancePage: React.FC = () => {
                         {t('finance:summary.thisMonth', 'This Month')} - {t('finance:summary.netBalance', 'Net Balance')}
                     </span>
                     <span style={{ fontSize: '2rem', fontWeight: 800, color: (summary?.netBalance || 0) >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-                        {loadingSummary ? '...' : `₹${summary?.netBalance?.toLocaleString() || 0}`}
+                        {loadingSummary ? '...' : formatCurrency(summary?.netBalance || 0)}
                     </span>
                 </div>
             </div>
@@ -179,10 +181,10 @@ const FinancePage: React.FC = () => {
                                     <tbody>
                                         {incomes.map(item => (
                                             <tr key={item.id}>
-                                                <td>{new Date(item.date).toLocaleDateString()}</td>
+                                                <td>{formatDate(item.date)}</td>
                                                 <td>{t(INCOME_SOURCE_I18N_MAP[item.category] || EXPENSE_CATEGORY_I18N_MAP[item.category] || item.category as any)}</td>
                                                 <td>{item.notes || '-'}</td>
-                                                <td style={{ color: 'var(--success)', fontWeight: 600 }}>+₹{item.amount.toLocaleString()}</td>
+                                                <td style={{ color: 'var(--success)', fontWeight: 600 }}>+{formatCurrency(item.amount)}</td>
                                             </tr>
                                         ))}
                                         {incomes.length === 0 && (
@@ -216,10 +218,10 @@ const FinancePage: React.FC = () => {
                                     <tbody>
                                         {expenses.map(item => (
                                             <tr key={item.id}>
-                                                <td>{new Date(item.date).toLocaleDateString()}</td>
+                                                <td>{formatDate(item.date)}</td>
                                                 <td>{t(INCOME_SOURCE_I18N_MAP[item.category] || EXPENSE_CATEGORY_I18N_MAP[item.category] || item.category as any)}</td>
                                                 <td>{item.notes || '-'}</td>
-                                                <td style={{ color: 'var(--danger)', fontWeight: 600 }}>-₹{item.amount.toLocaleString()}</td>
+                                                <td style={{ color: 'var(--danger)', fontWeight: 600 }}>-{formatCurrency(item.amount)}</td>
                                             </tr>
                                         ))}
                                         {expenses.length === 0 && (

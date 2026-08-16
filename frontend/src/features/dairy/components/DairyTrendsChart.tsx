@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DairyTrendPointDto } from '../../../types/dairy';
+import { useFormatters } from '../../../utils/useFormatters';
 import './Dairy.css';
 
 interface DairyTrendsChartProps {
@@ -12,6 +13,7 @@ interface DairyTrendsChartProps {
 
 const DairyTrendsChart: React.FC<DairyTrendsChartProps> = ({ data, loading, error }) => {
     const { t } = useTranslation(['common', 'milk']);
+    const { formatDate, formatNumber } = useFormatters();
 
     if (loading) {
         return (
@@ -52,7 +54,7 @@ const DairyTrendsChart: React.FC<DairyTrendsChartProps> = ({ data, loading, erro
     // Format dates for X-axis
     const formattedData = data.map(point => ({
         ...point,
-        displayDate: new Date(point.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+        displayDate: formatDate(point.date, { month: 'short', day: 'numeric' })
     }));
 
     return (
@@ -82,7 +84,7 @@ const DairyTrendsChart: React.FC<DairyTrendsChartProps> = ({ data, loading, erro
                         />
                         <Tooltip 
                             formatter={(value: any, name: any) => {
-                                if (name === 'totalMilk') return [`${Number(value).toFixed(1)} L`, t('milk:fields.yieldL', 'Yield (L)') as any];
+                                if (name === 'totalMilk') return [`${formatNumber(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} L`, t('milk:fields.yieldL', 'Yield (L)') as any];
                                 return [value, name];
                             }}
                             labelFormatter={(label) => label}

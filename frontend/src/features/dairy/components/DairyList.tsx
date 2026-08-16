@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { getDairies } from '../../../services/dairyService';
 import { DAIRY_SESSION_I18N_MAP, DAIRY_QUALITY_I18N_MAP } from '../../../utils/i18nMappings';
 import { Dairy } from '../../../types/dairy';
+import { useFormatters } from '../../../utils/useFormatters';
 import './Dairy.css';
 
 interface DairyListProps {
@@ -17,6 +18,7 @@ interface DairyListProps {
 
 const DairyList: React.FC<DairyListProps> = ({ filters }) => {
     const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
+    const { formatDate, formatNumber } = useFormatters();
     const [dairies, setDairies] = useState<Dairy[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -57,11 +59,11 @@ const DairyList: React.FC<DairyListProps> = ({ filters }) => {
                     <tbody>
                         {dairies.map((dairy) => (
                             <tr key={dairy.id}>
-                                <td>{new Date(dairy.date).toLocaleDateString()}</td>
+                                <td>{formatDate(dairy.date)}</td>
                                 <td>{t(DAIRY_SESSION_I18N_MAP[dairy.session] || dairy.session as any)}</td>
-                                <td style={{ fontWeight: 600 }}>{dairy.milkYield}</td>
-                                <td>{dairy.fatContent}</td>
-                                <td>{dairy.snfContent}</td>
+                                <td style={{ fontWeight: 600 }}>{formatNumber(dairy.milkYield)}</td>
+                                <td>{formatNumber(dairy.fatContent, { minimumFractionDigits: 1 })}</td>
+                                <td>{formatNumber(dairy.snfContent, { minimumFractionDigits: 1 })}</td>
                                 <td>
                                     <span className={`status-badge status-${dairy.quality.toLowerCase()}`}>
                                         {t(DAIRY_QUALITY_I18N_MAP[dairy.quality] || dairy.quality as any)}

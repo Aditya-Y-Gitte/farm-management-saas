@@ -98,3 +98,15 @@
     transform: rotate(360deg);
   }
 }
+
+/* Wrapping utilities for localization */
+.ui-button--wrap {
+  white-space: normal;
+  text-align: center;
+  height: auto;
+  line-height: 1.2;
+}
+
+.ui-button--nowrap {
+  white-space: nowrap;
+}

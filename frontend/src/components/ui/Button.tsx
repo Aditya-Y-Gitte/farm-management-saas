@@ -7,6 +7,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   loading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  allowWrap?: boolean;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -20,6 +21,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       disabled,
       type = 'button',
+      allowWrap = true, // Defaulting to true for localization safety across the app
       ...props
     },
     ref
@@ -28,6 +30,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       'ui-button',
       `ui-button--${variant}`,
       loading ? 'ui-button--loading' : '',
+      allowWrap ? 'ui-button--wrap' : 'ui-button--nowrap',
       className,
     ]
       .filter(Boolean)

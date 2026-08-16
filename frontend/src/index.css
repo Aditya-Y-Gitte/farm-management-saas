@@ -113,6 +113,7 @@ a:hover {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
+  overflow-wrap: break-word;
 }
 
 .form-control {
