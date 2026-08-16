@@ -35,3 +35,9 @@ export interface CreateExpenseRequest {
     notes?: string;
     relatedEntityId?: string;
 }
+
+export interface FinanceSummaryDto {
+    totalIncomeThisMonth: number;
+    totalExpenseThisMonth: number;
+    netBalance: number;
+}

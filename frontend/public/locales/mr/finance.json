@@ -39,5 +39,18 @@
     "animalPurchase": "पशु खरेदी",
     "miscellaneous": "किरकोळ खर्च"
   },
-  "title": "फायनान्स लेजर"
+  "title": "फायनान्स लेजर",
+  "summary": {
+    "thisMonth": "या महिन्यात",
+    "totalIncome": "एकूण उत्पन्न",
+    "totalExpenses": "एकूण खर्च",
+    "netBalance": "निव्वळ शिल्लक"
+  },
+  "ledger": {
+    "income": "उत्पन्न",
+    "expenses": "खर्च",
+    "previous": "मागील",
+    "next": "पुढील",
+    "empty": "कोणत्याही नोंदी आढळल्या नाहीत."
+  }
 }
