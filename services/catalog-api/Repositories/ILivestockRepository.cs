@@ -4,7 +4,7 @@ namespace CatalogApi.Repositories;
 
 public interface ILivestockRepository
 {
-    Task<(IEnumerable<Livestock> Items, int TotalCount)> GetAllAsync(int page, int pageSize);
+    Task<(IEnumerable<Livestock> Items, int TotalCount)> GetAllAsync(int page, int pageSize, string? search = null, string? species = null, string? status = null);
     Task<Livestock?> GetByIdAsync(Guid id);
     Task<Livestock?> GetByNameAsync(string name);
     Task<Livestock?> GetByTagNumberAsync(string tagNumber);

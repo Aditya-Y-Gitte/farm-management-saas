@@ -9,7 +9,7 @@ namespace CatalogApi.Services;
 /// </summary>
 public interface ILivestockService
 {
-    Task<PagedResponse<LivestockDto>> GetAllAsync(int page, int pageSize);
+    Task<PagedResponse<LivestockDto>> GetAllAsync(int page, int pageSize, string? search = null, string? species = null, string? status = null);
     Task<LivestockDto?> GetByIdAsync(Guid id);
     Task<LivestockDto> CreateAsync(CreateLivestockRequest request);
     Task<LivestockDto> UpdateAsync(Guid id, UpdateLivestockRequest request);

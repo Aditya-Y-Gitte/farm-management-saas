@@ -93,27 +93,25 @@ public class DairyRepository : IDairyRepository
             query = query.Where(d => d.LivestockId == livestockId.Value);
         }
 
-        var totalRecords = await query.CountAsync();
-        var todayMilk = await query
-            .Where(d => d.Date >= todayStartUtc && d.Date < todayEndUtc)
-            .SumAsync(d => d.MilkYield);
-        var weekMilk = await query
-            .Where(d => d.Date >= weekStartUtc && d.Date < weekEndUtc)
-            .SumAsync(d => d.MilkYield);
-        var avgFat = totalRecords > 0
-            ? await query.AverageAsync(d => d.FatContent)
-            : 0;
-        var avgSnf = totalRecords > 0
-            ? await query.AverageAsync(d => d.SnfContent)
-            : 0;
+        var summaryList = await query
+            .GroupBy(d => 1)
+            .Select(g => new DairySummaryDto
+            {
+                TotalRecords = g.Count(),
+                TotalMilkToday = g.Sum(d => (d.Date >= todayStartUtc && d.Date < todayEndUtc) ? d.MilkYield : 0),
+                TotalMilkThisWeek = g.Sum(d => (d.Date >= weekStartUtc && d.Date < weekEndUtc) ? d.MilkYield : 0),
+                AverageFatContent = g.Average(d => (decimal?)d.FatContent) ?? 0m,
+                AverageSnfContent = g.Average(d => (decimal?)d.SnfContent) ?? 0m
+            })
+            .ToListAsync();
 
-        return new DairySummaryDto
+        return summaryList.FirstOrDefault() ?? new DairySummaryDto
         {
-            TotalMilkToday = todayMilk,
-            TotalMilkThisWeek = weekMilk,
-            TotalRecords = totalRecords,
-            AverageFatContent = avgFat,
-            AverageSnfContent = avgSnf
+            TotalRecords = 0,
+            TotalMilkToday = 0,
+            TotalMilkThisWeek = 0,
+            AverageFatContent = 0,
+            AverageSnfContent = 0
         };
     }
 

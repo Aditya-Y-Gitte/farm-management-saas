@@ -16,7 +16,7 @@ const FeedList: React.FC = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    const loadRecords = async (pageNum: number) => {
+    const loadRecords = React.useCallback(async (pageNum: number) => {
         try {
             setIsLoading(true);
             setError(null);
@@ -29,11 +29,11 @@ const FeedList: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [t]);
 
     useEffect(() => {
         loadRecords(1);
-    }, []);
+    }, [loadRecords]);
 
     if (isLoading && records.length === 0) {
         return <div className="text-center p-4">{t('common:loading', { defaultValue: 'Loading...' })}</div>;
