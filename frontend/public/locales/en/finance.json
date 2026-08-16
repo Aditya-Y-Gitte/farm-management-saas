@@ -39,5 +39,18 @@
     "animalPurchase": "Animal Purchase",
     "miscellaneous": "Miscellaneous"
   },
-  "title": "Finance Ledger"
+  "title": "Finance Ledger",
+  "summary": {
+    "thisMonth": "This Month",
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "netBalance": "Net Balance"
+  },
+  "ledger": {
+    "income": "Income",
+    "expenses": "Expenses",
+    "previous": "Previous",
+    "next": "Next",
+    "empty": "No records found."
+  }
 }
