@@ -37,6 +37,8 @@
   "empty": {
     "noRecords": "No dairy records found."
   },
+  "noData": "No milk production data available for this period.",
+  "trends": "Production Trends",
   "title": "Dairy Management",
   "record": {
     "title": "Record Milk",
