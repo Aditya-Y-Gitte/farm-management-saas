@@ -34,9 +34,10 @@
     "additional": "Additional Information"
   },
   "actions": {
-    "logMilk": "Log Milk",
+    "recordMilk": "Record Milk",
     "addAnimal": "Add Animal",
-    "logFeed": "Log Feed"
+    "recordTreatment": "Record Treatment",
+    "viewAnimals": "View Animals"
   },
   "lastUpdated": "Last updated:"
 }

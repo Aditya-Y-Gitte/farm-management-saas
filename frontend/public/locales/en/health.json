@@ -42,9 +42,12 @@
     "medication": "Medication",
     "veterinarian": "Veterinarian",
     "notes": "Additional Notes",
+    "animal": "Animal",
+    "selectAnimal": "Select Animal",
     "errors": {
       "dateRequired": "Date is required",
       "typeRequired": "Type is required",
+      "animalRequired": "Animal selection is required",
       "maxLength": "Maximum {{max}} characters"
     },
     "success": {

@@ -7,7 +7,7 @@ const QuickActions: React.FC = () => {
 
   const actions = [
     {
-      label: t('dashboard:actions.logMilk', { defaultValue: 'Log Milk' }),
+      label: t('dashboard:actions.recordMilk', { defaultValue: 'Record Milk' }),
       icon: '🥛',
       path: '/dairy/record'
     },
@@ -17,9 +17,14 @@ const QuickActions: React.FC = () => {
       path: '/livestock/add'
     },
     {
-      label: t('dashboard:actions.logFeed', { defaultValue: 'Log Feed' }),
-      icon: '🌾',
-      path: '/feed/add'
+      label: t('dashboard:actions.recordTreatment', { defaultValue: 'Record Treatment' }),
+      icon: '⚕️',
+      path: '/health/record'
+    },
+    {
+      label: t('dashboard:actions.viewAnimals', { defaultValue: 'View Animals' }),
+      icon: '📋',
+      path: '/livestock'
     }
   ];
 

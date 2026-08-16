@@ -42,9 +42,12 @@
     "medication": "औषधोपचार",
     "veterinarian": "पशुवैद्यक",
     "notes": "अतिरिक्त नोट्स",
+    "animal": "प्राणी",
+    "selectAnimal": "प्राणी निवडा",
     "errors": {
       "dateRequired": "तारीख आवश्यक आहे",
       "typeRequired": "प्रकार आवश्यक आहे",
+      "animalRequired": "प्राणी निवडणे आवश्यक आहे",
       "maxLength": "कमाल {{max}} अक्षरे"
     },
     "success": {
