@@ -159,4 +159,12 @@ public class DairyRepository : IDairyRepository
 
         return points;
     }
+
+    public async Task<IEnumerable<Dairy>> GetRecentYieldsAsync(DateTime startDate, DateTime endDate)
+    {
+        return await _context.Dairies
+            .AsNoTracking()
+            .Where(d => d.Date >= startDate && d.Date < endDate)
+            .ToListAsync();
+    }
 }

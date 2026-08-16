@@ -138,4 +138,15 @@ public class DairyController : ControllerBase
         var trends = await _dairyService.GetTrendsAsync(startDate, endDate, livestockId, session);
         return Ok(trends);
     }
+
+    /// <summary>
+    /// Returns actionable dairy alerts based on recent production history.
+    /// </summary>
+    [HttpGet("alerts")]
+    public async Task<IActionResult> GetAlerts([FromQuery] int limit = 5)
+    {
+        if (limit < 1 || limit > 50) limit = 5;
+        var result = await _dairyService.GetAlertsAsync(limit);
+        return Ok(result);
+    }
 }

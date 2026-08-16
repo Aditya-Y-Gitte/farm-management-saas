@@ -135,4 +135,62 @@ public class DairyService : IDairyService
         var points = await _repository.GetTrendsAsync(startDate, endDate, livestockId, session);
         return new DairyTrendResponse { Points = points };
     }
+
+    public async Task<DairyAlertResponseDto> GetAlertsAsync(int limit)
+    {
+        _logger.LogInformation("Calculating dairy alerts. Limit: {Limit}", limit);
+        
+        const decimal MilkDropThreshold = 0.20M;
+        const int MinimumBaselineDays = 3;
+        
+        var todayBoundaries = _dateTimeService.GetTodayBoundariesUtc();
+        var baselineStart = todayBoundaries.StartUtc.AddDays(-7);
+        
+        var records = await _repository.GetRecentYieldsAsync(baselineStart, todayBoundaries.EndUtc);
+        
+        var alerts = new List<DairyAlertDto>();
+        
+        var groupedByAnimal = records.GroupBy(r => r.LivestockId);
+        
+        foreach (var group in groupedByAnimal)
+        {
+            var todayRecords = group.Where(r => r.Date >= todayBoundaries.StartUtc).ToList();
+            if (!todayRecords.Any())
+            {
+                continue; // No milk today, cannot determine a drop
+            }
+            
+            var todayTotal = todayRecords.Sum(r => r.MilkYield);
+            
+            var baselineRecords = group.Where(r => r.Date < todayBoundaries.StartUtc).ToList();
+            var uniqueBaselineDays = baselineRecords.Select(r => r.Date.Date).Distinct().Count();
+            
+            if (uniqueBaselineDays < MinimumBaselineDays)
+            {
+                continue; // Insufficient history
+            }
+            
+            var baselineDailyAvg = baselineRecords.Sum(r => r.MilkYield) / uniqueBaselineDays;
+            
+            if (baselineDailyAvg > 0 && todayTotal < baselineDailyAvg * (1 - MilkDropThreshold))
+            {
+                alerts.Add(new DairyAlertDto
+                {
+                    LivestockId = group.Key,
+                    AlertType = "MilkDrop",
+                    Date = todayBoundaries.StartUtc,
+                    CurrentValue = todayTotal,
+                    BaselineValue = baselineDailyAvg
+                });
+            }
+        }
+        
+        var topAlerts = alerts.OrderByDescending(a => a.Date).Take(limit).ToList();
+        
+        return new DairyAlertResponseDto
+        {
+            Items = topAlerts,
+            TotalCount = alerts.Count
+        };
+    }
 }

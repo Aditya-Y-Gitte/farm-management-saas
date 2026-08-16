@@ -39,5 +39,10 @@
     "recordTreatment": "Record Treatment",
     "viewAnimals": "View Animals"
   },
+  "alerts": {
+    "livestockSick": "Reported sick",
+    "livestockNeedsAttention": "Needs attention",
+    "milkDrop": "Milk production dropped {{percent}}% today vs baseline"
+  },
   "lastUpdated": "Last updated:"
 }

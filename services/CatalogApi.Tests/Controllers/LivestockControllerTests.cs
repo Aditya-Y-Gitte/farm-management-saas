@@ -156,5 +156,58 @@ namespace CatalogApi.Tests.Controllers
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.Equal(response, okResult.Value);
         }
+
+        [Fact]
+        public async Task GetAlerts_ReturnsOk()
+        {
+            // Arrange
+            var response = new CatalogAlertResponseDto
+            {
+                TotalCount = 1,
+                Items = new List<CatalogAlertDto> { new CatalogAlertDto { LivestockId = Guid.NewGuid(), AlertType = "LivestockSick" } }
+            };
+            _mockService.Setup(s => s.GetAlertsAsync(5)).ReturnsAsync(response);
+
+            // Act
+            var result = await _controller.GetAlerts(5);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(response, okResult.Value);
+        }
+
+        [Fact]
+        public async Task GetBatch_ValidIds_ReturnsOk()
+        {
+            // Arrange
+            var id1 = Guid.NewGuid();
+            var id2 = Guid.NewGuid();
+            var idsString = $"{id1},{id2}";
+            var response = new List<LivestockDto> 
+            { 
+                new LivestockDto { Id = id1 }, 
+                new LivestockDto { Id = id2 } 
+            };
+            
+            // Note: In Moq, matching an IEnumerable exactly can be tricky, using It.IsAny for simplicity here
+            _mockService.Setup(s => s.GetByIdsAsync(It.IsAny<IEnumerable<Guid>>())).ReturnsAsync(response);
+
+            // Act
+            var result = await _controller.GetBatch(idsString);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(response, okResult.Value);
+        }
+
+        [Fact]
+        public async Task GetBatch_EmptyIds_ReturnsBadRequest()
+        {
+            // Act
+            var result = await _controller.GetBatch("");
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
     }
 }
