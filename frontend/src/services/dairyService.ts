@@ -42,3 +42,8 @@ export const getDairyTrends = async (params: { startDate: string, endDate: strin
   const response = await apiClient.get(`${BASE_PATH}/trends`, { params });
   return response.data;
 };
+
+export const getDairyAlerts = async (limit = 5) => {
+  const response = await apiClient.get(`${BASE_PATH}/alerts`, { params: { limit } });
+  return response.data;
+};

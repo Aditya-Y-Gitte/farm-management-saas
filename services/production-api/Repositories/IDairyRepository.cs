@@ -20,4 +20,5 @@ public interface IDairyRepository
     Task<DairySummaryDto> GetSummaryAsync(DateTime todayStartUtc, DateTime todayEndUtc, DateTime weekStartUtc, DateTime weekEndUtc, Guid? livestockId = null);
     Task<(IEnumerable<Dairy> Items, int TotalCount)> GetByLivestockIdAsync(Guid livestockId, int page, int pageSize);
     Task<IEnumerable<DairyTrendPointDto>> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null);
+    Task<IEnumerable<Dairy>> GetRecentYieldsAsync(DateTime startDate, DateTime endDate);
 }

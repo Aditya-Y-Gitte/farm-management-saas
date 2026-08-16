@@ -89,4 +89,31 @@ public class LivestockController : ControllerBase
         var result = await _livestockService.GetAttentionAsync(limit);
         return Ok(result);
     }
+
+    /// <summary>
+    /// Returns structured actionable alerts based on livestock status.
+    /// </summary>
+    [HttpGet("alerts")]
+    public async Task<IActionResult> GetAlerts([FromQuery] int limit = 5)
+    {
+        if (limit < 1 || limit > 50) limit = 5;
+        var result = await _livestockService.GetAlertsAsync(limit);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Returns a batch of livestock records by IDs.
+    /// </summary>
+    [HttpGet("batch")]
+    public async Task<IActionResult> GetBatch([FromQuery] string ids)
+    {
+        if (string.IsNullOrWhiteSpace(ids)) return BadRequest("ids parameter is required");
+        var guidIds = ids.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                         .Select(id => Guid.TryParse(id, out var g) ? g : Guid.Empty)
+                         .Where(g => g != Guid.Empty)
+                         .ToList();
+        
+        var result = await _livestockService.GetByIdsAsync(guidIds);
+        return Ok(result);
+    }
 }

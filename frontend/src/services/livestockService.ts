@@ -48,3 +48,14 @@ export const getAttentionLivestocks = async (limit = 5) => {
   const response = await apiClient.get(`${BASE_PATH}/attention`, { params: { limit } });
   return response.data;
 };
+
+export const getCatalogAlerts = async (limit = 5) => {
+  const response = await apiClient.get(`${BASE_PATH}/alerts`, { params: { limit } });
+  return response.data;
+};
+
+export const getLivestockBatch = async (ids: string[]): Promise<Livestock[]> => {
+  if (ids.length === 0) return [];
+  const response = await apiClient.get(`${BASE_PATH}/batch`, { params: { ids: ids.join(',') } });
+  return response.data;
+};

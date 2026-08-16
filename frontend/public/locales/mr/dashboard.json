@@ -39,5 +39,10 @@
     "recordTreatment": "उपचार नोंदवा",
     "viewAnimals": "प्राणी पहा"
   },
+  "alerts": {
+    "livestockSick": "आजारी असल्याची नोंद",
+    "livestockNeedsAttention": "लक्ष देणे आवश्यक आहे",
+    "milkDrop": "दुधाचे उत्पादन आज बेसलाइनच्या तुलनेत {{percent}}% ने कमी झाले"
+  },
   "lastUpdated": "शेवटचे अपडेट:"
 }

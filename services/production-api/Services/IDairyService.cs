@@ -19,4 +19,5 @@ public interface IDairyService
     Task<bool> DeleteAsync(Guid id);
     Task<DairySummaryDto> GetSummaryAsync(Guid? livestockId = null);
     Task<DairyTrendResponse> GetTrendsAsync(DateTime startDate, DateTime endDate, Guid? livestockId = null, string? session = null);
+    Task<DairyAlertResponseDto> GetAlertsAsync(int limit);
 }

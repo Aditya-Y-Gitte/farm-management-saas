@@ -115,5 +115,21 @@ namespace ProductionApi.Tests.Controllers
 
             Assert.IsType<NotFoundResult>(result);
         }
+
+        [Fact]
+        public async Task GetAlerts_ReturnsOk()
+        {
+            var response = new DairyAlertResponseDto
+            {
+                TotalCount = 1,
+                Items = new List<DairyAlertDto> { new DairyAlertDto { LivestockId = Guid.NewGuid(), AlertType = "MilkDrop" } }
+            };
+            _mockService.Setup(s => s.GetAlertsAsync(5)).ReturnsAsync(response);
+
+            var result = await _controller.GetAlerts(5);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(response, okResult.Value);
+        }
     }
 }

@@ -77,6 +77,32 @@ public class LivestockRepository : ILivestockRepository
             .ToListAsync();
     }
 
+    public async Task<IEnumerable<CatalogApi.DTOs.CatalogAlertDto>> GetAlertsAsync(int limit)
+    {
+        var attentionAnimals = await _context.Livestocks
+            .AsNoTracking()
+            .Where(l => LivestockStatuses.RequiringAttention.Contains(l.Status))
+            .OrderBy(l => l.Status == LivestockStatuses.Sick ? 0 : 1)
+            .ThenByDescending(l => l.UpdatedAt)
+            .Take(limit)
+            .ToListAsync();
+
+        return attentionAnimals.Select(l => new CatalogApi.DTOs.CatalogAlertDto
+        {
+            LivestockId = l.Id,
+            AlertType = l.Status == LivestockStatuses.Sick ? "LivestockSick" : "LivestockNeedsAttention",
+            Date = DateTime.UtcNow // Catalog alerts are usually real-time based on current status
+        });
+    }
+
+    public async Task<IEnumerable<Livestock>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        return await _context.Livestocks
+            .AsNoTracking()
+            .Where(l => ids.Contains(l.Id))
+            .ToListAsync();
+    }
+
     public async Task<CatalogApi.DTOs.CatalogSummaryDto> GetSummaryAsync()
     {
         var query = _context.Livestocks.AsNoTracking();

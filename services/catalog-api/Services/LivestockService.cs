@@ -122,6 +122,26 @@ public class LivestockService : ILivestockService
         };
     }
 
+    public async Task<CatalogAlertResponseDto> GetAlertsAsync(int limit)
+    {
+        _logger.LogInformation("Fetching catalog alerts. Limit: {Limit}", limit);
+        var items = await _repository.GetAlertsAsync(limit);
+        var summary = await _repository.GetSummaryAsync();
+
+        return new CatalogAlertResponseDto
+        {
+            Items = items,
+            TotalCount = summary.AttentionCount
+        };
+    }
+
+    public async Task<IEnumerable<LivestockDto>> GetByIdsAsync(IEnumerable<Guid> ids)
+    {
+        _logger.LogInformation("Fetching livestock batch");
+        var items = await _repository.GetByIdsAsync(ids);
+        return items.Select(i => i.Adapt<LivestockDto>());
+    }
+
     public async Task<CatalogSummaryDto> GetSummaryAsync()
     {
         return await _repository.GetSummaryAsync();
