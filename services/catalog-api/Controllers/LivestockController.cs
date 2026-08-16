@@ -28,12 +28,17 @@ public class LivestockController : ControllerBase
     /// Returns a paginated list of livestock for the authenticated tenant.
     /// </summary>
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int page = 1, 
+        [FromQuery] int pageSize = 20,
+        [FromQuery] string? search = null,
+        [FromQuery] string? species = null,
+        [FromQuery] string? status = null)
     {
         if (page < 1) page = 1;
         if (pageSize < 1 || pageSize > 100) pageSize = 20;
 
-        var result = await _livestockService.GetAllAsync(page, pageSize);
+        var result = await _livestockService.GetAllAsync(page, pageSize, search, species, status);
         return Ok(result);
     }
 

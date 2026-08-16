@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '../features/auth/context/AuthContext';
 import ProtectedRoute from '../features/auth/components/ProtectedRoute';
 import AppShell from '../components/layout/AppShell';
 import LoginPage from '../features/auth/pages/LoginPage';
-import DashboardPage from '../features/dashboard/pages/DashboardPage';
-import LivestockPage from '../features/livestock/pages/LivestockPage';
-import AddLivestockPage from '../features/livestock/pages/AddLivestockPage';
-import AddBreedingRecordPage from '../features/breeding/pages/AddBreedingRecordPage';
-import EditBreedingRecordPage from '../features/breeding/pages/EditBreedingRecordPage';
-import AddHealthRecordPage from '../features/health/pages/AddHealthRecordPage';
-import GlobalAddHealthRecordPage from '../features/health/pages/GlobalAddHealthRecordPage';
-import DairyPage from '../features/dairy/pages/DairyPage';
-import AddDairyRecordPage from '../features/dairy/pages/AddDairyRecordPage';
-import LivestockProfilePage from '../features/livestock/pages/LivestockProfilePage';
-import FinancePage from '../features/finance/pages/FinancePage';
-import FeedPage from '../features/feed/pages/FeedPage';
-import FeedAddPage from '../features/feed/pages/FeedAddPage';
+import { Skeleton } from '../components/ui/Skeleton';
 import './App.css';
+
+// Lazy load major feature pages
+const DashboardPage = lazy(() => import('../features/dashboard/pages/DashboardPage'));
+const LivestockPage = lazy(() => import('../features/livestock/pages/LivestockPage'));
+const AddLivestockPage = lazy(() => import('../features/livestock/pages/AddLivestockPage'));
+const AddBreedingRecordPage = lazy(() => import('../features/breeding/pages/AddBreedingRecordPage'));
+const EditBreedingRecordPage = lazy(() => import('../features/breeding/pages/EditBreedingRecordPage'));
+const AddHealthRecordPage = lazy(() => import('../features/health/pages/AddHealthRecordPage'));
+const GlobalAddHealthRecordPage = lazy(() => import('../features/health/pages/GlobalAddHealthRecordPage'));
+const DairyPage = lazy(() => import('../features/dairy/pages/DairyPage'));
+const AddDairyRecordPage = lazy(() => import('../features/dairy/pages/AddDairyRecordPage'));
+const LivestockProfilePage = lazy(() => import('../features/livestock/pages/LivestockProfilePage'));
+const FinancePage = lazy(() => import('../features/finance/pages/FinancePage'));
+const FeedPage = lazy(() => import('../features/feed/pages/FeedPage'));
+const FeedAddPage = lazy(() => import('../features/feed/pages/FeedAddPage'));
+
+const PageSuspenseFallback = () => (
+    <div className="page" style={{ padding: 'var(--space-xl)' }}>
+        <div className="page__header" style={{ marginBottom: 'var(--space-xl)' }}>
+            <Skeleton width="200px" height="32px" />
+        </div>
+        <div className="glass-card" style={{ padding: 'var(--space-xl)' }}>
+            <Skeleton width="100%" height="200px" />
+        </div>
+    </div>
+);
 
 function App() {
   return (
@@ -28,26 +42,26 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
 
           {/* Protected routes inside AppShell layout */}
-          <Route
+            <Route
             element={
               <ProtectedRoute>
                 <AppShell />
               </ProtectedRoute>
             }
           >
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/livestock" element={<LivestockPage />} />
-            <Route path="/livestock/add" element={<AddLivestockPage />} />
-            <Route path="/livestock/:id" element={<LivestockProfilePage />} />
-            <Route path="/livestock/:id/breeding/add" element={<AddBreedingRecordPage />} />
-            <Route path="/livestock/:id/breeding/:cycleId/edit" element={<EditBreedingRecordPage />} />
-            <Route path="/livestock/:id/health/add" element={<AddHealthRecordPage />} />
-            <Route path="/health/record" element={<GlobalAddHealthRecordPage />} />
-            <Route path="/dairy" element={<DairyPage />} />
-            <Route path="/dairy/record" element={<AddDairyRecordPage />} />
-            <Route path="/finances" element={<FinancePage />} />
-            <Route path="/feed" element={<FeedPage />} />
-            <Route path="/feed/add" element={<FeedAddPage />} />
+            <Route path="/dashboard" element={<Suspense fallback={<PageSuspenseFallback />}><DashboardPage /></Suspense>} />
+            <Route path="/livestock" element={<Suspense fallback={<PageSuspenseFallback />}><LivestockPage /></Suspense>} />
+            <Route path="/livestock/add" element={<Suspense fallback={<PageSuspenseFallback />}><AddLivestockPage /></Suspense>} />
+            <Route path="/livestock/:id" element={<Suspense fallback={<PageSuspenseFallback />}><LivestockProfilePage /></Suspense>} />
+            <Route path="/livestock/:id/breeding/add" element={<Suspense fallback={<PageSuspenseFallback />}><AddBreedingRecordPage /></Suspense>} />
+            <Route path="/livestock/:id/breeding/:cycleId/edit" element={<Suspense fallback={<PageSuspenseFallback />}><EditBreedingRecordPage /></Suspense>} />
+            <Route path="/livestock/:id/health/add" element={<Suspense fallback={<PageSuspenseFallback />}><AddHealthRecordPage /></Suspense>} />
+            <Route path="/health/record" element={<Suspense fallback={<PageSuspenseFallback />}><GlobalAddHealthRecordPage /></Suspense>} />
+            <Route path="/dairy" element={<Suspense fallback={<PageSuspenseFallback />}><DairyPage /></Suspense>} />
+            <Route path="/dairy/record" element={<Suspense fallback={<PageSuspenseFallback />}><AddDairyRecordPage /></Suspense>} />
+            <Route path="/finances" element={<Suspense fallback={<PageSuspenseFallback />}><FinancePage /></Suspense>} />
+            <Route path="/feed" element={<Suspense fallback={<PageSuspenseFallback />}><FeedPage /></Suspense>} />
+            <Route path="/feed/add" element={<Suspense fallback={<PageSuspenseFallback />}><FeedAddPage /></Suspense>} />
           </Route>
 
           {/* Default redirect */}

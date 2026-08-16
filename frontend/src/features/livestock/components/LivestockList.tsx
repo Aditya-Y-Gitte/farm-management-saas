@@ -45,11 +45,17 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
     const [speciesFilter, setSpeciesFilter] = useState('ALL');
     const [statusFilter, setStatusFilter] = useState('ALL');
 
-    const fetchLivestocks = async (pageNumber: number) => {
+    const fetchLivestocks = async (pageNumber: number, search: string, species: string, status: string) => {
         setLoading(true);
         setError(null);
         try {
-            const data = await getLivestocks(pageNumber, 20); // 20 per page
+            const data = await getLivestocks(
+                pageNumber, 
+                20, 
+                search, 
+                species === 'ALL' ? undefined : species, 
+                status === 'ALL' ? undefined : status
+            );
             setLivestocks(data.items || []);
             setTotalPages(data.totalPages || 1);
             setPage(data.page || 1);
@@ -61,27 +67,30 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
     };
 
     useEffect(() => {
-        fetchLivestocks(page);
-    }, [refresh, page]);
+        const handler = setTimeout(() => {
+            fetchLivestocks(page, searchQuery, speciesFilter, statusFilter);
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [refresh, page, searchQuery, speciesFilter, statusFilter]);
 
     const handleRetry = () => {
-        fetchLivestocks(page);
+        fetchLivestocks(page, searchQuery, speciesFilter, statusFilter);
     };
 
-    // Client-side filtering
-    const filteredLivestocks = useMemo(() => {
-        return livestocks.filter(animal => {
-            const query = searchQuery.trim().toLowerCase();
-            const matchesSearch = query === '' || 
-                (animal.tagNumber?.toLowerCase().includes(query)) ||
-                (animal.name?.toLowerCase().includes(query));
-                
-            const matchesSpecies = speciesFilter === 'ALL' || animal.species === speciesFilter;
-            const matchesStatus = statusFilter === 'ALL' || animal.status === statusFilter;
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setPage(1);
+    };
 
-            return matchesSearch && matchesSpecies && matchesStatus;
-        });
-    }, [livestocks, searchQuery, speciesFilter, statusFilter]);
+    const handleSpeciesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSpeciesFilter(e.target.value);
+        setPage(1);
+    };
+
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setStatusFilter(e.target.value);
+        setPage(1);
+    };
 
     if (error) {
         return (
@@ -118,13 +127,13 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
                 <Input
                     placeholder={t('animals:list.searchPlaceholder')}
                     value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
+                    onChange={handleSearchChange}
                     leftIcon={<Search size={18} />}
                     style={{ marginBottom: 0 }}
                 />
                 <Select
                     value={speciesFilter}
-                    onChange={e => setSpeciesFilter(e.target.value)}
+                    onChange={handleSpeciesChange}
                 >
                     <option value="ALL">{t('animals:list.allSpecies')}</option>
                     {LIVESTOCK_SPECIES.map(species => (
@@ -133,7 +142,7 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
                 </Select>
                 <Select
                     value={statusFilter}
-                    onChange={e => setStatusFilter(e.target.value)}
+                    onChange={handleStatusChange}
                 >
                     <option value="ALL">{t('animals:list.allStatuses')}</option>
                     {LIVESTOCK_STATUSES.map(status => (
@@ -162,7 +171,7 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
                         </Card>
                     ))}
                 </div>
-            ) : filteredLivestocks.length === 0 ? (
+            ) : livestocks.length === 0 ? (
                 <EmptyState 
                     title={t('animals:list.noResults')}
                     description={t('animals:empty.noLivestock')}
@@ -173,6 +182,7 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
                                 setSearchQuery('');
                                 setSpeciesFilter('ALL');
                                 setStatusFilter('ALL');
+                                setPage(1);
                             }}
                         >
                             {t('common:actions.cancel', { defaultValue: 'Clear Filters' })}
@@ -182,7 +192,7 @@ const LivestockList: React.FC<LivestockListProps> = ({ refresh = false }) => {
             ) : (
                 <>
                     <div className="livestock-grid">
-                        {filteredLivestocks.map(animal => (
+                        {livestocks.map(animal => (
                             <Card key={animal.id}>
                                 <Card.Header 
                                     title={animal.name ? `${animal.name} (${animal.tagNumber})` : animal.tagNumber} 

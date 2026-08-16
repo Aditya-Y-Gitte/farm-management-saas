@@ -27,12 +27,27 @@ const DairyFilters: React.FC<DairyFiltersProps> = ({ filters, onFiltersChange })
         }).catch(err => console.error(err));
     }, []);
 
+    const hasInitializedRef = React.useRef(false);
+
     // Set initial custom range if quickRange is custom
     useEffect(() => {
-        if (!filters.startDate && !filters.endDate && quickRange !== 'custom') {
-            handleQuickRangeChange(quickRange);
+        if (!hasInitializedRef.current && !filters.startDate && !filters.endDate && quickRange !== 'custom') {
+            const now = new Date();
+            const startOfToday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+            const endOfToday = new Date(startOfToday.getTime() + 24 * 60 * 60 * 1000);
+
+            if (quickRange === 'today') {
+                onFiltersChange({ ...filters, startDate: startOfToday.toISOString(), endDate: endOfToday.toISOString() });
+            } else if (quickRange === 'thisWeek') {
+                const dayOfWeek = now.getUTCDay();
+                const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+                const startOfWeek = new Date(startOfToday.getTime() - daysToMonday * 24 * 60 * 60 * 1000);
+                const endOfWeek = new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000);
+                onFiltersChange({ ...filters, startDate: startOfWeek.toISOString(), endDate: endOfWeek.toISOString() });
+            }
+            hasInitializedRef.current = true;
         }
-    }, []);
+    }, [filters, quickRange, onFiltersChange]);
 
     const handleQuickRangeChange = (range: string) => {
         setQuickRange(range);
@@ -53,8 +68,6 @@ const DairyFilters: React.FC<DairyFiltersProps> = ({ filters, onFiltersChange })
             onFiltersChange({ ...filters, startDate: startOfWeek.toISOString(), endDate: endOfWeek.toISOString() });
         } else if (range === 'all') {
              onFiltersChange({ ...filters, startDate: undefined, endDate: undefined });
-        } else {
-            // custom, leave dates as they are or clear them to force user input
         }
     };
 

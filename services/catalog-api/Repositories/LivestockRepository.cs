@@ -13,9 +13,27 @@ public class LivestockRepository : ILivestockRepository
         _context = context;
     }
 
-    public async Task<(IEnumerable<Livestock> Items, int TotalCount)> GetAllAsync(int page, int pageSize)
+    public async Task<(IEnumerable<Livestock> Items, int TotalCount)> GetAllAsync(int page, int pageSize, string? search = null, string? species = null, string? status = null)
     {
         var query = _context.Livestocks.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchLower = search.ToLower();
+            query = query.Where(l => (l.Name != null && l.Name.ToLower().Contains(searchLower)) || 
+                                     (l.TagNumber != null && l.TagNumber.ToLower().Contains(searchLower)));
+        }
+
+        if (!string.IsNullOrWhiteSpace(species) && species != "ALL")
+        {
+            query = query.Where(l => l.Species == species);
+        }
+
+        if (!string.IsNullOrWhiteSpace(status) && status != "ALL")
+        {
+            query = query.Where(l => l.Status == status);
+        }
+
         var totalCount = await query.CountAsync();
         var items = await query
             .OrderByDescending(l => l.CreatedAt)
@@ -105,14 +123,21 @@ public class LivestockRepository : ILivestockRepository
 
     public async Task<CatalogApi.DTOs.CatalogSummaryDto> GetSummaryAsync()
     {
-        var query = _context.Livestocks.AsNoTracking();
-        var total = await query.CountAsync();
-        var attention = await query.CountAsync(l => LivestockStatuses.RequiringAttention.Contains(l.Status));
+        var summaryData = await _context.Livestocks.AsNoTracking()
+            .GroupBy(l => l.Species)
+            .Select(g => new
+            {
+                Species = g.Key,
+                Total = g.Count(),
+                Attention = g.Count(l => LivestockStatuses.RequiringAttention.Contains(l.Status))
+            })
+            .ToListAsync();
 
         return new CatalogApi.DTOs.CatalogSummaryDto
         {
-            TotalLivestock = total,
-            AttentionCount = attention
+            TotalLivestock = summaryData.Sum(s => s.Total),
+            AttentionCount = summaryData.Sum(s => s.Attention),
+            SpeciesDistribution = summaryData.ToDictionary(s => s.Species, s => s.Total)
         };
     }
 }

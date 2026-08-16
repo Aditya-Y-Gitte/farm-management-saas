@@ -23,10 +23,10 @@ public class LivestockService : ILivestockService
         _logger = logger;
     }
 
-    public async Task<PagedResponse<LivestockDto>> GetAllAsync(int page, int pageSize)
+    public async Task<PagedResponse<LivestockDto>> GetAllAsync(int page, int pageSize, string? search = null, string? species = null, string? status = null)
     {
         _logger.LogInformation("Fetching livestock. Page: {Page}, PageSize: {PageSize}", page, pageSize);
-        var (items, totalCount) = await _repository.GetAllAsync(page, pageSize);
+        var (items, totalCount) = await _repository.GetAllAsync(page, pageSize, search, species, status);
         var dtos = items.Select(i => i.Adapt<LivestockDto>());
         return PagedResponse<LivestockDto>.Create(dtos, totalCount, page, pageSize);
     }

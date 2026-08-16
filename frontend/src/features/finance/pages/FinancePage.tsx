@@ -31,7 +31,7 @@ const FinancePage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<typeof TRANSACTION_TYPES[keyof typeof TRANSACTION_TYPES]>(TRANSACTION_TYPES.INCOME);
     const [showForm, setShowForm] = useState(false);
 
-    const fetchSummary = async () => {
+    const fetchSummary = React.useCallback(async () => {
         setLoadingSummary(true);
         try {
             const data = await getFinanceSummary();
@@ -41,9 +41,9 @@ const FinancePage: React.FC = () => {
         } finally {
             setLoadingSummary(false);
         }
-    };
+    }, [t]);
 
-    const fetchIncomes = async (page: number) => {
+    const fetchIncomes = React.useCallback(async (page: number) => {
         try {
             const data = await getIncomes(page, 20);
             setIncomes(data.items || []);
@@ -51,9 +51,9 @@ const FinancePage: React.FC = () => {
         } catch (err) {
             console.error(t('finance:errors.fetchFailed'), err);
         }
-    };
+    }, [t]);
 
-    const fetchExpenses = async (page: number) => {
+    const fetchExpenses = React.useCallback(async (page: number) => {
         try {
             const data = await getExpenses(page, 20);
             setExpenses(data.items || []);
@@ -61,9 +61,9 @@ const FinancePage: React.FC = () => {
         } catch (err) {
             console.error(t('finance:errors.fetchFailed'), err);
         }
-    };
+    }, [t]);
 
-    const fetchLedger = async () => {
+    const fetchLedger = React.useCallback(async () => {
         setLoadingLedger(true);
         if (activeTab === TRANSACTION_TYPES.INCOME) {
             await fetchIncomes(incomePage);
@@ -71,17 +71,17 @@ const FinancePage: React.FC = () => {
             await fetchExpenses(expensePage);
         }
         setLoadingLedger(false);
-    };
+    }, [activeTab, incomePage, expensePage, fetchIncomes, fetchExpenses]);
 
     // Load summary once on mount
     useEffect(() => {
         fetchSummary();
-    }, []);
+    }, [fetchSummary]);
 
     // Load ledger when tab or page changes
     useEffect(() => {
         fetchLedger();
-    }, [activeTab, incomePage, expensePage]);
+    }, [fetchLedger]);
 
     const handleTransactionCreated = () => {
         setShowForm(false);

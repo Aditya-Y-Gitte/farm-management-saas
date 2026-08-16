@@ -11,8 +11,8 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-export const getLivestocks = async (page = 1, pageSize = 20): Promise<PaginatedResponse<Livestock>> => {
-  const response = await apiClient.get(BASE_PATH, { params: { page, pageSize } });
+export const getLivestocks = async (page = 1, pageSize = 20, search?: string, species?: string, status?: string): Promise<PaginatedResponse<Livestock>> => {
+  const response = await apiClient.get(BASE_PATH, { params: { page, pageSize, search, species, status } });
   return response.data;
 };
 

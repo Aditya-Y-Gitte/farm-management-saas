@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getLivestocks } from '../../../services/livestockService';
+import { getCatalogSummary } from '../../../services/livestockService';
 import { SPECIES_I18N_MAP } from '../../../utils/i18nMappings';
-import { getDairies } from '../../../services/dairyService';
-import { Livestock } from '../../../types/livestock';
-import { Dairy } from '../../../types/dairy';
+import { getDairySummary, getDairyTrends } from '../../../services/dairyService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import { useFormatters } from '../../../utils/useFormatters';
 import './Dashboard.css';
@@ -20,40 +18,51 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const livestockData = await getLivestocks();
-            const dairyData = await getDairies();
+            try {
+                const [catalogSummary, dairySummary] = await Promise.all([
+                    getCatalogSummary(),
+                    getDairySummary()
+                ]);
 
-            // At-a-Glance Summary
-            setLivestockCount(livestockData.items.length);
+                // For trends, let's fetch the last 7 days
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - 7);
+                
+                const trends = await getDairyTrends({
+                    startDate: startDate.toISOString().split('T')[0],
+                    endDate: endDate.toISOString().split('T')[0]
+                });
 
-            const today = new Date().toISOString().split('T')[0];
-            const todayMilk = dairyData.items
-                .filter(d => d.date.split('T')[0] === today)
-                .reduce((acc, curr) => acc + curr.milkYield, 0);
-            setTotalMilkToday(todayMilk);
+                // At-a-Glance Summary
+                setLivestockCount(catalogSummary.totalLivestock || 0);
+                setTotalMilkToday(dairySummary.totalMilkToday || 0);
+                setActiveAlerts(catalogSummary.attentionCount || 0);
 
-            // Mock active alerts
-            setActiveAlerts(3);
+                // Livestock Analytics
+                if (catalogSummary.speciesDistribution) {
+                    const livestockByTypeArray = Object.entries(catalogSummary.speciesDistribution).map(([species, count]) => {
+                        const speciesName = t(SPECIES_I18N_MAP[species] || species as any);
+                        return { name: speciesName, count: count as number };
+                    });
+                    setLivestockByType(livestockByTypeArray);
+                }
 
-            // Livestock Analytics
-            const livestockCountByType = livestockData.items.reduce((acc, curr) => {
-                const speciesName = t(SPECIES_I18N_MAP[curr.species] || curr.species as any);
-                acc[speciesName] = (acc[speciesName] || 0) + 1;
-                return acc;
-            }, {} as { [key: string]: number });
-            setLivestockByType(Object.entries(livestockCountByType).map(([name, count]) => ({ name, count })));
-
-            // Dairy Analytics
-            const milkByDate = dairyData.items.reduce((acc, curr) => {
-                const date = formatDate(curr.date);
-                acc[date] = (acc[date] || 0) + curr.milkYield;
-                return acc;
-            }, {} as { [key: string]: number });
-            setMilkProductionTrend(Object.entries(milkByDate).map(([date, totalMilk]) => ({ date, totalMilk })));
+                // Dairy Analytics
+                if (trends.points) {
+                    const milkProductionArray = trends.points.map(p => ({
+                        date: formatDate(p.date, { month: 'short', day: 'numeric' }),
+                        totalMilk: p.totalMilk
+                    }));
+                    setMilkProductionTrend(milkProductionArray);
+                }
+            } catch (err) {
+                console.error("Failed to fetch dashboard summaries", err);
+            }
         };
 
         fetchData();
-    }, []);
+    }, [formatDate, t]);
 
     return (
         <div className="dashboard">
