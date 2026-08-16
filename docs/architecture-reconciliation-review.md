@@ -21,7 +21,7 @@ Several commits and branches incorrectly targeted the discontinued `backend/` di
 - **Historical Features** (`8dc032c`, `66db827`, `e1c8778`): Implemented `.resx` Localization and a global Exception Handling Middleware inside the monolith.
 
 ### 4. Which changes should remain?
-No active code within `backend/` will remain in use. However, the security commit (`658ab98`) that scrubbed hardcoded database passwords from the legacy appsettings remains valid and should not be undone. The `backend/` directory will temporarily remain in the repository (as dormant code) until it is cleanly deleted.
+No active code within `backend/` will remain in use. However, the security commit (`658ab98`) that scrubbed hardcoded database passwords from the legacy appsettings remains valid and should not be undone. The `backend/` directory has been cleanly deleted.
 
 ### 5. Which changes must be reverted?
 **No blind git reverts are required.** 
