@@ -5,6 +5,10 @@
     padding: 0;
 }
 
+.dairy-chart-container {
+    min-width: 0;
+}
+
 .dairy-container h2,
 .dairy-form-container h2 {
     font-size: 1.5rem;
