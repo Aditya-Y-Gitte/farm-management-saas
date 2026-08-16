@@ -65,6 +65,18 @@ public class LivestockRepository : ILivestockRepository
         return true;
     }
 
+    public async Task<IEnumerable<Livestock>> GetAttentionAsync(int limit)
+    {
+        // Custom order: Sick before Needs Attention
+        return await _context.Livestocks
+            .AsNoTracking()
+            .Where(l => LivestockStatuses.RequiringAttention.Contains(l.Status))
+            .OrderBy(l => l.Status == "Sick" ? 0 : 1)
+            .ThenByDescending(l => l.UpdatedAt)
+            .Take(limit)
+            .ToListAsync();
+    }
+
     public async Task<CatalogApi.DTOs.CatalogSummaryDto> GetSummaryAsync()
     {
         var query = _context.Livestocks.AsNoTracking();

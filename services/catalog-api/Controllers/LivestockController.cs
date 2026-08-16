@@ -79,4 +79,14 @@ public class LivestockController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>
+    /// Returns livestock requiring attention.
+    /// </summary>
+    [HttpGet("attention")]
+    public async Task<IActionResult> GetAttention([FromQuery] int limit = 5)
+    {
+        if (limit < 1 || limit > 50) limit = 5;
+        var result = await _livestockService.GetAttentionAsync(limit);
+        return Ok(result);
+    }
 }

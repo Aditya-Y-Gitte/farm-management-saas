@@ -137,5 +137,24 @@ namespace CatalogApi.Tests.Controllers
             // Assert
             Assert.IsType<NotFoundResult>(result);
         }
+
+        [Fact]
+        public async Task GetAttention_ReturnsOk()
+        {
+            // Arrange
+            var response = new AttentionResponseDto
+            {
+                TotalCount = 1,
+                Items = new List<LivestockDto> { new LivestockDto { Id = Guid.NewGuid(), Name = "Sick Cow" } }
+            };
+            _mockService.Setup(s => s.GetAttentionAsync(5)).ReturnsAsync(response);
+
+            // Act
+            var result = await _controller.GetAttention(5);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal(response, okResult.Value);
+        }
     }
 }
