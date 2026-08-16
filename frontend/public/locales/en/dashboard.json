@@ -17,6 +17,26 @@
   },
   "empty": {
     "noProductionData": "No production data",
-    "noProductionRecords": "No milk records have been logged yet."
-  }
+    "noProductionRecords": "No milk records have been logged yet.",
+    "noAttention": "All good!",
+    "noAttentionDesc": "No animals require immediate attention."
+  },
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "sections": {
+    "overview": "Today's Overview",
+    "actions": "Quick Actions",
+    "attention": "Needs Attention",
+    "milk": "Milk Summary (Last 7 Days)",
+    "additional": "Additional Information"
+  },
+  "actions": {
+    "logMilk": "Log Milk",
+    "addAnimal": "Add Animal",
+    "logFeed": "Log Feed"
+  },
+  "lastUpdated": "Last updated:"
 }

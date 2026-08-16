@@ -109,6 +109,19 @@ public class LivestockService : ILivestockService
         return await _repository.DeleteAsync(id);
     }
 
+    public async Task<AttentionResponseDto> GetAttentionAsync(int limit)
+    {
+        _logger.LogInformation("Fetching attention livestock. Limit: {Limit}", limit);
+        var items = await _repository.GetAttentionAsync(limit);
+        var summary = await _repository.GetSummaryAsync();
+
+        return new AttentionResponseDto
+        {
+            Items = items.Select(i => i.Adapt<LivestockDto>()),
+            TotalCount = summary.AttentionCount
+        };
+    }
+
     public async Task<CatalogSummaryDto> GetSummaryAsync()
     {
         return await _repository.GetSummaryAsync();

@@ -43,3 +43,8 @@ export const getCatalogSummary = async () => {
   const response = await apiClient.get('/api/catalog/summary');
   return response.data;
 };
+
+export const getAttentionLivestocks = async (limit = 5) => {
+  const response = await apiClient.get(`${BASE_PATH}/attention`, { params: { limit } });
+  return response.data;
+};
