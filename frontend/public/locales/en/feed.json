@@ -1,0 +1,36 @@
+{
+  "title": "Feed Consumption",
+  "addFeed": "Log Feed",
+  "history": "Feed History",
+  "fields": {
+    "date": "Date",
+    "livestock": "Livestock",
+    "herdWide": "Herd-wide (All Animals)",
+    "feedType": "Feed Type",
+    "quantity": "Quantity",
+    "unit": "Unit",
+    "notes": "Notes"
+  },
+  "actions": {
+    "save": "Save Feed Record",
+    "back": "Back to History"
+  },
+  "empty": "No feed consumption records found.",
+  "errors": {
+    "fetchFailed": "Failed to fetch feed history",
+    "saveFailed": "Failed to save feed record"
+  },
+  "feedType": {
+    "GreenFodder": "Green Fodder",
+    "DryFodder": "Dry Fodder",
+    "Concentrate": "Concentrate",
+    "Supplements": "Supplements",
+    "Other": "Other"
+  },
+  "feedUnit": {
+    "Kg": "Kilograms (Kg)",
+    "Lb": "Pounds (Lb)",
+    "Bale": "Bale",
+    "Bundle": "Bundle"
+  }
+}

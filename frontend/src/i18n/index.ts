@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpApi from 'i18next-http-backend';
 
 export const defaultNS = 'common';
-export const resources = ['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance'];
+export const resources = ['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance', 'feed'];
 
 i18n
   .use(HttpApi)

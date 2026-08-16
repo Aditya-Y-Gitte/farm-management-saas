@@ -6,7 +6,9 @@ import {
     IncomeSource, 
     ExpenseCategory, 
     DairySession, 
-    DairyQuality 
+    DairyQuality,
+    FeedType,
+    FeedUnit
 } from '../constants/appConstants';
 
 // Animals
@@ -67,4 +69,20 @@ export const DAIRY_QUALITY_I18N_MAP: Record<string, "milk:quality.excellent" | "
     [DairyQuality.Good]: "milk:quality.good",
     [DairyQuality.Fair]: "milk:quality.fair",
     [DairyQuality.Poor]: "milk:quality.poor"
+};
+
+// Feed
+export const FEED_TYPE_I18N_MAP: Record<string, "feed:feedType.GreenFodder" | "feed:feedType.DryFodder" | "feed:feedType.Concentrate" | "feed:feedType.Supplements" | "feed:feedType.Other"> = {
+    [FeedType.GreenFodder]: "feed:feedType.GreenFodder",
+    [FeedType.DryFodder]: "feed:feedType.DryFodder",
+    [FeedType.Concentrate]: "feed:feedType.Concentrate",
+    [FeedType.Supplements]: "feed:feedType.Supplements",
+    [FeedType.Other]: "feed:feedType.Other"
+};
+
+export const FEED_UNIT_I18N_MAP: Record<string, "feed:feedUnit.Kg" | "feed:feedUnit.Lb" | "feed:feedUnit.Bale" | "feed:feedUnit.Bundle"> = {
+    [FeedUnit.Kg]: "feed:feedUnit.Kg",
+    [FeedUnit.Lb]: "feed:feedUnit.Lb",
+    [FeedUnit.Bale]: "feed:feedUnit.Bale",
+    [FeedUnit.Bundle]: "feed:feedUnit.Bundle"
 };

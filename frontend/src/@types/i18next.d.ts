@@ -7,6 +7,7 @@ import milk from '../../public/locales/en/milk.json';
 import health from '../../public/locales/en/health.json';
 import breeding from '../../public/locales/en/breeding.json';
 import finance from '../../public/locales/en/finance.json';
+import feed from '../../public/locales/en/feed.json';
 
 declare module 'i18next' {
   interface CustomTypeOptions {
@@ -20,6 +21,7 @@ declare module 'i18next' {
       health: typeof health;
       breeding: typeof breeding;
       finance: typeof finance;
+      feed: typeof feed;
     };
   }
 }
