@@ -18,6 +18,7 @@ import { Skeleton } from '../../../components/ui/Skeleton';
 import { EmptyState } from '../../../components/ui/EmptyState';
 import { ErrorState } from '../../../components/ui/ErrorState';
 import { Activity } from 'lucide-react';
+import { useFormatters } from '../../../utils/useFormatters';
 import '../../../theme/PageCommon.css';
 import '../components/Livestock.css';
 
@@ -44,6 +45,7 @@ const healthTimelineCache: Record<string, { items: HealthRecord[], page: number,
 const HealthTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
     const { t } = useTranslation(['health', 'common', 'animals']);
     const navigate = useNavigate();
+    const { formatDate } = useFormatters();
     
     const cached = healthTimelineCache[livestockId] || { items: [], page: 1, hasMore: true };
     const [history, setHistory] = useState<HealthRecord[]>(cached.items);
@@ -134,7 +136,7 @@ const HealthTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId }) =
                                 border: '2px solid var(--bg-primary)'
                             }} />
                             <div style={{ marginBottom: '4px', fontWeight: 600, color: 'var(--text-muted)' }}>
-                                {new Date(record.date).toLocaleDateString()}
+                                {formatDate(record.date)}
                             </div>
                             <Card>
                                 <Card.Body>
@@ -179,6 +181,7 @@ const breedingTimelineCache: Record<string, { items: BreedingCycle[], page: numb
 const BreedingTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
     const { t } = useTranslation(['breeding', 'common', 'animals']);
     const navigate = useNavigate();
+    const { formatDate } = useFormatters();
     
     const cached = breedingTimelineCache[livestockId] || { items: [], page: 1, hasMore: true };
     const [history, setHistory] = useState<BreedingCycle[]>(cached.items);
@@ -269,7 +272,7 @@ const BreedingTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId })
                                 border: '2px solid var(--bg-primary)'
                             }} />
                             <div style={{ marginBottom: '4px', fontWeight: 600, color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
-                                <span>{new Date(record.breedingDate).toLocaleDateString()}</span>
+                                <span>{formatDate(record.breedingDate)}</span>
                                 <span>
                                     <Badge variant={getStatusVariant(record.status)}>
                                         {t(`breeding:status.${record.status.toLowerCase()}`, { defaultValue: record.status })}
@@ -284,13 +287,13 @@ const BreedingTimelineTab: React.FC<{ livestockId: string }> = ({ livestockId })
                                     
                                     {record.expectedDeliveryDate && (
                                         <div style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-sm)' }}>
-                                            <strong>{t('breeding:form.expectedDeliveryDate', { defaultValue: 'Expected Delivery' })}:</strong> {new Date(record.expectedDeliveryDate).toLocaleDateString()}
+                                            <strong>{t('breeding:form.expectedDeliveryDate', { defaultValue: 'Expected Delivery' })}:</strong> {formatDate(record.expectedDeliveryDate)}
                                         </div>
                                     )}
 
                                     {record.actualDeliveryDate && (
                                         <div style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-sm)' }}>
-                                            <strong>{t('breeding:form.actualDeliveryDate', { defaultValue: 'Actual Delivery' })}:</strong> {new Date(record.actualDeliveryDate).toLocaleDateString()}
+                                            <strong>{t('breeding:form.actualDeliveryDate', { defaultValue: 'Actual Delivery' })}:</strong> {formatDate(record.actualDeliveryDate)}
                                         </div>
                                     )}
                                     
@@ -332,6 +335,7 @@ const milkHistoryCache: Record<string, Dairy[]> = {};
 
 const MilkHistoryTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
     const { t } = useTranslation(['animals', 'milk', 'common']);
+    const { formatDate, formatNumber } = useFormatters();
     const [history, setHistory] = useState<Dairy[]>(milkHistoryCache[livestockId] || []);
     const [loading, setLoading] = useState(!milkHistoryCache[livestockId]);
     const [error, setError] = useState<Error | null>(null);
@@ -405,11 +409,11 @@ const MilkHistoryTab: React.FC<{ livestockId: string }> = ({ livestockId }) => {
                 <tbody>
                     {history.map(record => (
                         <tr key={record.id}>
-                            <td>{new Date(record.date).toLocaleDateString()}</td>
+                            <td>{formatDate(record.date)}</td>
                             <td>{t(`milk:session.${record.session.toLowerCase()}`, { defaultValue: record.session })}</td>
-                            <td>{record.milkYield}</td>
-                            <td>{record.fatContent}</td>
-                            <td>{record.snfContent}</td>
+                            <td>{formatNumber(record.milkYield)}</td>
+                            <td>{formatNumber(record.fatContent, { minimumFractionDigits: 1 })}</td>
+                            <td>{formatNumber(record.snfContent, { minimumFractionDigits: 1 })}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -422,6 +426,7 @@ const LivestockProfilePage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { t } = useTranslation(['common', 'animals', 'health', 'breeding', 'milk']);
+    const { formatDate, formatNumber, formatCurrency } = useFormatters();
     
     const [livestock, setLivestock] = useState<Livestock | null>(null);
     const [milkSummary, setMilkSummary] = useState<any>(null);
@@ -532,7 +537,7 @@ const LivestockProfilePage: React.FC = () => {
                                             {t('animals:profile.todayMilk', { defaultValue: 'Today\'s Milk' })}
                                         </p>
                                         <h2 style={{ margin: '4px 0 0 0' }}>
-                                            {milkSummary?.totalMilkToday ? `${milkSummary.totalMilkToday} L` : '0 L'}
+                                            {milkSummary?.totalMilkToday ? `${formatNumber(milkSummary.totalMilkToday, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} L` : '0 L'}
                                         </h2>
                                     </div>
                                 </div>
@@ -571,7 +576,7 @@ const LivestockProfilePage: React.FC = () => {
                                                 <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-muted)' }}>{evt.description}</div>
                                             </div>
                                             <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-muted)' }}>
-                                                {evt.date.toLocaleDateString()}
+                                                {formatDate(evt.date)}
                                             </div>
                                         </div>
                                     ))}
@@ -614,7 +619,7 @@ const LivestockProfilePage: React.FC = () => {
                                 </div>
                                 <div>
                                     <span style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-sm)' }}>{t('animals:fields.dob')}</span>
-                                    <div style={{ fontWeight: 600 }}>{new Date(livestock.dateOfBirth).toLocaleDateString()}</div>
+                                    <div style={{ fontWeight: 600 }}>{formatDate(livestock.dateOfBirth)}</div>
                                 </div>
                             </div>
                         </Card.Body>
@@ -632,12 +637,12 @@ const LivestockProfilePage: React.FC = () => {
                                     <>
                                         <div>
                                             <span style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-sm)' }}>{t('animals:fields.purchasePrice')}</span>
-                                            <div style={{ fontWeight: 600 }}>₹{livestock.purchasePrice}</div>
+                                            <div style={{ fontWeight: 600 }}>{formatCurrency(livestock.purchasePrice)}</div>
                                         </div>
                                         <div>
                                             <span style={{ color: 'var(--text-muted)', fontSize: 'var(--font-size-sm)' }}>{t('animals:fields.purchaseDate')}</span>
                                             <div style={{ fontWeight: 600 }}>
-                                                {livestock.purchaseDate ? new Date(livestock.purchaseDate).toLocaleDateString() : '-'}
+                                                {livestock.purchaseDate ? formatDate(livestock.purchaseDate) : '-'}
                                             </div>
                                         </div>
                                     </>

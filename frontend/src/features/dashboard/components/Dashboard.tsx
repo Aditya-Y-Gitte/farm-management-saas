@@ -6,10 +6,12 @@ import { getDairies } from '../../../services/dairyService';
 import { Livestock } from '../../../types/livestock';
 import { Dairy } from '../../../types/dairy';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
+import { useFormatters } from '../../../utils/useFormatters';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
     const { t } = useTranslation(['common', 'navigation', 'dashboard', 'animals', 'milk', 'health', 'breeding', 'finance']);
+    const { formatDate, formatNumber } = useFormatters();
     const [livestockCount, setLivestockCount] = useState(0);
     const [totalMilkToday, setTotalMilkToday] = useState(0);
     const [activeAlerts, setActiveAlerts] = useState(0);
@@ -43,7 +45,7 @@ const Dashboard: React.FC = () => {
 
             // Dairy Analytics
             const milkByDate = dairyData.items.reduce((acc, curr) => {
-                const date = new Date(curr.date).toLocaleDateString();
+                const date = formatDate(curr.date);
                 acc[date] = (acc[date] || 0) + curr.milkYield;
                 return acc;
             }, {} as { [key: string]: number });
@@ -66,7 +68,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div className="card">
                     <h3>{t('dashboard:metrics.totalMilkToday')}</h3>
-                    <p>{totalMilkToday.toFixed(2)} L</p>
+                    <p>{formatNumber(totalMilkToday, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} L</p>
                 </div>
                 <div className="card">
                     <h3>{t('dashboard:metrics.activeAlerts')}</h3>
