@@ -1,4 +1,4 @@
-using FarmManagement.SharedKernel.Exceptions;
+
 using FarmManagement.SharedKernel.Models;
 using Mapster;
 using Microsoft.Extensions.Logging;
@@ -56,7 +56,7 @@ public class FeedConsumptionService : IFeedConsumptionService
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
         {
-            throw new NotFoundException($"Feed consumption record with id '{id}' was not found.");
+            throw new KeyNotFoundException($"Feed consumption record with id '{id}' was not found.");
         }
 
         entity.LivestockId = request.LivestockId;

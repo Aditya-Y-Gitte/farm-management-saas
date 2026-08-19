@@ -62,7 +62,7 @@ public class DairyService : IDairyService
         {
             _logger.LogWarning("Duplicate dairy record. LivestockId: {LivestockId}, Date: {Date}, Session: {Session}",
                 request.LivestockId, request.Date.Date, request.Session);
-            throw new FarmManagement.SharedKernel.Exceptions.ConflictException(
+            throw new InvalidOperationException(
                 $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' during '{request.Session}' session already exists.");
         }
 
@@ -88,14 +88,14 @@ public class DairyService : IDairyService
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
         {
-            throw new FarmManagement.SharedKernel.Exceptions.NotFoundException($"Dairy record with id '{id}' was not found.");
+            throw new KeyNotFoundException($"Dairy record with id '{id}' was not found.");
         }
 
         // Business rule: Check if updating to an existing livestock+date+session combination (excluding self)
         var existing = await _repository.GetByLivestockDateAndSessionAsync(request.LivestockId, request.Date, request.Session);
         if (existing != null && existing.Id != id)
         {
-            throw new FarmManagement.SharedKernel.Exceptions.ConflictException(
+            throw new InvalidOperationException(
                 $"A dairy record for livestock '{request.LivestockId}' on '{request.Date:yyyy-MM-dd}' during '{request.Session}' session already exists.");
         }
 

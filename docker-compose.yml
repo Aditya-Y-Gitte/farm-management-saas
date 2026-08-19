@@ -100,8 +100,6 @@ services:
       AllowedOrigins__1: http://localhost:5173
       # Production frontend origin (e.g. https://your-farm-app.netlify.app)
       FrontendUrl: ${FRONTEND_URL:-}
-    ports:
-      - "5003:5003"
     depends_on:
       auth-db:
         condition: service_healthy
@@ -130,8 +128,6 @@ services:
       Jwt__Issuer: farm-management-auth
       Jwt__Audience: farm-management-api
       AllowedOrigins__0: http://api-gateway:5000
-    ports:
-      - "5001:5001"
     depends_on:
       catalog-db:
         condition: service_healthy
@@ -160,8 +156,6 @@ services:
       Jwt__Issuer: farm-management-auth
       Jwt__Audience: farm-management-api
       AllowedOrigins__0: http://api-gateway:5000
-    ports:
-      - "5002:5002"
     depends_on:
       production-db:
         condition: service_healthy
@@ -190,8 +184,6 @@ services:
       Jwt__Issuer: farm-management-auth
       Jwt__Audience: farm-management-api
       AllowedOrigins__0: http://api-gateway:5000
-    ports:
-      - "5004:8080"
     depends_on:
       finance-db:
         condition: service_healthy

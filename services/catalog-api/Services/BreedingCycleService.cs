@@ -1,7 +1,7 @@
 using CatalogApi.DTOs;
 using CatalogApi.Models;
 using CatalogApi.Repositories;
-using FarmManagement.SharedKernel.Exceptions;
+
 using FarmManagement.SharedKernel.Models;
 using Mapster;
 using Microsoft.Extensions.Logging;
@@ -50,7 +50,7 @@ public class BreedingCycleService : IBreedingCycleService
         var livestock = await _livestockRepository.GetByIdAsync(request.LivestockId);
         if (livestock == null)
         {
-            throw new NotFoundException($"Livestock with ID {request.LivestockId} not found or does not belong to the tenant.");
+            throw new KeyNotFoundException($"Livestock with ID {request.LivestockId} not found or does not belong to the tenant.");
         }
 
         var entity = new BreedingCycle
@@ -73,7 +73,7 @@ public class BreedingCycleService : IBreedingCycleService
         var entity = await _repository.GetByIdAsync(id);
         if (entity == null)
         {
-            throw new NotFoundException($"BreedingCycle with ID {id} not found.");
+            throw new KeyNotFoundException($"BreedingCycle with ID {id} not found.");
         }
 
         if (entity.LivestockId != request.LivestockId)
@@ -81,7 +81,7 @@ public class BreedingCycleService : IBreedingCycleService
             var livestock = await _livestockRepository.GetByIdAsync(request.LivestockId);
             if (livestock == null)
             {
-                throw new NotFoundException($"Livestock with ID {request.LivestockId} not found or does not belong to the tenant.");
+                throw new KeyNotFoundException($"Livestock with ID {request.LivestockId} not found or does not belong to the tenant.");
             }
         }
 
