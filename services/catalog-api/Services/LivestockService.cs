@@ -46,7 +46,7 @@ public class LivestockService : ILivestockService
             var existing = await _repository.GetByTagNumberAsync(request.TagNumber);
             if (existing != null)
             {
-                throw new FarmManagement.SharedKernel.Exceptions.ConflictException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
+                throw new InvalidOperationException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
             }
         }
 
@@ -74,7 +74,7 @@ public class LivestockService : ILivestockService
         var entity = await _repository.GetByIdAsync(id);
         if (entity is null)
         {
-            throw new FarmManagement.SharedKernel.Exceptions.NotFoundException($"Livestock with id '{id}' was not found.");
+            throw new KeyNotFoundException($"Livestock with id '{id}' was not found.");
         }
 
         if (!string.IsNullOrWhiteSpace(request.TagNumber) && request.TagNumber != entity.TagNumber)
@@ -82,7 +82,7 @@ public class LivestockService : ILivestockService
             var existing = await _repository.GetByTagNumberAsync(request.TagNumber);
             if (existing != null)
             {
-                throw new FarmManagement.SharedKernel.Exceptions.ConflictException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
+                throw new InvalidOperationException($"A livestock record with TagNumber '{request.TagNumber}' already exists.");
             }
         }
 

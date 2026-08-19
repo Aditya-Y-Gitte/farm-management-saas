@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace CatalogApi.Controllers;
 
 [ApiController]
-[Route("api/catalog/[controller]")]
+[Route("api/catalog/breeding")]
 [Authorize]
 public class BreedingCycleController : ControllerBase
 {

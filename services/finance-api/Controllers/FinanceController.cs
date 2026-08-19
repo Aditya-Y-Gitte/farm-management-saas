@@ -2,7 +2,7 @@ using FinanceApi.DTOs;
 using FinanceApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using FarmManagement.SharedKernel.Exceptions;
+
 
 namespace FinanceApi.Controllers;
 

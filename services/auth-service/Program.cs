@@ -72,7 +72,7 @@ if (app.Environment.IsDevelopment())
 
 // ForwardedHeaders MUST come first in the pipeline
 app.UseForwardedHeaders();
-app.UseSharedExceptionHandling();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

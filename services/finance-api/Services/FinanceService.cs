@@ -1,4 +1,4 @@
-using FarmManagement.SharedKernel.Exceptions;
+
 using FarmManagement.SharedKernel.Models;
 using FinanceApi.Data;
 using FinanceApi.DTOs;
@@ -53,7 +53,7 @@ public class FinanceService : IFinanceService
     {
         var entity = await _context.Incomes.FirstOrDefaultAsync(i => i.Id == id);
         if (entity == null)
-            throw new NotFoundException($"Income with id {id} not found");
+            throw new KeyNotFoundException($"Income with id {id} not found");
 
         request.Adapt(entity);
         await _context.SaveChangesAsync();
@@ -106,7 +106,7 @@ public class FinanceService : IFinanceService
     {
         var entity = await _context.Expenses.FirstOrDefaultAsync(e => e.Id == id);
         if (entity == null)
-            throw new NotFoundException($"Expense with id {id} not found");
+            throw new KeyNotFoundException($"Expense with id {id} not found");
 
         request.Adapt(entity);
         await _context.SaveChangesAsync();

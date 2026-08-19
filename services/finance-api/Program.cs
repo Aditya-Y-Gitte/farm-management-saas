@@ -71,7 +71,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.UseSharedExceptionHandling();
+app.UseMiddleware<FarmManagement.SharedKernel.Middleware.ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
